@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#15242d"><title>Pre-Genesis — A World Before History</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="ui.css"><link rel="stylesheet" href="mobile.css"><link rel="stylesheet" href="friends.css"><link rel="stylesheet" href="pregenesis.css"><link rel="preload" href="assets/fonts/PreGenesis-Display.woff2" as="font" type="font/woff2" crossorigin><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/app-icon.svg" type="image/svg+xml"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"></head>
+<body>
+<div id="game" inert>
+ <div id="world" aria-label="Interactive strategy map of Pre-Genesis"></div>
+ <header class="topbar">
+  <button class="brand" id="brand" title="Campaign menu"><span class="ring-mark"><img src="assets/emblems/genesis.svg" alt=""></span><span>PRE-GENESIS<small>THE FIRST AGE</small></span></button>
+  <div id="resources" class="resources"></div>
+  <div class="top-actions"><button class="icon-button" id="codex" title="Mythology and scripture" aria-label="Mythology and scripture">▤</button><button class="icon-button" id="sound" title="Toggle ambient music" aria-label="Toggle ambient music">♫</button><button class="icon-button" id="help" title="How to play" aria-label="How to play">?</button><button class="icon-button" id="menu" title="Save and settings" aria-label="Save and settings">☰</button></div>
+ </header>
+ <button id="realm-toggle" class="realm-toggle panel" aria-expanded="false" aria-label="Toggle realm panel">☰ Realm</button><aside class="realm-panel panel">
+  <div class="realm-banner"><div class="eyebrow">YOUR REALM</div><div id="realm-identity"></div></div>
+  <nav class="side-tabs" aria-label="Realm panels"><button data-tab="realm" class="active">Realm</button><button data-tab="knowledge">Knowledge</button><button data-tab="council">Council</button></nav>
+  <div id="sidebar-content"></div>
+  <button id="chronicle" class="chronicle-link">◷ &nbsp; The chronicle <span>↗</span></button>
+ </aside>
+ <div class="map-heading"><span class="heading-rule"></span><div><small>THE FIRST AGE</small><span>A U R E V A L E</span></div><span class="heading-rule"></span></div>
+ <div id="friend-room-bar" class="friend-room-bar" hidden></div><div id="objective" class="objective panel"></div>
+ <div class="map-tools panel"><button id="zoom-in" title="Zoom in" aria-label="Zoom in">+</button><button id="zoom-out" title="Zoom out" aria-label="Zoom out">−</button><button id="home" title="Focus capital" aria-label="Focus capital">⌂</button><button id="labels" title="Toggle map labels" aria-label="Toggle map labels">Aa</button></div>
+ <div id="hover-info" class="hover-info"></div>
+ <section id="selection" class="selection panel" aria-live="polite"></section>
+ <div class="turn-corner"><div class="minimap panel"><canvas id="minimap" width="240" height="150" aria-label="Realm overview"></canvas><span>THE KNOWN WORLD</span></div><button id="end-turn" class="end-turn"><span><small id="turn-era">THE FIRST AGE · 1</small><strong>End turn</strong></span><span class="turn-arrow">➜</span></button><div class="turn-foot"><span id="turn-number">TURN 01</span><span id="save-status">AUTOSAVED</span></div></div>
+ <div class="controls-hint">Select · Highlighted tile to move · Right-drag to pan · Scroll to zoom</div>
+ <div id="toast" role="status"></div>
+</div>
+<dialog id="modal" aria-labelledby="dialog-title"><button class="modal-close" id="modal-close" aria-label="Close dialog">×</button><div id="modal-body"></div></dialog>
+<div id="welcome" class="welcome">
+ <div class="welcome-art"></div><div class="welcome-shade"></div>
+ <div class="welcome-content"><div class="eyebrow">A WORLD BEFORE HISTORY</div><div class="welcome-ring" aria-hidden="true"><img src="assets/emblems/genesis.svg" alt=""></div><h1 aria-label="Pre-Genesis"><span class="title-prefix" aria-hidden="true">PRE</span><span aria-hidden="true">GENESIS</span></h1><p class="welcome-sub">Choose a patron. Build your civilization.</p><div class="patron-label">CHOOSE YOUR PATRON</div><div id="faction-picker" class="faction-picker"></div><div id="faction-description"></div><button id="start-game" class="primary start-game">Begin campaign <span>➜</span></button><button class="friends-button" data-friends>Play with friends <span>2–4 players</span></button><button id="resume-game" class="text-button" hidden>Continue saved campaign</button><button class="text-button welcome-settings" data-welcome-settings="true">Accessibility & controls</button><p id="offline-status" class="offline-status" role="status">Preparing offline play…</p><p class="build-note">PRE-GENESIS · V0.9.9 ONLINE BETA</p></div>
+</div>
+<input id="import-file" type="file" accept="application/json,.json" hidden>
+<script type="module" src="app.js"></script><script type="module" src="offline.js?release=0.9.9"></script>
+</body></html>
+
