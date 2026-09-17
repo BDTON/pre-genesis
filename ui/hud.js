@@ -242,7 +242,7 @@ function unitSelection(unit) {
 
   return `<div class="selection-head">
       <div class="selection-emblem">${unitIcon(unit)}</div>
-      <div class="selection-title">${kicker ? `<p class="kicker">${esc(kicker)}</p>` : ''}<h2>${esc(unit.name)}</h2><p class="selection-sub">${esc(TERRAIN[t?.terrain] || '')}</p></div>
+      <div class="selection-title">${kicker ? `<p class="kicker">${esc(kicker)}</p>` : ''}<h2>${esc(unit.name)}</h2><p class="selection-sub">${esc(TERRAIN[t?.terrain] || '')}${unit.moves > 0 ? ` · ${plural(unit.moves, 'move')} left` : ' · No moves'}</p></div>
     </div>
     ${statsFor(unit)}
     ${meter(unit.hp, unit.maxHp, {label: 'Health', tone: unit.hp < unit.maxHp * .4 ? 'danger' : 'good'})}
@@ -269,7 +269,7 @@ function citySelection(city) {
   const meta = g.factionMeta(city.faction);
   const head = `<div class="selection-head">
       <div class="selection-emblem">${crest(city.faction)}</div>
-      <div class="selection-title"><p class="kicker">${esc(ours ? (city.capitalOf ? 'Capital' : 'City') : meta.name)}</p><h2>${esc(city.name)}</h2>
+      <div class="selection-title"><p class="kicker">${esc(ours ? (city.capitalOf ? 'Capital city' : 'City') : meta.name)}</p><h2>${esc(city.name)}</h2>
       <p class="selection-sub">${plural(city.population, 'person', 'people')} · Defence ${city.hp}/${city.maxHp}</p></div>
     </div>`;
   if (!ours) {
@@ -394,7 +394,12 @@ function renderCoach() {
   const step = coachStep();
   const html = `<p>${esc(step.text)}</p>${step.action ? button(step.action[0], step.action[1]) : ''}`;
   const coach = $('#coach');
-  if (coach.dataset.html !== html) { coach.innerHTML = html; coach.dataset.html = html; }
+  // The generic end-of-turn prompt appears in turn 1 only; after that the
+  // End turn button says it.
+  const generic = /^All units have moved/.test(step.text);
+  const show = !(generic && ctx.state.turn > 1);
+  coach.hidden = !show;
+  if (show && coach.dataset.html !== html) { coach.innerHTML = html; coach.dataset.html = html; }
 }
 
 // Room busy/connection changes only touch the status surfaces.

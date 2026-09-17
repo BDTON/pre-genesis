@@ -1466,7 +1466,8 @@ body[data-screen="game"] .world {
   background: var(--lapis);
 }
 
-.coach:empty {
+.coach:empty,
+.coach[hidden] {
   display: none;
 }
 
@@ -1493,6 +1494,20 @@ body[data-screen="game"] .world {
   background: var(--lapis);
 }
 
+/* Phones fold the buttons behind one toggle (see the phone blocks). */
+.map-tools .map-toggle {
+  display: none;
+}
+
+.map-tools-buttons {
+  display: contents;
+}
+
+.map-tools.expanded .map-tools-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
 .hover-info {
   padding: var(--space-1) var(--space-3);
   border: var(--hairline) solid var(--rule);
@@ -1507,6 +1522,13 @@ body[data-screen="game"] .world {
 
 .hover-info.show {
   opacity: 1;
+}
+
+/* No hover popups on touch: a tap already selects the tile. */
+@media (pointer: coarse) {
+  .hover-info {
+    display: none;
+  }
 }
 
 .controls-hint {
@@ -2908,6 +2930,11 @@ body.placing-district .hud > .selection {
     display: none;
   }
 
+  /* The corner keeps the turn control without the overview map. */
+  .minimap {
+    display: none;
+  }
+
   .era {
     padding-left: 0;
     border-left: 0;
@@ -2969,6 +2996,19 @@ body.placing-district .hud > .selection {
 
   .hud > .map-tools {
     margin: var(--space-2) calc(var(--space-2) + var(--safe-right)) 0 0;
+  }
+
+  /* One toggle in the corner; the controls unfold on demand. */
+  .map-tools .map-toggle {
+    display: inline-grid;
+  }
+
+  .map-tools .map-tools-buttons {
+    display: none;
+  }
+
+  .map-tools.expanded .map-tools-buttons {
+    display: flex;
   }
 
   .hud > .realm-panel {
@@ -3350,78 +3390,127 @@ body.placing-district .hud > .selection {
     --topbar-height: 44px;
   }
 
+  /* One full-width map; every panel is a slim edge overlay. */
   .hud {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
     grid-template-areas:
-      "top   top"
-      "room  room"
-      "coach right"
-      "map   right"
-      "sheet corner";
-    column-gap: var(--space-2);
-    padding: 0 calc(var(--space-2) + var(--safe-right)) calc(var(--space-2) + var(--safe-bottom)) calc(var(--space-2) + var(--safe-left));
+      "top"
+      "map";
+    padding: 0;
   }
 
   .hud > .hud-top {
-    margin: 0 calc(-1 * (var(--space-2) + var(--safe-right))) 0 calc(-1 * (var(--space-2) + var(--safe-left)));
+    margin: 0;
   }
 
-  .hud > .coach {
-    justify-self: start;
-    max-width: min(560px, 100%);
-    margin-top: var(--space-2);
+  body[data-screen="game"] .world {
+    top: calc(var(--topbar-height) + var(--safe-top));
   }
 
-  .hud > .room-bar,
-  .hud > .realm-toggle,
-  .hud > .map-tools {
-    margin-top: var(--space-2);
+  /* Turn number and End turn join the top bar; the save chip is hidden. */
+  .turn-corner {
+    position: fixed;
+    inset: auto auto calc(var(--safe-bottom) + var(--space-1)) calc(var(--safe-left) + var(--space-2));
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
   }
 
-  .hud > .realm-panel {
-    inset: var(--space-2) auto 0 0;
-    grid-row: 2 / -1;
+  .turn-corner .end-turn {
+    min-height: 40px;
   }
 
+  .turn-corner .turn-foot {
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    background: none;
+  }
+
+  .turn-corner .turn-foot #save-status {
+    display: none;
+  }
+
+  /* The coach is a compact pill under the top bar. */
+  .coach {
+    position: fixed;
+    top: calc(var(--topbar-height) + var(--safe-top) + var(--space-2));
+    left: calc(50% - var(--space-4));
+    transform: translateX(-50%);
+    z-index: 4;
+    max-width: min(440px, 70vw);
+    padding: var(--space-1) var(--space-3);
+    gap: var(--space-2);
+  }
+
+  .coach p {
+    flex: 1;
+    font-size: var(--text-12);
+    padding: var(--space-1) 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .coach .btn {
+    min-height: 32px;
+    padding: 0 var(--space-2);
+  }
+
+  /* The selection becomes a bottom drawer. */
   .hud > .selection {
-    width: min(380px, 55vw);
-    max-height: calc(100dvh - var(--topbar-height) - var(--safe-top) - 72px);
-    margin-top: var(--space-2);
+    position: fixed;
+    inset: auto 0 calc(var(--safe-bottom) + 60px) 0;
+    z-index: 6;
+    margin: 0;
+    width: 100%;
+    max-height: 42dvh;
+    border-radius: var(--radius-panel) var(--radius-panel) 0 0;
+    box-shadow: var(--shadow-float);
+  }
+
+  .selection-title h2 {
+    font-size: var(--text-16);
+  }
+
+  /* Map tools cluster at the right edge; one toggle unfolds the controls. */
+  .map-tools {
+    position: fixed;
+    top: 50%;
+    right: calc(var(--safe-right) + var(--space-2));
+    transform: translateY(-50%);
+    margin: 0;
+    flex-direction: column;
+  }
+
+  .map-tools .map-toggle {
+    display: inline-grid;
+  }
+
+  .map-tools .map-tools-buttons {
+    display: none;
+  }
+
+  /* The room bar sits bottom-left when a room is live. */
+  .hud > .room-bar {
+    position: fixed;
+    inset: auto auto calc(var(--safe-bottom) + var(--space-1)) calc(var(--safe-left) + var(--space-2));
+    z-index: 5;
+  }
+
+  /* No hover popups on touch; a tap already selects the tile. */
+  .hover-info {
+    display: none;
   }
 
   .brand,
   .resource-label,
-  .controls-hint {
-    display: none;
-  }
-
-  .map-tools {
-    flex-direction: row;
-  }
-
-  .selection {
-    padding: var(--space-3);
-  }
-
-  .selection-title h2 {
-    font-size: var(--text-20);
-  }
-
-  .turn-corner {
-    width: 196px;
-  }
-
+  .controls-hint,
   .minimap {
     display: none;
-  }
-
-  .end-turn {
-    min-height: 48px;
-  }
-
-  .end-turn strong {
-    font-size: var(--text-20);
   }
 
   .toast {

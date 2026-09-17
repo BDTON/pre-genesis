@@ -139,6 +139,16 @@ function wireStaticControls() {
     labels.setAttribute('aria-pressed', String(ctx.labels));
     toast(ctx.labels ? 'Labels shown.' : 'Labels hidden.');
   });
+  const mapToolsToggle = $('#map-tools-toggle');
+  mapToolsToggle.addEventListener('click', () => {
+    const tools = mapToolsToggle.closest('.map-tools');
+    const expand = !tools.classList.toggle('expanded');
+    mapToolsToggle.setAttribute('aria-expanded', String(expand));
+    const icon = mapToolsToggle.querySelector('use');
+    if (icon) icon.setAttribute('href', `assets/icons.svg#${expand ? 'close' : 'plus'}`);
+    mapToolsToggle.setAttribute('aria-label', expand ? 'Hide map controls' : 'Show map controls');
+    mapToolsToggle.setAttribute('title', expand ? 'Hide map controls' : 'Show map controls');
+  });
   $('#friends-button').addEventListener('click', () => ui.showLobby());
   $('#import-file').addEventListener('change', async e => {
     const file = e.target.files[0];

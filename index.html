@@ -59,10 +59,13 @@
   <div id="coach" class="coach" role="status"></div>
 
   <div class="map-tools" role="group" aria-label="Map">
+    <button type="button" class="icon-button map-toggle" id="map-tools-toggle" aria-label="Show map controls" aria-expanded="false" aria-controls="map-tools-buttons" title="Show map controls"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#plus"></use></svg></button>
+    <div class="map-tools-buttons" id="map-tools-buttons">
     <button type="button" class="icon-button" id="zoom-in" aria-label="Zoom in" title="Zoom in"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#zoom-in"></use></svg></button>
     <button type="button" class="icon-button" id="zoom-out" aria-label="Zoom out" title="Zoom out"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#zoom-out"></use></svg></button>
     <button type="button" class="icon-button" id="home" aria-label="Show capital" title="Show capital"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#capital"></use></svg></button>
     <button type="button" class="icon-button" id="labels" aria-label="Show labels" title="Show labels"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#labels"></use></svg></button>
+    </div>
   </div>
 
   <div id="hover-info" class="hover-info" aria-hidden="true"></div>

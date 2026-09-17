@@ -1,17 +1,17 @@
 {
-  "version": "pregenesis-web-d0ebb6df177e08",
+  "version": "pregenesis-web-618f5e2b2fe39f",
   "files": 97,
-  "bytes": 2895069,
+  "bytes": 2898408,
   "assets": [
     {
       "file": "index.html",
-      "bytes": 8443,
-      "sha256": "566fc4e3e63bf8cd2bd7bfea2111c45051f092bf9bbf2c3fcc4398f2c32c7211"
+      "bytes": 8816,
+      "sha256": "67a9973b10bc6ce3f57b6708da1d8ef76214adee7c1f7fe90eb0a7ca13e0213c"
     },
     {
       "file": "app.js",
-      "bytes": 8096,
-      "sha256": "9fb0b14a253aa2b1b59988445314bf4711d6d025c72829e160be458eb0c6eec3"
+      "bytes": 8717,
+      "sha256": "5334d3b925ddd1634a588bb9cc181288e8ced15ae47f7c5dc92f933aedda7125"
     },
     {
       "file": "art-direction.js",
@@ -335,8 +335,8 @@
     },
     {
       "file": "hud.css",
-      "bytes": 70442,
-      "sha256": "817becf772528d31a9dfae1bce61a5a28d1aab6fdafee922268ad4d183c6df9f"
+      "bytes": 72460,
+      "sha256": "8e8531b472aaab624e2063afe14ea936da71a0df977550ad23701541bb1f2b1d"
     },
     {
       "file": "lore-biblical.js",
@@ -425,8 +425,8 @@
     },
     {
       "file": "ui/hud.js",
-      "bytes": 29576,
-      "sha256": "637624e8b0f68a3d4bb43d7e94352d9fbe9517ffcd542aed4f16991e02888f9f"
+      "bytes": 29903,
+      "sha256": "d0093aad920a06114645d44103e71f0cc41dbc88dc6abf5a1e757f347cc0bfa2"
     },
     {
       "file": "ui/icons.js",
