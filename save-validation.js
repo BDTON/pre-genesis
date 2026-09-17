@@ -1,4 +1,4 @@
-import { FACTIONS, TECHS, CIVICS, POLICIES, PRODUCTIONS } from './engine.js';
+import { FACTIONS, TECHS, CIVICS, POLICIES, PRODUCTIONS, DIFFICULTIES } from './engine.js';
 import {TRAIT_RULESET} from './faction-traits.js';
 import {CITY_FOCUSES,DISTRICT_KINDS,districtLimit} from './city-planning.js';
 
@@ -14,8 +14,87 @@ const terrains = new Set(['grass', 'forest', 'hills', 'waste', 'water', 'mountai
 const resources = new Set(['wheat', 'fish', 'iron', 'timber', 'gems', 'horses']);
 const improvements = new Set(['farm', 'mine', 'lumbermill']);
 const relations = new Set(['peace', 'war']);
-const victoryTypes = new Set(['fellowship', 'domination', 'conquest', 'economic', 'cultural']);
+const victoryTypes = new Set(['etemenanki', 'domination', 'conquest', 'economic', 'cultural']);
+const difficulties = new Set(DIFFICULTIES.map(d => d.id));
 const maxCounter = Number.MAX_SAFE_INTEGER - 1;
+
+// Identifiers renamed in the Pre-Genesis rework. Older saves and stored rooms
+// still carry the old ids, so they are rewritten before any validation.
+export const FACTION_ID_MIGRATIONS = Object.freeze({ gondor: 'michael', rohan: 'ra', elves: 'athena', mordor: 'thor' });
+export const TECH_ID_MIGRATIONS = Object.freeze({ ring_lore: 'tablet_of_destinies' });
+// The wonder id is also the victory type it grants.
+export const WONDER_ID_MIGRATIONS = Object.freeze({ fellowship: 'etemenanki' });
+const legacyIds = Object.keys({ ...FACTION_ID_MIGRATIONS, ...TECH_ID_MIGRATIONS, ...WONDER_ID_MIGRATIONS });
+const legacyIdPattern = new RegExp(`"(?:${legacyIds.join('|')})"`);
+
+const isRecord = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+const renameWith = table => value => typeof value === 'string' && Object.hasOwn(table, value) ? table[value] : value;
+// Collection renamers return their input unchanged when no entry is renamed.
+const eachWith = rename => value => {
+  if (!Array.isArray(value)) return value;
+  const next = value.map(rename);
+  return next.some((item, i) => item !== value[i]) ? next : value;
+};
+const keysWith = rename => value => {
+  if (!isRecord(value) || !Object.keys(value).some(key => rename(key) !== key)) return value;
+  return Object.fromEntries(Object.entries(value).map(([key, item]) => [rename(key), item]));
+};
+const factionId = renameWith(FACTION_ID_MIGRATIONS);
+const techId = renameWith(TECH_ID_MIGRATIONS);
+const wonderId = renameWith(WONDER_ID_MIGRATIONS);
+const factionIds = eachWith(factionId), factionKeys = keysWith(factionId);
+const techIds = eachWith(techId), wonderIds = eachWith(wonderId);
+
+function mentionsLegacyId(value) {
+  try { return legacyIdPattern.test(JSON.stringify(value)); } catch { return false; }
+}
+// Renames the listed fields of a record the caller already owns; reports any change.
+function migrateFields(target, fields) {
+  let changed = false;
+  if (!isRecord(target)) return changed;
+  for (const [key, rename] of Object.entries(fields)) {
+    if (!Object.hasOwn(target, key)) continue;
+    const next = rename(target[key]);
+    if (next !== target[key]) { target[key] = next; changed = true; }
+  }
+  return changed;
+}
+function migrateEach(list, fields) {
+  let changed = false;
+  if (Array.isArray(list)) for (const item of list) changed = migrateFields(item, fields) || changed;
+  return changed;
+}
+function migrateSaveFields(save) {
+  let changed = migrateFields(save, { player: factionId, winner: factionId, victoryType: wonderId, humanFactions: factionIds });
+  changed = migrateEach(save.factions, { id: factionId, relations: factionKeys, techs: techIds, research: techId }) || changed;
+  changed = migrateEach(save.tiles, { owner: factionId }) || changed;
+  changed = migrateEach(save.cities, { faction: factionId, capitalOf: factionId, queue: wonderId, buildings: wonderIds }) || changed;
+  changed = migrateEach(save.units, { faction: factionId }) || changed;
+  return changed;
+}
+
+/** Rewrite renamed faction, technology and wonder ids in a parsed save.
+ * Returns the same object when nothing is renamed; otherwise returns a
+ * migrated copy and leaves the input untouched.
+ */
+export function migrateCampaignSave(data) {
+  if (!isRecord(data) || !mentionsLegacyId(data)) return data;
+  const save = structuredClone(data);
+  return migrateSaveFields(save) ? save : data;
+}
+
+/** Rewrite renamed ids in a stored multiplayer room: its seats, roster,
+ * finished turns, per-seat views and campaign state. Returns the same object
+ * when nothing is renamed; otherwise returns a migrated copy.
+ */
+export function migrateRoom(room) {
+  if (!isRecord(room) || !mentionsLegacyId(room)) return room;
+  const next = structuredClone(room);
+  let changed = migrateFields(next, { roster: factionIds, finishedFactions: factionIds, views: factionKeys });
+  changed = migrateEach(next.players, { faction: factionId }) || changed;
+  if (isRecord(next.state)) changed = migrateSaveFields(next.state) || changed;
+  return changed ? next : room;
+}
 
 function invalid(path, reason) { throw new Error(`Cannot load campaign: ${path} ${reason}.`); }
 function record(value, path) {
@@ -69,20 +148,24 @@ function jsonData(value) {
 }
 
 /** Validate a parsed save without changing it or the current campaign.
- * Returns the original save only after every check passes. Call this before
- * assigning application state, rendering, or writing to browser storage.
+ * Returns the save only after every check passes: the original object, or a
+ * migrated copy when it still uses renamed ids. Call this before assigning
+ * application state, rendering, or writing to browser storage.
  */
 export function validateCampaignSave(v) {
   jsonData(v); record(v, 'save');
+  v = migrateCampaignSave(v);
   if (v.version !== 1) invalid('version', 'is unsupported (expected version 1)');
   if (v.ruleset !== undefined && v.ruleset !== TRAIT_RULESET) invalid('ruleset','is unsupported');
+  // Saves from before difficulty levels have no field and play as hard.
+  if (v.difficulty !== undefined) member(v.difficulty, difficulties, 'difficulty');
   integer(v.turn, 'turn', 1);
   if (typeof v.seed !== 'number' || !Number.isFinite(v.seed)) invalid('seed', 'must be a finite number');
   integer(v.rngState, 'rngState', 0, 0xffffffff);
   integer(v.nextId, 'nextId', 1);
   for (const name of ['tiles', 'factions', 'cities', 'units', 'log']) array(v[name], name);
   if (v.tiles.length !== 217) invalid('tiles', 'must contain the complete 217-hex map');
-  if (v.factions.length !== 4) invalid('factions', 'must contain four campaign realms exactly once');
+  if (v.factions.length < 2 || v.factions.length > 4) invalid('factions', 'must contain two to four campaign realms exactly once');
   const factions = new Set();
   v.factions.forEach((f, i) => {
     record(f, `factions[${i}]`); member(f.id, factionCatalog, `factions[${i}].id`);
@@ -130,6 +213,25 @@ export function validateCampaignSave(v) {
   for (const f of v.factions) for (const [id, status] of Object.entries(f.relations)) {
     if (factionById.get(id).relations[f.id] !== status) invalid(`relations.${f.id}.${id}`, 'must agree in both directions');
   }
+  // Optional diplomacy state: treaty locks (turn a relation may change again)
+  // and a rival's announced war plan.
+  v.factions.forEach((f, i) => {
+    const path = `factions[${i}]`;
+    if (f.treaties !== undefined) {
+      record(f.treaties, `${path}.treaties`);
+      for (const [id, until] of Object.entries(f.treaties)) {
+        if (id === f.id || !factions.has(id)) invalid(`${path}.treaties`, 'must name other campaign realms only');
+        integer(until, `${path}.treaties.${id}`, 1);
+        if (factionById.get(id).treaties?.[f.id] !== until) invalid(`treaties.${f.id}.${id}`, 'must agree in both directions');
+      }
+    }
+    if (f.warPlan !== undefined) {
+      record(f.warPlan, `${path}.warPlan`);
+      if (f.warPlan.target === f.id) invalid(`${path}.warPlan.target`, 'must name another realm');
+      member(f.warPlan.target, factions, `${path}.warPlan.target`);
+      integer(f.warPlan.turn, `${path}.warPlan.turn`, 1);
+    }
+  });
 
   const entityIds = new Set(), occupiedCities = new Set(), capitals = new Set();
   let greatestId = 0;
@@ -193,7 +295,7 @@ export function validateCampaignSave(v) {
     integer(u.cooldown, `${path}.cooldown`, 0, 100); integer(u.bonusStrength, `${path}.bonusStrength`, 0, 10000); integer(u.buffTurns, `${path}.buffTurns`, 0, 100);
     optionalBoolean(u.acted, `${path}.acted`); optionalBoolean(u.healing, `${path}.healing`);
     if (u.armySize !== undefined && ![1, 3].includes(u.armySize)) invalid(`${path}.armySize`, 'must be 1 or 3 when present');
-    if (u.armySize === 3 && !['warrior', 'archer', 'rider'].includes(u.kind)) invalid(`${path}.armySize`, 'is only supported for military battalions');
+    if (u.armySize === 3 && !['warrior', 'archer', 'rider'].includes(u.kind)) invalid(`${path}.armySize`, 'is only supported for Spearmen, Archers and Horsemen');
     if (u.kind === 'hero') {
       if (heroFactions.has(u.faction)) invalid(path, 'duplicates a realm’s champion');
       heroFactions.add(u.faction);

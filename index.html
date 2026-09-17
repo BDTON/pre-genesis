@@ -1,34 +1,120 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#15242d"><title>Pre-Genesis — A World Before History</title><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="ui.css"><link rel="stylesheet" href="mobile.css"><link rel="stylesheet" href="friends.css"><link rel="stylesheet" href="pregenesis.css"><link rel="preload" href="assets/fonts/PreGenesis-Display.woff2" as="font" type="font/woff2" crossorigin><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/app-icon.svg" type="image/svg+xml"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"></head>
-<body>
-<div id="game" inert>
- <div id="world" aria-label="Interactive strategy map of Pre-Genesis"></div>
- <header class="topbar">
-  <button class="brand" id="brand" title="Campaign menu"><span class="ring-mark"><img src="assets/emblems/genesis.svg" alt=""></span><span>PRE-GENESIS<small>THE FIRST AGE</small></span></button>
-  <div id="resources" class="resources"></div>
-  <div class="top-actions"><button class="icon-button" id="codex" title="Mythology and scripture" aria-label="Mythology and scripture">▤</button><button class="icon-button" id="sound" title="Toggle ambient music" aria-label="Toggle ambient music">♫</button><button class="icon-button" id="help" title="How to play" aria-label="How to play">?</button><button class="icon-button" id="menu" title="Save and settings" aria-label="Save and settings">☰</button></div>
- </header>
- <button id="realm-toggle" class="realm-toggle panel" aria-expanded="false" aria-label="Toggle realm panel">☰ Realm</button><aside class="realm-panel panel">
-  <div class="realm-banner"><div class="eyebrow">YOUR REALM</div><div id="realm-identity"></div></div>
-  <nav class="side-tabs" aria-label="Realm panels"><button data-tab="realm" class="active">Realm</button><button data-tab="knowledge">Knowledge</button><button data-tab="council">Council</button></nav>
-  <div id="sidebar-content"></div>
-  <button id="chronicle" class="chronicle-link">◷ &nbsp; The chronicle <span>↗</span></button>
- </aside>
- <div class="map-heading"><span class="heading-rule"></span><div><small>THE FIRST AGE</small><span>A U R E V A L E</span></div><span class="heading-rule"></span></div>
- <div id="friend-room-bar" class="friend-room-bar" hidden></div><div id="objective" class="objective panel"></div>
- <div class="map-tools panel"><button id="zoom-in" title="Zoom in" aria-label="Zoom in">+</button><button id="zoom-out" title="Zoom out" aria-label="Zoom out">−</button><button id="home" title="Focus capital" aria-label="Focus capital">⌂</button><button id="labels" title="Toggle map labels" aria-label="Toggle map labels">Aa</button></div>
- <div id="hover-info" class="hover-info"></div>
- <section id="selection" class="selection panel" aria-live="polite"></section>
- <div class="turn-corner"><div class="minimap panel"><canvas id="minimap" width="240" height="150" aria-label="Realm overview"></canvas><span>THE KNOWN WORLD</span></div><button id="end-turn" class="end-turn"><span><small id="turn-era">THE FIRST AGE · 1</small><strong>End turn</strong></span><span class="turn-arrow">➜</span></button><div class="turn-foot"><span id="turn-number">TURN 01</span><span id="save-status">AUTOSAVED</span></div></div>
- <div class="controls-hint">Select · Highlighted tile to move · Right-drag to pan · Scroll to zoom</div>
- <div id="toast" role="status"></div>
-</div>
-<dialog id="modal" aria-labelledby="dialog-title"><button class="modal-close" id="modal-close" aria-label="Close dialog">×</button><div id="modal-body"></div></dialog>
-<div id="welcome" class="welcome">
- <div class="welcome-art"></div><div class="welcome-shade"></div>
- <div class="welcome-content"><div class="eyebrow">A WORLD BEFORE HISTORY</div><div class="welcome-ring" aria-hidden="true"><img src="assets/emblems/genesis.svg" alt=""></div><h1 aria-label="Pre-Genesis"><span class="title-prefix" aria-hidden="true">PRE</span><span aria-hidden="true">GENESIS</span></h1><p class="welcome-sub">Choose a patron. Build your civilization.</p><div class="patron-label">CHOOSE YOUR PATRON</div><div id="faction-picker" class="faction-picker"></div><div id="faction-description"></div><button id="start-game" class="primary start-game">Begin campaign <span>➜</span></button><button class="friends-button" data-friends>Play with friends <span>2–4 players</span></button><button id="resume-game" class="text-button" hidden>Continue saved campaign</button><button class="text-button welcome-settings" data-welcome-settings="true">Accessibility & controls</button><p id="offline-status" class="offline-status" role="status">Preparing offline play…</p><p class="build-note">PRE-GENESIS · V0.9.9 ONLINE BETA</p></div>
-</div>
-<input id="import-file" type="file" accept="application/json,.json" hidden>
-<script type="module" src="app.js"></script><script type="module" src="offline.js?release=0.9.9"></script>
-</body></html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pre-Genesis</title>
+<meta name="description" content="Turn-based strategy with gods and prophets from world myth. Play solo or with 2–4 players online.">
+<meta name="theme-color" content="#0F1A30">
+<meta name="color-scheme" content="dark">
+<meta name="pregenesis-api" content="https://api.pre-genesis.online">
+<meta name="pregenesis-version" content="0.9.9">
+<meta property="og:title" content="Pre-Genesis">
+<meta property="og:description" content="Turn-based strategy with gods and prophets from world myth.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pre-genesis.online/">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preload" href="assets/fonts/PreGenesis-Text-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/PreGenesis-Display-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="hud.css">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/app-icon.svg" type="image/svg+xml">
+</head>
+<body data-screen="title">
+<div id="world" class="world" aria-label="Map of the Oikoumene"></div>
 
+<div id="game" class="hud" hidden inert>
+  <header class="hud-top">
+    <p class="brand">Pre-Genesis</p>
+    <p id="era" class="era" hidden></p>
+    <div id="resources" class="resources"></div>
+    <nav class="hud-actions" aria-label="Game">
+      <button type="button" class="icon-button" id="codex" aria-label="Codex" title="Codex"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#codex"></use></svg></button>
+      <button type="button" class="icon-button" id="sound" aria-label="Play music" title="Play music" aria-pressed="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#sound-off"></use></svg></button>
+      <button type="button" class="icon-button" id="help" aria-label="Help" title="Help"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#help"></use></svg></button>
+      <button type="button" class="icon-button" id="menu" aria-label="Menu" title="Menu"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#menu"></use></svg></button>
+    </nav>
+  </header>
+
+  <button type="button" id="realm-toggle" class="btn btn-secondary realm-toggle" aria-expanded="false" aria-controls="realm-panel"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#realm"></use></svg><span>Realm</span></button>
+  <aside id="realm-panel" class="realm-panel" aria-label="Realm">
+    <div id="realm-identity" class="identity"></div>
+    <div class="tabs" role="tablist" aria-label="Realm">
+      <button type="button" role="tab" data-tab="cities" class="tab">Cities</button>
+      <button type="button" role="tab" data-tab="research" class="tab">Research</button>
+      <button type="button" role="tab" data-tab="diplomacy" class="tab">Diplomacy</button>
+    </div>
+    <div id="sidebar-content" class="realm-content" role="tabpanel"></div>
+    <div class="realm-foot">
+      <button type="button" id="chronicle" class="btn btn-ghost"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#history"></use></svg><span>Read history</span></button>
+      <button type="button" id="goals" class="btn btn-ghost"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#goals"></use></svg><span>See goals</span></button>
+    </div>
+  </aside>
+
+  <div id="room-bar" class="room-bar" hidden></div>
+  <div id="coach" class="coach" role="status"></div>
+
+  <div class="map-tools" role="group" aria-label="Map">
+    <button type="button" class="icon-button" id="zoom-in" aria-label="Zoom in" title="Zoom in"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#zoom-in"></use></svg></button>
+    <button type="button" class="icon-button" id="zoom-out" aria-label="Zoom out" title="Zoom out"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#zoom-out"></use></svg></button>
+    <button type="button" class="icon-button" id="home" aria-label="Show capital" title="Show capital"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#capital"></use></svg></button>
+    <button type="button" class="icon-button" id="labels" aria-label="Show labels" title="Show labels"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#labels"></use></svg></button>
+  </div>
+
+  <div id="hover-info" class="hover-info" aria-hidden="true"></div>
+  <section id="selection" class="selection" aria-label="Selection"></section>
+  <p id="sr-status" class="visually-hidden" aria-live="polite"></p>
+
+  <div class="turn-corner">
+    <canvas id="minimap" class="minimap" width="240" height="150" role="img" aria-label="Overview map"></canvas>
+    <button type="button" id="end-turn" class="end-turn"><strong>End turn</strong><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#arrow-right"></use></svg></button>
+    <p class="turn-foot"><span id="turn-number">Turn 1</span><span id="save-status">Saved</span></p>
+  </div>
+  <p id="controls-hint" class="controls-hint" hidden></p>
+</div>
+
+<main id="welcome" class="title-screen">
+  <div class="title-panel">
+    <h1 class="wordmark">Pre-Genesis</h1>
+    <section class="patron-picker" aria-labelledby="patron-heading">
+      <div class="patron-head">
+        <h2 id="patron-heading">Choose a patron</h2>
+        <label class="search">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#search"></use></svg>
+          <input id="patron-search" type="search" placeholder="Search" aria-label="Search patrons" autocomplete="off" spellcheck="false">
+        </label>
+        <p id="patron-count" class="patron-count" role="status"></p>
+      </div>
+      <div id="patron-list" class="patron-list"></div>
+      <div id="patron-detail" class="patron-detail" aria-live="polite"></div>
+      <button type="button" id="read-lore" class="btn btn-ghost"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#lore"></use></svg><span>Read lore</span></button>
+    </section>
+    <fieldset id="difficulty" class="difficulty" hidden>
+      <legend>Difficulty</legend>
+      <div id="difficulty-options" class="segmented"></div>
+      <p id="difficulty-note" class="note"></p>
+    </fieldset>
+    <div class="title-actions">
+      <button type="button" id="start-game" class="btn btn-primary"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#play"></use></svg><span>Begin</span></button>
+      <button type="button" id="resume-game" class="btn btn-secondary" hidden><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#save"></use></svg><span>Continue</span></button>
+      <button type="button" id="friends-button" class="btn btn-secondary"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#online"></use></svg><span>Play online</span></button>
+      <button type="button" id="title-settings" class="btn btn-ghost"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#settings"></use></svg><span>Settings</span></button>
+    </div>
+    <p id="title-note" class="note" role="alert" hidden></p>
+  </div>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+<dialog id="modal" class="sheet" aria-labelledby="dialog-title">
+  <button type="button" class="icon-button sheet-close" id="modal-close" aria-label="Close" title="Close"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#close"></use></svg></button>
+  <div id="modal-body" class="sheet-body"></div>
+</dialog>
+<input id="import-file" type="file" accept="application/json,.json" hidden>
+<script type="module" src="app.js"></script>
+<script type="module" src="offline.js?release=0.9.9"></script>
+</body>
+</html>

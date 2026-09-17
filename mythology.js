@@ -1,5 +1,5 @@
-// Source-linked reference data. Codex inclusion does not create a playable unit.
-// Internal faction keys are retained for save compatibility, not as lore names.
+// Source-linked figures shown in the codex under the four realms that introduced the art styles.
+// Keys are faction ids; names match the realm names in factions.js. A figure here is not a playable unit.
 const bible = (chapter, version = 'KJV') => `https://www.biblegateway.com/passage/?search=${encodeURIComponent(chapter)}&version=${version}`;
 const hymns1 = 'https://www.theoi.com/Text/HomericHymns1.html';
 const hymns2 = 'https://www.theoi.com/Text/HomericHymns2.html';
@@ -12,12 +12,12 @@ const museum = name => `https://egyptianmuseum.org/deities-${name}`;
 const figure = (id, name, role, imagery, lore, sourceUrl, sourceLabel) => ({ id, name, role, imagery, lore, sourceUrl, sourceLabel });
 
 export const MYTHOLOGY_VERSION = 1;
-export const MYTHOLOGY_SCOPE = 'A source-linked reference codex. Lore entries are not a list of implemented playable units; game powers and faction alliances are original fiction.';
+export const MYTHOLOGY_SCOPE = 'Figures from each tradition, with the passage or museum record that attests them. Game powers and alliances are rules, not doctrine.';
 
 export const PANTHEONS = {
-  gondor: {
-    name: 'Radiant Covenant',
-    tradition: 'Christianity',
+  michael: {
+    name: 'Heavenly Host',
+    tradition: 'Christian',
     patron: 'God',
     note: 'Christianity is monotheistic. Jesus, human apostles, heavenly beings, and the Nephilim are distinct categories, not a pantheon of interchangeable gods.',
     figures: [
@@ -46,7 +46,7 @@ export const PANTHEONS = {
         'After Jesus calls Philip, Philip invites Nathanael to meet him.',
         bible('John 1'), 'John 1:43–46 (KJV)'),
       figure('bartholomew', 'Bartholomew', 'One of the Twelve',
-        'An inscribed name scroll is a game design motif; the list gives no appearance.',
+        'The list gives no appearance.',
         'Matthew names Bartholomew among the Twelve without supplying an individual biography in this passage.',
         bible('Matthew 10'), 'Matthew 10:2–4 (KJV)'),
       figure('thomas', 'Thomas', 'One of the Twelve',
@@ -54,19 +54,19 @@ export const PANTHEONS = {
         'Thomas first asks for evidence of Jesus’s wounds, then encounters the risen Jesus and professes belief.',
         bible('John 20'), 'John 20:24–29 (KJV)'),
       figure('matthew', 'Matthew', 'One of the Twelve',
-        'A tax booth; ledger and coins are scene-design motifs.',
+        'A tax booth.',
         'Jesus calls Matthew from his tax-collection seat, and Matthew rises to follow him.',
         bible('Matthew 9'), 'Matthew 9:9 (KJV)'),
       figure('james-alphaeus', 'James, son of Alphaeus', 'One of the Twelve',
-        'A named scroll is a design motif, not a scriptural attribute.',
+        'The list gives no appearance.',
         'Matthew identifies this apostle by his father Alphaeus, distinguishing him from James son of Zebedee.',
         bible('Matthew 10'), 'Matthew 10:2–3 (KJV)'),
       figure('thaddaeus', 'Thaddaeus', 'One of the Twelve',
-        'A named scroll is a design motif; no appearance is given.',
+        'The lists give no appearance.',
         'The KJV apostle list names Lebbaeus, surnamed Thaddaeus; names and wording differ across lists and translations.',
         bible('Matthew 10'), 'Matthew 10:3 (KJV); compare Luke 6:16'),
       figure('simon-zealot', 'Simon the Zealot', 'One of the Twelve',
-        'A named scroll is a design motif; the epithet does not prescribe weapons.',
+        'The list gives no appearance; the epithet does not imply weapons.',
         'Luke distinguishes this Simon with the epithet Zelotes while listing the Twelve.',
         bible('Luke 6'), 'Luke 6:13–16 (KJV)'),
       figure('judas-iscariot', 'Judas Iscariot', 'One of the Twelve; betrayer in the Gospel narrative',
@@ -82,14 +82,14 @@ export const PANTHEONS = {
         'In Isaiah’s temple vision, seraphim praise God, and one touches Isaiah’s lips with a live coal.',
         bible('Isaiah 6'), 'Isaiah 6:1–7 (KJV)'),
       figure('nephilim', 'Nephilim', 'Enigmatic figures in Genesis',
-        'No detailed anatomy is given; imposing silhouettes would be a game interpretation.',
+        'Genesis gives no description.',
         'Genesis names the Nephilim among ancient renowned figures; the term’s meaning and their relationship to the surrounding genealogy remain debated.',
         bible('Genesis 6', 'NET'), 'Genesis 6:1–4 (NET), especially the translation note on verse 4')
     ]
   },
-  rohan: {
-    name: 'Solar Dynasty',
-    tradition: 'Ancient Egyptian religion',
+  ra: {
+    name: 'Kemet',
+    tradition: 'Egyptian',
     patron: 'Ra',
     note: 'Egyptian divine forms and relationships varied across places and periods; these entries describe selected attested traditions.',
     figures: [
@@ -130,7 +130,7 @@ export const PANTHEONS = {
         'Bastet is associated with protection, health, and pleasure.',
         museum('Bastet'), 'Rosicrucian Egyptian Museum — Bastet'),
       figure('ptah', 'Ptah', 'Creator and patron of craftspeople',
-        'Workshop and temple motifs express his craft association.',
+        'The straight was-sceptre and close-fitting cap of his statues.',
         'Ptah is the Memphite creator deity and patron of craftspeople and architects.',
         museum('ptah'), 'Rosicrucian Egyptian Museum — Ptah'),
       figure('seth', 'Seth', 'Deity associated with desert and storms',
@@ -143,9 +143,9 @@ export const PANTHEONS = {
         museum('Maat'), 'Rosicrucian Egyptian Museum — Ma’at')
     ]
   },
-  elves: {
-    name: 'Aegis League',
-    tradition: 'Ancient Greek religion and literature',
+  athena: {
+    name: 'Attica',
+    tradition: 'Greek',
     patron: 'Athena',
     note: 'These are selected literary traditions, not a single fixed Greek canon.',
     figures: [
@@ -186,7 +186,7 @@ export const PANTHEONS = {
         'One hymn describes Aphrodite arriving from the sea and being adorned by the Seasons.',
         hymns3, 'Homeric Hymn 6, To Aphrodite; Evelyn-White translation'),
       figure('hephaestus', 'Hephaestus', 'Divine craftworker',
-        'A workshop expresses his craft association.',
+        'Hammer and tongs of the smith.',
         'Hesiod describes Hephaestus as Hera’s son and a craftsman surpassing the other heavenly gods.',
         theogony, 'Hesiod, Theogony 924–929; Evelyn-White translation'),
       figure('hermes', 'Hermes', 'Divine messenger and ingenious trickster',
@@ -207,9 +207,9 @@ export const PANTHEONS = {
         hymns1, 'Homeric Hymn 2, To Demeter, 370–403; Evelyn-White translation')
     ]
   },
-  mordor: {
-    name: 'Stormforged',
-    tradition: 'Norse mythology',
+  thor: {
+    name: 'Þrúðvangar',
+    tradition: 'Norse',
     patron: 'Thor',
     note: 'The Eddas preserve medieval Icelandic accounts of earlier traditions; spellings and details vary among texts.',
     figures: [
@@ -218,7 +218,7 @@ export const PANTHEONS = {
         'Snorri gives Thor a mighty hammer and strength-enhancing belt.',
         gylfaginning, 'Snorri, Gylfaginning XXI; Brodeur translation'),
       figure('odin', 'Odin', 'Ruler and seeker of knowledge',
-        'Ravens Huginn and Muninn.',
+        'Ravens Huginn and Muninn; one eye, pledged at Mímir’s well. The sources give him no eyepatch.',
         'Odin’s ravens range across the world and return with what they have seen and heard.',
         youngerEdda, 'Snorri, Gylfaginning, the ravens of Odin; Anderson translation'),
       figure('loki', 'Loki', 'Cunning, disruptive figure among the gods',

@@ -1,132 +1,477 @@
 {
-  "version": "crowns-web-dbefcd6c36a573",
-  "files": 85,
-  "bytes": 9754569,
+  "version": "pregenesis-web-c941d65c26082b",
+  "files": 97,
+  "bytes": 2893618,
   "assets": [
     {
       "file": "index.html",
-      "bytes": 5183,
-      "sha256": "f987fe04bc9f459c8dbd1ec2b7cf66a378d6fdd7e65d4ce7b3b8a8acec376a8a"
-    },
-    {
-      "file": "style.css",
-      "bytes": 16147,
-      "sha256": "56a4b98e36e76858d67dc18fc913089515c2d39e11d2edd3422322e8df5c000d"
-    },
-    {
-      "file": "ui.css",
-      "bytes": 35173,
-      "sha256": "422839d967a22fdf6a592e99d61510ad6db868a6ddb5ed6052c17c3ceb89f59f"
-    },
-    {
-      "file": "mobile.css",
-      "bytes": 3330,
-      "sha256": "caa92886abb2ceefed21af7530cf3f1fdd571b7427adebdfc5a8ca10fef1c19b"
+      "bytes": 8441,
+      "sha256": "c2438a3c44842239974788fd474717e0525549afbba3d07cc6371f79aa3b6fa0"
     },
     {
       "file": "app.js",
-      "bytes": 73576,
-      "sha256": "bfa4515c2df27cf1fc4ff490194e43437c87a9d21f4da220dd37cf3e46c16649"
-    },
-    {
-      "file": "engine.js",
-      "bytes": 49434,
-      "sha256": "9945576883deff8ca88da7536bf820c19e78aca2afc585b6b16dbb76d86024f6"
-    },
-    {
-      "file": "factions.js",
-      "bytes": 24522,
-      "sha256": "0a16dbfd1b5ffb0c4ccb722c5d516a29bc8d46298ac0dfc4781da9ff891b3527"
-    },
-    {
-      "file": "mythology.js",
-      "bytes": 17806,
-      "sha256": "c480b9b9d51ae7890a253a74bd73b113a72e03c94396f60aadbc57482219c7c1"
-    },
-    {
-      "file": "preferences.js",
-      "bytes": 2514,
-      "sha256": "74c658cd504d16eb0acc1c318e6127913983eababd58b8907210c10c6573a559"
-    },
-    {
-      "file": "save-validation.js",
-      "bytes": 14203,
-      "sha256": "e3503138c288c47740f4d396410166e6511dd1ce79138ace310bcb19de4d18c0"
-    },
-    {
-      "file": "world.js",
-      "bytes": 94376,
-      "sha256": "8580e5fe88872f2bd55aeeb5b5eea88039d26622eddc57a04527a3228fb23372"
+      "bytes": 8096,
+      "sha256": "9fb0b14a253aa2b1b59988445314bf4711d6d025c72829e160be458eb0c6eec3"
     },
     {
       "file": "art-direction.js",
-      "bytes": 4526,
-      "sha256": "f454912f0c31bc84d3d7473802ecfbe6b96e1c3f6fca9c4a95b84a8cdfb0a23e"
-    },
-    {
-      "file": "mythic-miniatures.js",
-      "bytes": 12308,
-      "sha256": "6a03e86a5a9e5710d36d65d06d7370c7ee6171c2fd60cd6700409bb767525abe"
-    },
-    {
-      "file": "offline.js",
-      "bytes": 1811,
-      "sha256": "52d2b5269c092d93fc09b0f2b1ec909bec9eb80473b4ab54017e0fa9e12e882f"
-    },
-    {
-      "file": "manifest.webmanifest",
-      "bytes": 525,
-      "sha256": "48ddb05bbda9d17abdf6c060c07160e5ff340a049314e35216177a6ba58c6e16"
-    },
-    {
-      "file": "vendor/three.module.js",
-      "bytes": 603113,
-      "sha256": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a"
-    },
-    {
-      "file": "assets/key-art-aurevale.png",
-      "bytes": 3503994,
-      "sha256": "c5c413de66511a41c2d42ffd6e2021ec516dcbcb0396155a927fa555161a4855"
-    },
-    {
-      "file": "assets/terrain-meadow-v1.png",
-      "bytes": 3661481,
-      "sha256": "f0ed0c3c7b5abbe9b7c6c3e90e0a7a20273c09aa64549542069b9adf58963fb2"
+      "bytes": 8394,
+      "sha256": "2f15c2b845f7c85b683fc07fbcf45c9b33c7f3b143e3edb1d47c22d26b4a1ec1"
     },
     {
       "file": "assets/app-icon.svg",
-      "bytes": 771,
-      "sha256": "054a9837ca422d34dc228c72927028e97150d7562d34b08aa8e47573e20d6a03"
+      "bytes": 770,
+      "sha256": "14ef32e0861d3f8cd93b10aac913f0ce5a158ebd582d791ea7925b9557958f03"
     },
     {
-      "file": "faction-traits.js",
-      "bytes": 22346,
-      "sha256": "db8d9f841b7a95536e22808b57c5455e8a34a4fc048ee6ce6420106c76ffcb51"
+      "file": "assets/emblems/amaterasu.svg",
+      "bytes": 1102,
+      "sha256": "8142f14a6d3ff17e3ebfe59653496d3d78f4ef869a2abfd0d5162eefe6163e14"
+    },
+    {
+      "file": "assets/emblems/artemis.svg",
+      "bytes": 453,
+      "sha256": "4a1b7b6d247ad67e70aa29e921c2a728fc48229bddf4339413870f33948892af"
+    },
+    {
+      "file": "assets/emblems/athena.svg",
+      "bytes": 1157,
+      "sha256": "9216e9a705072bdf0f5e2242008012c85f89e40f4451bdf8dc6a9cf60424802c"
+    },
+    {
+      "file": "assets/emblems/brahma.svg",
+      "bytes": 563,
+      "sha256": "ddf4fa6e06089cb2bb10fe0ae02e1f74c69a36af583c9371c3535cf6e3467330"
+    },
+    {
+      "file": "assets/emblems/brigid.svg",
+      "bytes": 478,
+      "sha256": "5991b94134d2763e002efc6293dddc8e60c9af78aec88fc5d37cfa2537d2e63b"
+    },
+    {
+      "file": "assets/emblems/dagda.svg",
+      "bytes": 538,
+      "sha256": "012e476049ecaaeb23c48590b5acb2c12917dc89ca066d749203f7289fbe1219"
+    },
+    {
+      "file": "assets/emblems/demeter.svg",
+      "bytes": 1785,
+      "sha256": "f863358a91346d6f012b44ee3e3e949bb7bb5c0a60aef63c5135969bdb48a092"
+    },
+    {
+      "file": "assets/emblems/durga.svg",
+      "bytes": 1656,
+      "sha256": "c1ddbb80225dbd41a9674942c1cc289b6c6299c51a70ea8034d2f4a5d3ad90c0"
+    },
+    {
+      "file": "assets/emblems/enki.svg",
+      "bytes": 900,
+      "sha256": "9f6f7dfcb85b1dafd3e132bd8adb99f8a8518e6476bf6f313bd1f3146c59653b"
+    },
+    {
+      "file": "assets/emblems/esther.svg",
+      "bytes": 1471,
+      "sha256": "09126bffe6942df1ebb685cb9b2182f7cd6aff749c643887c186f6392f136800"
+    },
+    {
+      "file": "assets/emblems/freyja.svg",
+      "bytes": 996,
+      "sha256": "aa7644d70673df9cde0d1303e2f1417221af242eeaa58a4dae3c907c6f6dcb6d"
+    },
+    {
+      "file": "assets/emblems/freyr.svg",
+      "bytes": 761,
+      "sha256": "473bbac5a39d6112ba39cdef5624c845838ed7c667cfb2d62ca72997982b9cdd"
+    },
+    {
+      "file": "assets/emblems/gabriel.svg",
+      "bytes": 751,
+      "sha256": "6b390289ae031c52be48d51dd76a8128fbfed1a13da6132b3edf0faced314d13"
+    },
+    {
+      "file": "assets/emblems/guanyin.svg",
+      "bytes": 867,
+      "sha256": "151d925d0b07dd5088776457139cc5882ace8ecf543706e729355811766ca6a2"
+    },
+    {
+      "file": "assets/emblems/hermes.svg",
+      "bytes": 592,
+      "sha256": "3ea6d5668a4c9becd8318343c627cbcab7b04ed47c190d02b000c978660841ce"
+    },
+    {
+      "file": "assets/emblems/horus.svg",
+      "bytes": 548,
+      "sha256": "7b50b0792779e8bce9b3295aa4ad47227a8a969bb7f5fb9dd90b3102326814e1"
+    },
+    {
+      "file": "assets/emblems/huitzilopochtli.svg",
+      "bytes": 677,
+      "sha256": "75d33ec8da9412025f7e449b143666d27e94336b11988d5b4dd42b79d0126b80"
+    },
+    {
+      "file": "assets/emblems/inanna.svg",
+      "bytes": 500,
+      "sha256": "a0e2cb3eb931c8afcc8b39fdf8d51d8220b3725453fa31f636b93ee78417f340"
+    },
+    {
+      "file": "assets/emblems/inari.svg",
+      "bytes": 658,
+      "sha256": "696d7e036d41679846e0e381843e3b0f5f5181dffc4214d21dfc9a52648d5ea4"
+    },
+    {
+      "file": "assets/emblems/inti.svg",
+      "bytes": 1652,
+      "sha256": "976ca312b3dd8c38545222800cda419406aa08c4df2cc969f4df52f293cb6bf7"
+    },
+    {
+      "file": "assets/emblems/isis.svg",
+      "bytes": 487,
+      "sha256": "cb64c7cfcb79cdd17fe61a05d6d2efbbc1e68a1056a761f14f781fee2e057dd4"
+    },
+    {
+      "file": "assets/emblems/itzamna.svg",
+      "bytes": 890,
+      "sha256": "79e81d55c764cefe1aa4a5c6bd9c005bb608194c86c2295f947eddc0e1bea35c"
+    },
+    {
+      "file": "assets/emblems/kukulkan.svg",
+      "bytes": 811,
+      "sha256": "fdd2652ebdb145dbf18cc90e167d94895c199c0d98aba8503d69c823f935dddd"
+    },
+    {
+      "file": "assets/emblems/lakshmi.svg",
+      "bytes": 596,
+      "sha256": "6ee6acbd3233ae628db6d13f5de3acc2a47af531f505a4ae61c310754d920a7a"
+    },
+    {
+      "file": "assets/emblems/lugh.svg",
+      "bytes": 474,
+      "sha256": "9345d7f470e40c00123305b809acc24392cee2e9a1e2d45f40a7603332ef3097"
+    },
+    {
+      "file": "assets/emblems/marduk.svg",
+      "bytes": 464,
+      "sha256": "cb01c00b9ea1ce9b1799d49b18ad5e9d9dd6c73d87f5eb0d481a21f3b4c90f6b"
+    },
+    {
+      "file": "assets/emblems/maui.svg",
+      "bytes": 458,
+      "sha256": "c2450bca46caccf508aeea774b43cd4320df2591ef92c85806bdfd2f514975bf"
+    },
+    {
+      "file": "assets/emblems/michael.svg",
+      "bytes": 526,
+      "sha256": "ea4d6a0cf356e26f622174a80627cb5becdfe46d14f08a4bc67849b3fb71be9f"
+    },
+    {
+      "file": "assets/emblems/moses.svg",
+      "bytes": 455,
+      "sha256": "97d32465b16bd20a8f2bddf1daadd84ea8e0c6e98a1e9302afeceab03fe467a5"
+    },
+    {
+      "file": "assets/emblems/nezha.svg",
+      "bytes": 769,
+      "sha256": "13ba342144c220e9662e49c5c126e169d14df926320aa6a14a54be6611704002"
+    },
+    {
+      "file": "assets/emblems/odin.svg",
+      "bytes": 517,
+      "sha256": "56777774677f63d048c4631c533bf83898ac0ba0454f4e7f9df528ba8668ee09"
+    },
+    {
+      "file": "assets/emblems/ogun.svg",
+      "bytes": 441,
+      "sha256": "4b1c8349220b184afcb3c445d3b5af36db4636ad4fc42e778e306b859451e8b9"
+    },
+    {
+      "file": "assets/emblems/oshun.svg",
+      "bytes": 1053,
+      "sha256": "a47e9c6807bafa6a2126f6b9461cd52dad936f5c08aaa1df42e1094f94afba74"
+    },
+    {
+      "file": "assets/emblems/osiris.svg",
+      "bytes": 449,
+      "sha256": "06b479bdaf9a993f3f347ce511877d158563b6923193833a0a241a5d82ada5f1"
+    },
+    {
+      "file": "assets/emblems/perun.svg",
+      "bytes": 428,
+      "sha256": "01127db8d3991da43d9cd1503e9cc917f4c41d3f4c5e97e322a75afe0f338bac"
+    },
+    {
+      "file": "assets/emblems/poseidon.svg",
+      "bytes": 445,
+      "sha256": "6c5b08550407aaf87ca57e1599c022d75876bcaf6034f01575dd8246451d9caa"
+    },
+    {
+      "file": "assets/emblems/quetzalcoatl.svg",
+      "bytes": 758,
+      "sha256": "3f1b218db9f2b596284b163d6910b0224d3f6e428e0c8c99b45d7bdc3c8c41b3"
+    },
+    {
+      "file": "assets/emblems/ra.svg",
+      "bytes": 494,
+      "sha256": "6c05fffbcda3c844827b0129830f8726fc8c6bf39801e2cfe11093427554aa4f"
+    },
+    {
+      "file": "assets/emblems/saraswati.svg",
+      "bytes": 675,
+      "sha256": "c04d1b8d87446603af88ca8ce7cac4abc132bc83914bd049b8368355959caaff"
+    },
+    {
+      "file": "assets/emblems/shango.svg",
+      "bytes": 460,
+      "sha256": "31ac3b1f55a5dd235d567142d94888c98b28546827c231e9daee242dd06a0292"
+    },
+    {
+      "file": "assets/emblems/shiva.svg",
+      "bytes": 659,
+      "sha256": "30f2ea555b8984df1b3abc7a6fd4d8e3da6c59cfc8d2856809f99a9e130efbd5"
+    },
+    {
+      "file": "assets/emblems/skadi.svg",
+      "bytes": 458,
+      "sha256": "5c6fa50069bc1228c35ddf77ab9600c968a8f52412d905590a05892a7085b550"
+    },
+    {
+      "file": "assets/emblems/susanoo.svg",
+      "bytes": 476,
+      "sha256": "6adf9f7d1c3db6f8d2e6d9f1bc42f102d094f5e9449b10cfb365203e88f8b924"
+    },
+    {
+      "file": "assets/emblems/tangaroa.svg",
+      "bytes": 534,
+      "sha256": "6de6643dd9bac1bfe8c7ca8b0c101088624290695f06586bc713f13a1032eec3"
+    },
+    {
+      "file": "assets/emblems/thor.svg",
+      "bytes": 614,
+      "sha256": "be235a1b5d6d828c2b7a92953a65446c6a61d239ed275a6af4e2ec0481b4172e"
+    },
+    {
+      "file": "assets/emblems/thoth.svg",
+      "bytes": 496,
+      "sha256": "87935453281974775ea7a2e805948097257f606f110c20a026c38aef74ec9a59"
+    },
+    {
+      "file": "assets/emblems/tlaloc.svg",
+      "bytes": 681,
+      "sha256": "0a07a903394855c4dab65b4b0867411c0d9a855f8dce2b528871ae2a374bca95"
+    },
+    {
+      "file": "assets/emblems/viracocha.svg",
+      "bytes": 461,
+      "sha256": "665d1806c04b0cc9305ec091eb788127ba1d2b909b109205adf03cf5c9a5aa42"
+    },
+    {
+      "file": "assets/emblems/vishnu.svg",
+      "bytes": 542,
+      "sha256": "4b18e9ed9a52dd2efa1be7203c290b7be38b77ba09932b4702ba307bfce13bc3"
+    },
+    {
+      "file": "assets/emblems/zeus.svg",
+      "bytes": 310,
+      "sha256": "662fcfc642cf53cc2e41d8effd5fb30f3ce70af79d952fdd54135201b898e024"
+    },
+    {
+      "file": "assets/fonts/LICENSE-PreGenesis.txt",
+      "bytes": 1292,
+      "sha256": "df912ed0495839d72e84dd3d7a19f099fc343029b00395a398fc10280838aab5"
+    },
+    {
+      "file": "assets/fonts/PreGenesis-Display-Medium.woff2",
+      "bytes": 19168,
+      "sha256": "d608026f0017ed4186dea7542eb59b25cc277c46456f90be47c4a7ae006a83e5"
+    },
+    {
+      "file": "assets/fonts/PreGenesis-Display.woff2",
+      "bytes": 19936,
+      "sha256": "b5ceb07286b08d434a980e035625c0eb563cb626979c26266e3008d30a7146cc"
+    },
+    {
+      "file": "assets/fonts/PreGenesis-Text-Bold.woff2",
+      "bytes": 19256,
+      "sha256": "39c32260262a7b411a2ae82bd4c1cf10bfbd996d8899dad9539ac5642774cb0f"
+    },
+    {
+      "file": "assets/fonts/PreGenesis-Text-Regular.woff2",
+      "bytes": 17816,
+      "sha256": "d306d1106ecb08877927810222b93e9848c97c3a979b0e2ac9f9af558f2d2a5d"
+    },
+    {
+      "file": "assets/fonts/fonts.css",
+      "bytes": 3788,
+      "sha256": "c5f88e24dbdacdc5781412648dc3a8089d90f66fd0b4e238cdd22aeb75742ccc"
+    },
+    {
+      "file": "assets/icons.svg",
+      "bytes": 31996,
+      "sha256": "44b8c84de6c935917fe837a4cce1e2478c6465c7fde54691ffbdb6eb71774910"
     },
     {
       "file": "city-planning.js",
-      "bytes": 4124,
-      "sha256": "ad3816964280982fada3a8fe4f1f4c1544d4c6054762c0b3cbd23b197790abbc"
+      "bytes": 6206,
+      "sha256": "c56bbfe85323841ecc586405ce6992fbc21dd39f490126bbb7efda722159ef70"
+    },
+    {
+      "file": "engine.js",
+      "bytes": 85034,
+      "sha256": "457aba36d0d287132c1b6f347291c2ad382ad039fb1fbb333845ac8edb76aae1"
     },
     {
       "file": "faction-lore.js",
-      "bytes": 283,
-      "sha256": "5bac7143e24aace084bb58913a511280a3a30f711f493460a9ff34c7bc77e855"
+      "bytes": 897,
+      "sha256": "8b3c299769431c8cf63598a1ec8ed5a74a555095aceef4ba03d4d78a6966ebca"
     },
     {
-      "file": "lore-classical.js",
-      "bytes": 35702,
-      "sha256": "18422e8fb3d97ae485c71a75c687337485f974e31f56bc54e9da843f3cf38767"
+      "file": "faction-traits.js",
+      "bytes": 25249,
+      "sha256": "d065248b5c2c7b1daa12f33c3c397b8ef5f2d546c4fb7595cb2025b8b126a8e9"
+    },
+    {
+      "file": "factions.js",
+      "bytes": 57435,
+      "sha256": "864d06754fb3add2af2e1ac4345b454e4d39691f9e8c709d506b62279670ce4b"
+    },
+    {
+      "file": "hud.css",
+      "bytes": 70442,
+      "sha256": "817becf772528d31a9dfae1bce61a5a28d1aab6fdafee922268ad4d183c6df9f"
     },
     {
       "file": "lore-biblical.js",
-      "bytes": 11512,
-      "sha256": "a32ae7f7d03f817a668350e1cd3e7976cfdb2e9162b19766b5e79cb4077867ce"
+      "bytes": 9578,
+      "sha256": "a346a468316d82001e496ad48f74d00a86d9031578ffac8240f954208eac8067"
+    },
+    {
+      "file": "lore-classical.js",
+      "bytes": 33281,
+      "sha256": "c391c4b928baa33f428698ca42c64bba5b7e96d1d3fb3c2c7aa93204ecd1fe68"
     },
     {
       "file": "lore-world.js",
-      "bytes": 63740,
-      "sha256": "d263e9838b8396d043f92ca21dfea5a1f45002cdcd8ece9aa759a35a21dc36cc"
+      "bytes": 53493,
+      "sha256": "a61b99ca42ad63a93815e952576319655fc8fab699889c8c6b8c4fce1907abeb"
+    },
+    {
+      "file": "manifest.webmanifest",
+      "bytes": 540,
+      "sha256": "8ee24b2d89f44c06a8ed7fe5805faa82ca4d876c2ea5d75106f42f9967aa735b"
+    },
+    {
+      "file": "multiplayer-client.js",
+      "bytes": 13545,
+      "sha256": "c7bcfc2cd144a33e13b3e6c65bd5adca020a1d87eef8ce7e677353553c10fd57"
+    },
+    {
+      "file": "mythic-miniatures.js",
+      "bytes": 23352,
+      "sha256": "e09ce4d21d7fbe17ce690073566b11a22da05af9d22cd866c960b84050681064"
+    },
+    {
+      "file": "mythology.js",
+      "bytes": 17604,
+      "sha256": "1ef3ec60cf658114faeb3a0364f7baeee817cd3ae4185da3e7a6660aeec5c851"
+    },
+    {
+      "file": "offline.js",
+      "bytes": 2164,
+      "sha256": "72c607b11c61d90fee7581aea70cd0f01e13c4323b00b512fcac696e58b05011"
+    },
+    {
+      "file": "preferences.js",
+      "bytes": 3157,
+      "sha256": "892e92ef1809ad2d759987964f35e2da7a287fda6f2f5dc511a3c0f72d6a2b84"
+    },
+    {
+      "file": "save-validation.js",
+      "bytes": 19566,
+      "sha256": "6c4e59cf3f85177be6d119dff68bfe391d11b204f06ee8f0d8475394301c475a"
+    },
+    {
+      "file": "tokens.css",
+      "bytes": 4164,
+      "sha256": "246914e064c9ff48e60d0296fa5d32e1b5b0f914111bbc1e0258c29850b4cce4"
+    },
+    {
+      "file": "ui/actions.js",
+      "bytes": 14519,
+      "sha256": "7f0fe3886b7a916b32d1bb6ff3ae8d903da95026e882013af96a18d438d9e5fd"
+    },
+    {
+      "file": "ui/audio.js",
+      "bytes": 3773,
+      "sha256": "f82d49062e7a6f3c58b44f0565a25344a442107d2c59051a85bdaedb601eb27a"
+    },
+    {
+      "file": "ui/codex.js",
+      "bytes": 5269,
+      "sha256": "8ac082b167db76405fb711293bd84f19c82f46527270c1f97b49f5bc9507c51b"
+    },
+    {
+      "file": "ui/context.js",
+      "bytes": 1555,
+      "sha256": "b19f3d390cffc764e0ab318f9c70cae7a4148ac14f18d2b38be7a6e94310df34"
+    },
+    {
+      "file": "ui/dialogs.js",
+      "bytes": 25066,
+      "sha256": "19f9bf8e15f9462f82f6a1a094969ff44e389d52d1d302f10cc993296a937999"
+    },
+    {
+      "file": "ui/game.js",
+      "bytes": 8407,
+      "sha256": "8822d4e01686d7ee9a0f403b965331913c389ce3005db3f8696137f0f4f8d686"
+    },
+    {
+      "file": "ui/hud.js",
+      "bytes": 29446,
+      "sha256": "d112eb01d2be6d3c8049e7beeb84504ae21467b828352289207e6f50e165b995"
+    },
+    {
+      "file": "ui/icons.js",
+      "bytes": 2563,
+      "sha256": "e9cc14a3450bfa8781979588a2c82bde27c0db0525ec69dc1665736e12e5404d"
+    },
+    {
+      "file": "ui/input.js",
+      "bytes": 6681,
+      "sha256": "48b659bf274e26dbebbf7beac9a6a905e25128c034a15cde353af3adc7cf33fa"
+    },
+    {
+      "file": "ui/lobby.js",
+      "bytes": 15627,
+      "sha256": "a3cd7d54841b992df88dc7ad3ecc21b3c5138cead4112f8dcf0d16fca1fca158"
+    },
+    {
+      "file": "ui/markup.js",
+      "bytes": 2759,
+      "sha256": "bd96553161224ab84b8179993e5c292d18179c5e0a0743a779eee7ea14434db0"
+    },
+    {
+      "file": "ui/overlay.js",
+      "bytes": 5807,
+      "sha256": "385a211bb7143b7bd9ee3a1998222778735415e2a5cc9d232df131ff97183927"
+    },
+    {
+      "file": "ui/settings.js",
+      "bytes": 10246,
+      "sha256": "d725b989a735ed68a68327c22c87c9b6d745148498ae7e30e268c2b1260cfe4b"
+    },
+    {
+      "file": "ui/storage.js",
+      "bytes": 2628,
+      "sha256": "81f5a4e7b6a8b88641e4933a1478e36bd1950f20a6d2e2ea50857190e5cde98e"
+    },
+    {
+      "file": "ui/text.js",
+      "bytes": 2360,
+      "sha256": "9041dff5d73f27a73b12da49ec324c1781a3f080bf2b3db6649ddbb40848ebbd"
+    },
+    {
+      "file": "ui/title.js",
+      "bytes": 8253,
+      "sha256": "79906f38bedbb514acaf12f4cd8de3458e4d3e9fd5f35a8205cb5f24e7f6fc19"
     },
     {
       "file": "vendor/three.core.js",
@@ -134,299 +479,14 @@
       "sha256": "eb077d2417f61d3e6d9264c317cabc4ea35769ed6b0ab533067292a550784c20"
     },
     {
-      "file": "multiplayer-client.js",
-      "bytes": 4930,
-      "sha256": "ead595249b2447876b68b44a427415d3b006618d69138b80bc053df2f83e487d"
+      "file": "vendor/three.module.js",
+      "bytes": 603113,
+      "sha256": "c8211c69345d2e9949dc7a8ac969380497aa0600a5a8ac6a459c8cd02dd9cb8a"
     },
     {
-      "file": "friends.css",
-      "bytes": 2663,
-      "sha256": "15b011b9845dd40ba2daaf48fd34aca3044c6720c3dc18fb62eaeee45b261206"
-    },
-    {
-      "file": "pregenesis.css",
-      "bytes": 25417,
-      "sha256": "7f78320ac77c74bdc3fb07ce952a3e27fe48b193199e6ec876d1e116fb2da8cf"
-    },
-    {
-      "file": "assets/emblems/amaterasu.svg",
-      "bytes": 501,
-      "sha256": "551440f8f880fdd694f04ac41776f7a6dcab31721c0a63eee66b129ba2171321"
-    },
-    {
-      "file": "assets/emblems/artemis.svg",
-      "bytes": 735,
-      "sha256": "2e5305e7a9936c07ca5e24f1395f2111dc28f17358137ef78acb2cb25bc452ae"
-    },
-    {
-      "file": "assets/emblems/brahma.svg",
-      "bytes": 754,
-      "sha256": "36edfac775e69ae3b55e5cb3530692753b90b6d9d82486a15b9e6275ff307a7e"
-    },
-    {
-      "file": "assets/emblems/brigid.svg",
-      "bytes": 515,
-      "sha256": "0a4d3a8222ac545b46c9ef3475f4380c301b73c282d259e63ac4574a91d5de9c"
-    },
-    {
-      "file": "assets/emblems/crown.svg",
-      "bytes": 338,
-      "sha256": "eacb1308e78804f7ba549974095844f09358e71b760f6ee8f4a2b8f7d0c9223d"
-    },
-    {
-      "file": "assets/emblems/dagda.svg",
-      "bytes": 543,
-      "sha256": "c6185384d8d83e972add1937856ff22de8f309610e85596a2dd3e63ed90bc554"
-    },
-    {
-      "file": "assets/emblems/demeter.svg",
-      "bytes": 665,
-      "sha256": "a84079a4b8fd840b790e20e211c929be8f1037b8f60ce22394f76498c553a031"
-    },
-    {
-      "file": "assets/emblems/durga.svg",
-      "bytes": 766,
-      "sha256": "b6bb895ba149f94fb7a456fb906fff703195418c55c74513ef729437755093ed"
-    },
-    {
-      "file": "assets/emblems/elves.svg",
-      "bytes": 595,
-      "sha256": "f8f377f310816e53a6d491be6673ec20ff7ffeb2aee2766b06cf837ba7b76b4f"
-    },
-    {
-      "file": "assets/emblems/enki.svg",
-      "bytes": 646,
-      "sha256": "39c68acdcff978743b0a80d174e919ee3f33af2ef3e91b4698958deeff25e59a"
-    },
-    {
-      "file": "assets/emblems/esther.svg",
-      "bytes": 765,
-      "sha256": "58af1628f5b91034662f40af7890086a65312e216e459987b9b6ee7083290468"
-    },
-    {
-      "file": "assets/emblems/freyja.svg",
-      "bytes": 493,
-      "sha256": "7e63c7bba0442b10b3584dec77ea3bd2ca3849f3de0e2092b1e80c08e5e483b6"
-    },
-    {
-      "file": "assets/emblems/freyr.svg",
-      "bytes": 464,
-      "sha256": "a38586871c8fe27b0af12eb3255fe2ae9f181880596df9f9c56c65621d6f4f34"
-    },
-    {
-      "file": "assets/emblems/gabriel.svg",
-      "bytes": 626,
-      "sha256": "4344affdb7ecd1b3e5763c0d9b6f03217e08bbc626f4fb5522963e45d927804b"
-    },
-    {
-      "file": "assets/emblems/genesis.svg",
-      "bytes": 679,
-      "sha256": "8574f5f968fd5829fbbdb6e3423a7b8828931751486d83f2019937fa0ff161b7"
-    },
-    {
-      "file": "assets/emblems/gondor.svg",
-      "bytes": 488,
-      "sha256": "a60c0574d6fb1f5f74a1391d5b6192d053582a6e9fcf6e7826b26c609805aa22"
-    },
-    {
-      "file": "assets/emblems/guanyin.svg",
-      "bytes": 747,
-      "sha256": "8709e8ea513a4cac447895a57d9f61342c2f9608f0731bf50c0e155adc445172"
-    },
-    {
-      "file": "assets/emblems/hermes.svg",
-      "bytes": 619,
-      "sha256": "bc7eed63dd3b0567e861b6091f3d5653e233557f7bcc6067177a6de0d7bf2676"
-    },
-    {
-      "file": "assets/emblems/horus.svg",
-      "bytes": 473,
-      "sha256": "ab2e302965a469a538d5e396a8be208a13b4b753d96feffcaba67586eaa2b32a"
-    },
-    {
-      "file": "assets/emblems/huitzilopochtli.svg",
-      "bytes": 524,
-      "sha256": "d6057027d2d1439f1e1d15deb6d0b63f9d832b167bd813d508a9a3bdba28e222"
-    },
-    {
-      "file": "assets/emblems/inanna.svg",
-      "bytes": 653,
-      "sha256": "409b78dfc372d92f697f1cf85a81f89c59d5626570a864e15fcdd02261374ef3"
-    },
-    {
-      "file": "assets/emblems/inari.svg",
-      "bytes": 665,
-      "sha256": "bd7d2ae13ae162807b4c9ee622ecfcbe23c1e42d7c783cc6834ae7585ac6365b"
-    },
-    {
-      "file": "assets/emblems/inti.svg",
-      "bytes": 675,
-      "sha256": "45ac78d0777100c53dd4ee02c497e6ca34cba198ad3fec6db7407199d761e167"
-    },
-    {
-      "file": "assets/emblems/isis.svg",
-      "bytes": 746,
-      "sha256": "8c95add9144769d4992225bb77f6d7e770d9804077596845e34e333e22ec0495"
-    },
-    {
-      "file": "assets/emblems/itzamna.svg",
-      "bytes": 490,
-      "sha256": "c8861de291ad1f612b8c03a94f904c1de35009360650ab86a65cd9b9c7a1e027"
-    },
-    {
-      "file": "assets/emblems/kukulkan.svg",
-      "bytes": 650,
-      "sha256": "49769f88ad37fcadbf0588ea2efa4bedee0f0235d8b376c7c167b3ffe0fa38b2"
-    },
-    {
-      "file": "assets/emblems/lakshmi.svg",
-      "bytes": 530,
-      "sha256": "28d3ff4d36d35dc19ed4a20778f6b6a97a2346107c3fd4e980635d8028f8f26e"
-    },
-    {
-      "file": "assets/emblems/lugh.svg",
-      "bytes": 718,
-      "sha256": "8b20efff715b144cb5a49913bae96eef502edd57ddf36e7e2262783779dcf1c0"
-    },
-    {
-      "file": "assets/emblems/marduk.svg",
-      "bytes": 615,
-      "sha256": "76b0279d248707156ce31d7cf13ac4b759fcbd64d223425403d9d038509ff0e5"
-    },
-    {
-      "file": "assets/emblems/maui.svg",
-      "bytes": 616,
-      "sha256": "338d6c0423c5fba8c1b843e9b734224a921567da1f1cb831222e71ba2de56775"
-    },
-    {
-      "file": "assets/emblems/mordor.svg",
-      "bytes": 601,
-      "sha256": "67250989199097dab2134407cd110df03d1ea1013c59e91bc6fcbdc96f715b40"
-    },
-    {
-      "file": "assets/emblems/moses.svg",
-      "bytes": 791,
-      "sha256": "6864dccfe37a9e91edf9fa67687051a15f0706296a5870acda9c702dc7de9c9c"
-    },
-    {
-      "file": "assets/emblems/nezha.svg",
-      "bytes": 454,
-      "sha256": "e48a7ee1fc740efbae787e7a47cb5110c8b9295ec8f171199a74d0310c35f333"
-    },
-    {
-      "file": "assets/emblems/odin.svg",
-      "bytes": 718,
-      "sha256": "71f2eda46edee1dc3f14dde590d8f64b568da94125eadf6ede2391adc017f837"
-    },
-    {
-      "file": "assets/emblems/ogun.svg",
-      "bytes": 605,
-      "sha256": "1f4af589aa303814c968fc0d366b3e1d5f0151e82051c3bfdd903f242122643f"
-    },
-    {
-      "file": "assets/emblems/oshun.svg",
-      "bytes": 491,
-      "sha256": "a04cf4fe426802f16a04ea71b0a3b469426a10fe49d494c21ca165fdc2a05d26"
-    },
-    {
-      "file": "assets/emblems/osiris.svg",
-      "bytes": 614,
-      "sha256": "f4444ed38927afd54d1b50b2ad00445d382d71509ba460db3f3e988e4a4c0413"
-    },
-    {
-      "file": "assets/emblems/perun.svg",
-      "bytes": 640,
-      "sha256": "333b74aad5641ba5bcd3b53c5b919f330b3569032f277ca877483909600f0784"
-    },
-    {
-      "file": "assets/emblems/poseidon.svg",
-      "bytes": 502,
-      "sha256": "6eed2ee99cade5e0c71ca853c48da894df900f7edaf275277785458c53059d9e"
-    },
-    {
-      "file": "assets/emblems/quetzalcoatl.svg",
-      "bytes": 646,
-      "sha256": "663368d243e70391040d3d0381505972f7473f45e8143d9ab50bb5a132f641ae"
-    },
-    {
-      "file": "assets/emblems/rohan.svg",
-      "bytes": 534,
-      "sha256": "42a52e73dbbdbc764ce7a5dc6766b2687c430d7b42f74ed9b21bd2abe33738ea"
-    },
-    {
-      "file": "assets/emblems/saraswati.svg",
-      "bytes": 506,
-      "sha256": "5d7533fc0c6707f794aef3548bebf8f95126b078fa58f70a2134e9c54be5d837"
-    },
-    {
-      "file": "assets/emblems/shango.svg",
-      "bytes": 636,
-      "sha256": "9723e97e3f4c512deecf0df5548678aefe464042cb22cc57c6ff782ea131700a"
-    },
-    {
-      "file": "assets/emblems/shiva.svg",
-      "bytes": 521,
-      "sha256": "8ca6a8e3dc9ce09837a2e328e83bd2eb66707140e7d58691928ab5643bb35d4b"
-    },
-    {
-      "file": "assets/emblems/skadi.svg",
-      "bytes": 612,
-      "sha256": "0aa27eaa9ce48287bd3766fff622acd1e8c195a0e14e5b297276e43e70c4f115"
-    },
-    {
-      "file": "assets/emblems/susanoo.svg",
-      "bytes": 464,
-      "sha256": "7251e6229d020ddb239b6cd79bbbddcbf0e1f3220eea1db7dcf48d986add6531"
-    },
-    {
-      "file": "assets/emblems/tangaroa.svg",
-      "bytes": 484,
-      "sha256": "96bb1e27ea1bb0d9a2e0d182e3c5f0543304d0f06b21df5acbe2c4bdf5df676e"
-    },
-    {
-      "file": "assets/emblems/thoth.svg",
-      "bytes": 635,
-      "sha256": "4b509829619e6541488b3e455291808741ee99ba6f9b652ddbb7f738c341e609"
-    },
-    {
-      "file": "assets/emblems/tlaloc.svg",
-      "bytes": 646,
-      "sha256": "39c68acdcff978743b0a80d174e919ee3f33af2ef3e91b4698958deeff25e59a"
-    },
-    {
-      "file": "assets/emblems/viracocha.svg",
-      "bytes": 493,
-      "sha256": "98aa203db644b71d8bd4fcde30ef88ce95733d499346d4cb615c942be53acc83"
-    },
-    {
-      "file": "assets/emblems/vishnu.svg",
-      "bytes": 549,
-      "sha256": "38a23ccf0b1c21723661f579580db0eb7bdcc57895bfa4c035e7fcb3419162bd"
-    },
-    {
-      "file": "assets/emblems/zeus.svg",
-      "bytes": 720,
-      "sha256": "e4748ea0ac1d099e3ba0f18677470ba3c65eed0a4a884922242dd43ed263c664"
-    },
-    {
-      "file": "assets/fonts/LICENSE-PreGenesis.txt",
-      "bytes": 1159,
-      "sha256": "bac1796e413750555d0444998b9776cde79ef7f86f9ac2ab9bbb8e8535a632ee"
-    },
-    {
-      "file": "assets/fonts/LICENSE.txt",
-      "bytes": 1093,
-      "sha256": "ec525ec9945e2a539eb714e9a1d621dbc5f752f7bcc2a8e9e9d5ea13ca39fd78"
-    },
-    {
-      "file": "assets/fonts/PreGenesis-Display.woff2",
-      "bytes": 11080,
-      "sha256": "ed51c3801291295a938628af416183d80bc3df5aabfce0b0874b1992d6579291"
-    },
-    {
-      "file": "assets/fonts/SunderingDisplay-Regular.woff2",
-      "bytes": 11116,
-      "sha256": "6b5e706c9a7e0c654ddf5eae734dffb4e4ef3c127c1934a6b537e27acd2568d5"
+      "file": "world.js",
+      "bytes": 142445,
+      "sha256": "fd2a3b18e1ea285c66463d9062cec882888dd608d47f5419b9fd6da868a6eb49"
     }
   ]
 }

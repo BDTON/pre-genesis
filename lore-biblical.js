@@ -1,52 +1,139 @@
-// Original summaries of identified scriptural accounts; gameplay is not doctrine.
-const scripture=(id,title,passage)=>({id,title,url:`https://www.biblegateway.com/passage/?search=${encodeURIComponent(passage)}&version=KJV`,kind:'primary'});
-export const LORE_BIBLICAL={
- gondor:{
-  identity:'God is the patron of this Christian-inspired realm; Michael is its angelic champion. Angels, apostles, and Jesus do not form a collection of competing gods.',
-  worldview:['Christian faith centers on Jesus Christ, his death and resurrection, and reconciliation with God. In mainstream Trinitarian Christianity, Father, Son, and Holy Spirit are one God, not three allied deities.','The Radiant Covenant is an invented realm. Its armies and territorial ambitions are not a reconstruction of the early church.'],
-  stories:[
-   {title:'The risen Jesus — Luke 24',text:'Women find the tomb empty. On the road to Emmaus, two disciples recognize Jesus when he breaks bread. He later appears among his followers, shows his wounds, and commissions their witness. Resurrection and recognition, rather than military conquest, give this account its center.',sourceIds:['luke24']},
-   {title:'Michael and the dragon — Revelation 12',text:'In an apocalyptic vision, Michael and his angels fight the dragon, identified as the devil and Satan. Michael serves within God’s heavenly order; the passage does not make him a creator or an independent divine ruler.',sourceIds:['rev12']},
-   {title:'A shared life — Acts 2',text:'After Pentecost, believers gather for the apostles’ teaching, fellowship, prayer, and the breaking of bread. Possessions are shared according to need. This communal care informs the fictional realm’s protective identity.',sourceIds:['acts2']}
-  ],
-  relationships:[{name:'Jesus Christ',role:'Central to Christian faith; not an angel or an ordinary military hero.'},{name:'Peter and the apostles',role:'Human witnesses and teachers in the New Testament.'},{name:'Michael',role:'Leader of angels in Revelation 12.'},{name:'Seraphim',role:'Isaiah 6 describes six-winged beings attending God’s throne.'}],
-  symbols:[{name:'Bread and the empty tomb',meaning:'Recognition, fellowship, and resurrection in Luke 24.'},{name:'Six wings and a burning coal',meaning:'The seraphim and the purification of Isaiah’s lips in Isaiah 6; not a description of every angel.'}],
-  practice:['Acts 2 connects communal worship with practical care. Churches differ in liturgy, sacramental teaching, and the use of icons.'],
-  variants:['Genesis 6 mentions the Nephilim, rendered “giants” in the KJV. Their identity and the “sons of God” have competing interpretations; a fallen-angel ancestry is not stated here as settled Christian doctrine.','Revelation is visionary literature. Interpretations of its chronology and imagery differ across Christian traditions.'],
-  adaptation:'The realm name, champion statistics, protective aura, and victory conditions are game inventions. The codex includes figures who are not implemented as playable units.',
-  sources:[scripture('luke24','Luke 24 — resurrection and Emmaus','Luke 24'),scripture('rev12','Revelation 12 — Michael and the dragon','Revelation 12'),scripture('acts2','Acts 2 — Pentecost and community','Acts 2'),scripture('isa6','Isaiah 6 — seraphim','Isaiah 6'),scripture('gen6','Genesis 6:1–4 — Nephilim','Genesis 6:1-4'),{id:'trinity',title:'Nicene Creed — Church of England',url:'https://www.churchofengland.org/faith-life/what-we-believe/nicene-creed',kind:'tradition'}]
- },
- gabriel:{
-  identity:'Gabriel is a heavenly messenger in Daniel and Luke. The Dawn Heralds follow the Christian reception of Luke, while acknowledging Gabriel’s earlier appearance in Jewish scripture.',
-  worldview:['The messenger’s authority comes from God. Gabriel explains and announces; he is not the source of the revelation and is not a god of communication.','Daniel places visions within the vulnerability of a people under imperial power. Luke locates Gabriel’s announcements in the lives of Zechariah, Elizabeth, and Mary.'],
-  stories:[{title:'Understanding a vision — Daniel 8',text:'Gabriel is instructed to help Daniel understand a vision. The ram and goat are interpreted through kingdoms, and Daniel is left exhausted. The scene concerns the meaning of a vision, not Gabriel founding an earthly empire.',sourceIds:['dan8']},{title:'Two announcements — Luke 1',text:'Gabriel announces John’s birth to Zechariah and later tells Mary that she will bear Jesus. Mary asks how this will happen; the account connects the birth with the Holy Spirit and God’s power. Gabriel’s role is to deliver the message, not to father the child.',sourceIds:['luke1']}],
-  relationships:[{name:'Daniel',role:'Recipient of visions interpreted by Gabriel.'},{name:'Zechariah and Elizabeth',role:'Parents of John the Baptist in Luke’s narrative.'},{name:'Mary',role:'Receives the announcement of Jesus’s birth.'}],
-  symbols:[{name:'An open message',meaning:'A game emblem inspired by announcement and interpretation; not an artifact prescribed by Luke.'}],
-  practice:['The Annunciation is remembered in Christian worship and art. A lily or wings belong to later visual traditions; Luke 1 does not specify either.'],
-  variants:['Gabriel also belongs to Jewish and Islamic traditions. This dossier follows Daniel and Luke and does not merge their later traditions into one biography.','Luke calls Gabriel an angel. The title “archangel” reflects later Christian usage rather than a title supplied in Luke 1.'],
-  adaptation:'Fast messengers, exploration bonuses, and the Dawn Heralds’ institutions are strategic interpretations of announcement and witness, not scriptural miracles promised to players.',
-  sources:[scripture('dan8','Daniel 8:15–27 — Gabriel interprets','Daniel 8:15-27'),scripture('luke1','Luke 1 — Zechariah and Mary','Luke 1')]
- },
- moses:{
-  identity:'Moses is a human prophet and leader in the Torah, central to Jewish tradition and received in the Christian Old Testament. He is not a deity or a Christian-era ruler.',
-  worldview:['Exodus presents liberation from slavery as God’s action. Moses is called into service despite his hesitation; leadership carries obligations rather than personal divinity.','The covenant connects worship with duties toward neighbors. The game’s invented Waystone Covenant borrows the themes of responsibility and journey without claiming to represent ancient Israel.'],
-  stories:[{title:'The burning bush — Exodus 3',text:'Moses encounters a bush burning without being consumed. God calls him to confront Pharaoh and lead the Israelites out of Egypt. Moses questions his adequacy and asks about God’s name; the mission begins with a difficult calling, not a claim to royal birthright.',sourceIds:['ex3']},{title:'The sea crossing — Exodus 14',text:'With an Egyptian force behind them, the Israelites pass through divided waters. The narrative credits God with their deliverance and describes Moses stretching out his hand. This is a particular scriptural event, not evidence that every traveler can command water.',sourceIds:['ex14']},{title:'Covenant obligations — Exodus 20',text:'The commandments join exclusive worship with duties concerning parents, life, marriage, property, testimony, and desire. Their religious and ethical meaning exceeds any single game policy.',sourceIds:['ex20']}],
-  relationships:[{name:'Aaron',role:'Moses’s brother and collaborator in the Exodus narrative.'},{name:'Miriam',role:'Prophet and leader of the song after the crossing in Exodus 15.'},{name:'Joshua',role:'Commissioned as Moses’s successor in Deuteronomy 31.'}],
-  symbols:[{name:'Bush, staff, and tablets',meaning:'Distinct images associated with calling, the Exodus journey, and covenant; not interchangeable magical equipment.'}],
-  practice:['Passover remembers the Exodus in Jewish life. Christian readings also receive Exodus through their own liturgical and theological traditions.'],
-  variants:['Jewish and Christian readings share texts while differing in interpretation. The English “Red Sea” and discussion of the Hebrew yam suph should not be treated as a settled map coordinate.'],
-  adaptation:'Settler protection and difficult journeys inspire this realm’s mechanics. The fantasy map does not reenact the Exodus or identify another playable religion with Pharaoh.',
-  sources:[scripture('ex3','Exodus 3 — the calling','Exodus 3'),scripture('ex14','Exodus 14 — the crossing','Exodus 14'),scripture('ex20','Exodus 20 — commandments','Exodus 20'),scripture('ex15','Exodus 15 — Miriam','Exodus 15'),scripture('dt31','Deuteronomy 31 — Joshua commissioned','Deuteronomy 31'),scripture('ex12','Exodus 12 — Passover','Exodus 12')]
- },
- esther:{
-  identity:'Esther, also called Hadassah, is the Jewish queen at the center of the Book of Esther. The Myrtleveil Assembly is a fictional realm inspired by her courage and advocacy.',
-  worldview:['The story follows a threatened Jewish community living under a foreign imperial court. Esther must act within unequal power, risk, and uncertainty.','The Hebrew form of Esther does not explicitly name God. Greek additions contain prayers and more explicit religious language; those textual forms must not be silently combined.'],
-  stories:[{title:'The decision to approach — Esther 4',text:'Mordecai asks Esther to intervene against the decree threatening her people. She explains that entering the king’s presence uninvited can mean death. After asking the community to fast with her, she resolves to go. Courage here is a costly decision rather than invulnerability.',sourceIds:['est4']},{title:'Deliverance and remembrance — Esther 9',text:'The narrative ends with the threatened community surviving violent conflict. Purim is established through days of feasting, gifts to one another, and gifts to the poor. The account includes violence and mourning; it is not simply a story about winning a palace argument.',sourceIds:['est9']}],
-  relationships:[{name:'Mordecai',role:'Esther’s guardian and an advocate for the threatened community.'},{name:'Ahasuerus',role:'The king in the Hebrew narrative.'},{name:'Haman',role:'Court official whose decree threatens the Jews.'}],
-  symbols:[{name:'Myrtle and the royal threshold',meaning:'The realm’s original emblem evokes Hadassah’s name and Esther’s dangerous approach; it is not a universally prescribed religious symbol.'}],
-  practice:['Purim preserves communal memory through reading Esther, celebration, giving, and care for people in need. Esther 9 supplies the scriptural basis for its observance.'],
-  variants:['Jewish scripture preserves the Hebrew book. Catholic and Orthodox Bibles receive Greek additions; Protestant editions generally separate or omit them. This entry labels the textual basis of each story.'],
-  adaptation:'Diplomatic protection and collective resilience are game interpretations. God remains the realm’s declared patron in the fictional roster; this must not be mistaken for wording in the Hebrew Book of Esther.',
-  sources:[scripture('est4','Esther 4 — risk and fasting','Esther 4'),scripture('est9','Esther 9 — Purim','Esther 9'),scripture('est2','Esther 2 — Hadassah and Mordecai','Esther 2'),{id:'estintro',title:'USCCB — introduction to Esther and Greek additions',url:'https://bible.usccb.org/bible/esther/0',kind:'tradition'}]
- }
+// Short, source-linked summaries of scriptural accounts. faction-lore.js adds the realm notes.
+const scripture = (id, title, passage) => ({
+  id,
+  title,
+  url: `https://www.biblegateway.com/passage/?search=${encodeURIComponent(passage)}&version=KJV`,
+  kind: 'primary',
+});
+const story = (title, text, ...sourceIds) => ({title, text, sourceIds});
+const relation = (name, role) => ({name, role});
+const symbol = (name, meaning) => ({name, meaning});
+
+export const LORE_BIBLICAL = {
+  michael: {
+    identity: 'God is the patron of this realm and Michael its champion. In Christian faith, angels, apostles and Jesus are not a set of rival gods.',
+    worldview: ['Christian faith centres on Jesus Christ, his death and resurrection. Trinitarian Christianity confesses Father, Son and Holy Spirit as one God, not three allied deities.'],
+    stories: [
+      story('The risen Jesus — Luke 24',
+        'Women find the tomb empty. On the road to Emmaus two disciples know Jesus when he breaks bread. He then appears to his followers, shows his wounds and sends them out as witnesses.',
+        'luke24'),
+      story('Michael and the dragon — Revelation 12',
+        'In an apocalyptic vision Michael and his angels fight the dragon, named as the devil and Satan, and cast it out of heaven. Michael serves within God’s order; he is not a creator or a ruler in his own right.',
+        'rev12'),
+      story('A shared life — Acts 2',
+        'After Pentecost the believers keep to the apostles’ teaching, fellowship, prayer and the breaking of bread, and share their goods according to need.',
+        'acts2'),
+    ],
+    relationships: [
+      relation('Jesus Christ', 'Central to Christian faith; not an angel or a war leader.'),
+      relation('Peter and the apostles', 'Human witnesses and teachers in the New Testament.'),
+      relation('Michael', 'Leader of the angels in Revelation 12; an archangel in Jude 1:9.'),
+      relation('Seraphim', 'The six-winged beings of Isaiah 6 who attend God’s throne.'),
+    ],
+    symbols: [
+      symbol('Bread and the empty tomb', 'Recognition, fellowship and resurrection in Luke 24.'),
+      symbol('Six wings and a burning coal', 'The seraphim and the cleansing of Isaiah’s lips; not a picture of every angel.'),
+    ],
+    practice: ['Acts 2 joins worship with practical care. Churches differ in liturgy, sacraments and the use of icons.'],
+    variants: ['Revelation is visionary writing, and Christian traditions read its imagery and timeline differently. Genesis 6:1–4 on the Nephilim also has several readings.'],
+    sources: [
+      scripture('luke24', 'Luke 24 — resurrection and Emmaus', 'Luke 24'),
+      scripture('rev12', 'Revelation 12 — Michael and the dragon', 'Revelation 12'),
+      scripture('acts2', 'Acts 2 — Pentecost and community', 'Acts 2'),
+      scripture('isa6', 'Isaiah 6 — the seraphim', 'Isaiah 6'),
+      scripture('gen6', 'Genesis 6:1–4 — the Nephilim', 'Genesis 6:1-4'),
+      scripture('rev1', 'Revelation 1:11 — the seven churches', 'Revelation 1:11'),
+      {id: 'trinity', title: 'Church of England — the Nicene Creed', url: 'https://www.churchofengland.org/faith-life/what-we-believe/nicene-creed', kind: 'tradition'},
+    ],
+  },
+  gabriel: {
+    identity: 'Gabriel is a heavenly messenger in Daniel and Luke. This dossier follows Luke as Christians read it and notes Gabriel’s earlier place in Jewish scripture.',
+    worldview: ['The messenger’s authority comes from God. Gabriel explains visions and announces births; he is not their source, and not a god of messages. Daniel sets his visions among a people under empire.'],
+    stories: [
+      story('Understanding a vision — Daniel 8',
+        'Gabriel is told to help Daniel understand a vision. The ram and the goat are read as kingdoms, and Daniel is left exhausted by what he has seen.',
+        'dan8'),
+      story('Two announcements — Luke 1',
+        'Gabriel announces the birth of John to Zechariah, then tells Mary she will bear Jesus. When Mary asks how, he speaks of the Holy Spirit and the power of God. Gabriel brings the message; the child is God’s gift.',
+        'luke1'),
+    ],
+    relationships: [
+      relation('Daniel', 'Receives visions that Gabriel interprets.'),
+      relation('Zechariah and Elizabeth', 'Parents of John the Baptist in Luke.'),
+      relation('Mary', 'Receives the announcement of the birth of Jesus.'),
+    ],
+    symbols: [
+      symbol('Lily', 'Later Annunciation art gives Gabriel a lily. Luke 1 names no attribute, and no Bible text gives him a trumpet.'),
+    ],
+    practice: ['Christians keep the feast of the Annunciation on 25 March. Wings and a lily come from later painting, not from Luke.'],
+    variants: ['Gabriel also belongs to Jewish and Islamic tradition. Luke calls him an angel; the title archangel comes from later Christian use.'],
+    sources: [
+      scripture('dan8', 'Daniel 8:15–27 — Gabriel interprets', 'Daniel 8:15-27'),
+      scripture('luke1', 'Luke 1 — Zechariah and Mary', 'Luke 1'),
+      scripture('galilee', 'Luke 1:26 — a city of Galilee named Nazareth', 'Luke 1:26'),
+    ],
+  },
+  moses: {
+    identity: 'Moses is a human prophet and leader in the Torah, central to Jewish tradition and read in the Christian Old Testament. He is not a god.',
+    worldview: ['Exodus presents freedom from slavery as God’s act. Moses is called despite his reluctance, and the covenant joins worship with duties toward one’s neighbour.'],
+    stories: [
+      story('The burning bush — Exodus 3',
+        'Moses sees a bush that burns without burning up. God calls him to face Pharaoh and lead Israel out of Egypt. Moses doubts himself and asks God’s name.',
+        'ex3'),
+      story('The sea crossing — Exodus 14',
+        'With Egypt’s army behind them, the Israelites cross through divided waters. The text credits God with the rescue while Moses stretches out his hand.',
+        'ex14'),
+      story('The commandments — Exodus 20',
+        'The commandments join the worship of one God with duties about parents, life, marriage, property, truthful witness and desire.',
+        'ex20'),
+    ],
+    relationships: [
+      relation('Aaron', 'Moses’s brother and partner in the Exodus.'),
+      relation('Miriam', 'Prophet who leads the song after the crossing in Exodus 15.'),
+      relation('Joshua', 'Commissioned as Moses’s successor in Deuteronomy 31.'),
+    ],
+    symbols: [
+      symbol('Bush, staff and tablets', 'Images of the calling, the journey and the covenant, not magic equipment.'),
+    ],
+    practice: ['Jewish families remember the Exodus at Passover. Christians read Exodus through their own liturgy and theology.'],
+    variants: ['Jewish and Christian readings share the text but differ in interpretation. The “Red Sea” of English Bibles translates the Hebrew yam suph, whose location is debated.'],
+    sources: [
+      scripture('ex3', 'Exodus 3 — the calling', 'Exodus 3'),
+      scripture('ex14', 'Exodus 14 — the crossing', 'Exodus 14'),
+      scripture('ex20', 'Exodus 20 — the commandments', 'Exodus 20'),
+      scripture('ex15', 'Exodus 15 — Miriam’s song', 'Exodus 15'),
+      scripture('dt31', 'Deuteronomy 31 — Joshua commissioned', 'Deuteronomy 31'),
+      scripture('ex12', 'Exodus 12 — Passover', 'Exodus 12'),
+      scripture('ex24', 'Exodus 24:4 — twelve pillars for the twelve tribes', 'Exodus 24:4'),
+    ],
+  },
+  esther: {
+    identity: 'Esther, also called Hadassah, is the Jewish queen at the centre of the Book of Esther, set at the Persian court in Shushan.',
+    worldview: ['A threatened Jewish community lives under a foreign empire, and Esther must act without equal power. The Hebrew book does not explicitly name God; the Greek additions add prayers.'],
+    stories: [
+      story('The decision to approach — Esther 4',
+        'Mordecai asks Esther to plead against the decree. Entering the king’s presence unbidden can mean death, so she asks her people to fast with her and resolves to go: “if I perish, I perish.”',
+        'est4'),
+      story('Deliverance and remembrance — Esther 9',
+        'The community survives a violent conflict. Purim is established with feasting, gifts to one another and gifts to the poor; the account also keeps the memory of mourning and bloodshed.',
+        'est9'),
+    ],
+    relationships: [
+      relation('Mordecai', 'Esther’s guardian and an advocate for their people.'),
+      relation('Ahasuerus', 'The king in the Hebrew book.'),
+      relation('Haman', 'The court official whose decree threatens the Jews.'),
+    ],
+    symbols: [
+      symbol('Myrtle and the golden sceptre', 'Hadassah means myrtle (Esther 2:7); the king’s sceptre spares her at the threshold (Esther 5:2).'),
+    ],
+    practice: ['Purim keeps the story alive through reading the scroll of Esther, celebration, gifts and care for the poor, as Esther 9 directs.'],
+    variants: ['Jewish Bibles keep the Hebrew book. Catholic and Orthodox Bibles include the Greek additions; Protestant Bibles usually omit or separate them.'],
+    sources: [
+      scripture('est4', 'Esther 4 — risk and fasting', 'Esther 4'),
+      scripture('est9', 'Esther 9 — Purim', 'Esther 9'),
+      scripture('est2', 'Esther 2 — Hadassah and Mordecai', 'Esther 2'),
+      scripture('est5', 'Esther 5:2 — the golden sceptre', 'Esther 5:2'),
+      {id: 'estintro', title: 'USCCB — introduction to Esther and the Greek additions', url: 'https://bible.usccb.org/bible/esther/0', kind: 'tradition'},
+    ],
+  },
 };

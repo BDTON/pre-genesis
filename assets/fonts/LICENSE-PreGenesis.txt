@@ -1,7 +1,10 @@
 MIT License
 
-Copyright (c) 2026 Crowns of the Sundering contributors
-Copyright (c) 2026 PRE-GENESIS contributors
+Copyright (c) 2026 Pre-Genesis contributors
+
+This license covers the PreGenesis Display and PreGenesis Text fonts
+(PreGenesis-*.ttf and PreGenesis-*.woff2), their drawing source
+(build-pregenesis-font.py and pregenesis_type/) and the generated fonts.css.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

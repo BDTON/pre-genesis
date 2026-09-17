@@ -2,19 +2,21 @@
   "id": "./",
   "name": "Pre-Genesis",
   "short_name": "Pre-Genesis",
-  "description": "Build the first civilizations. A mythology strategy game with solo campaigns and 2\u20134-player friend rooms.",
+  "description": "Turn-based strategy with gods and prophets from world myth. Play solo or with 2–4 players online.",
+  "lang": "en",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#071421",
-  "theme_color": "#071421",
+  "background_color": "#0F1A30",
+  "theme_color": "#0F1A30",
+  "categories": ["games", "strategy"],
   "icons": [
     {
       "src": "assets/app-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }
