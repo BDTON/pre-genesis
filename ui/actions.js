@@ -7,6 +7,7 @@ import {writeSave, validateSave, friendlyLoadError, exportFileName, loadSave} fr
 import {toast, modal, closeModal, confirmDialog} from './overlay.js';
 import {plural, signed} from './text.js';
 import {button, dialogHead} from './markup.js';
+import {revealCampaign, endReveal} from './reveal.js';
 
 const FEEDBACK = {
   SET_RESEARCH: 'Research set.',
@@ -321,9 +322,11 @@ export function begin(loaded = null) {
   save();
   if (loaded) toast('Campaign loaded.');
   else {
-    const leader = g.factionMeta(ctx.state.player).leader;
+    const meta = g.factionMeta(ctx.state.player);
     const capital = g.ownCities()[0]?.name;
-    toast(capital ? `${leader} rules from ${capital}.` : 'Campaign started.');
+    const line = capital ? `${meta.leader} rules from ${capital}.` : 'Campaign started.';
+    // The reveal says it on screen first; the toast repeats it for screen readers.
+    if (!revealCampaign(meta, {capital, era: g.era()?.name, onDone: () => toast(line)})) toast(line);
   }
 }
 
@@ -397,6 +400,7 @@ export async function leaveRoomIfNeeded() {
 
 export async function returnToTitle() {
   if (!(await leaveRoomIfNeeded())) return;
+  endReveal();
   closeModal();
   ui.showTitle();
 }

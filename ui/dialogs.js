@@ -5,6 +5,7 @@ import * as g from './game.js';
 import {engine} from './game.js';
 import {CITY_FOCUSES, cityWorkPlan, tileYields, districtLimit, districtAdjacency, DISTRICT_YIELD, districtAt, reservedDistrictAt} from '../city-planning.js';
 import {icon, unitIcon, crest} from './icons.js';
+import {portrait} from './portraits.js';
 import {button, meter, stat, dialogHead} from './markup.js';
 import {modal, closeModal, toast} from './overlay.js';
 import {TERRAIN, RESOURCES, IMPROVEMENTS, KIND_GROUPS, YIELDS, FOCUS_LABELS, plural, signed, formatNumber, capitalize} from './text.js';
@@ -238,7 +239,7 @@ export function showGoals() {
     const rf = engine.getFaction(s, r.id);
     const project = g.rivalProjects().find(x => x.faction.id === r.id);
     const line = project ? `Building ${project.project.name}: ${Math.floor(project.city.production || 0)}/${project.project.cost}` : 'No wonder under way';
-    return `<li>${crest(r.id)}<span><strong>${esc(r.leader)}</strong><small>${plural(rf?.techs?.length || 0, 'tech')} · ${esc(line)}</small></span></li>`;
+    return `<li>${portrait(r.id, {size: 'sm'})}<span><strong>${esc(r.leader)}</strong><small>${plural(rf?.techs?.length || 0, 'tech')} · ${esc(line)}</small></span></li>`;
   }).join('');
   modal(`${dialogHead('Ways to win', g.WORLD_NAME)}<div class="goals">${rows.join('')}</div>
     <section class="dialog-section"><h3>Rivals</h3><ul class="plain-list rivals-list">${rivals}</ul></section>`, {kind: 'goals'});
@@ -252,8 +253,15 @@ export function showVictory() {
   const line = won ? `${label}, turn ${s.turn}.`
     : s.victoryType === 'conquest' ? 'Your last city has fallen.'
     : `${winner.leader}: ${label}, turn ${s.turn}.`;
-  modal(`<div class="result">${crest(s.winner, 'crest crest-hero')}
-    <h2>${won ? 'Victory' : 'Defeat'}</h2><p class="dialog-sub">${esc(line)}</p></div>
+  const cities = s.cities.filter(c => c.faction === s.winner).length;
+  const facts = [['Realm', winner.name], ['Cities', String(cities)], ['Turn', String(s.turn)]];
+  modal(`<div class="result illuminated">
+      <span class="plate">${portrait(s.winner, {size: 'xl', gold: true, eager: true})}</span>
+      <p class="kicker">${esc(winner.leader)}</p>
+      <h2>${won ? 'Victory' : 'Defeat'}</h2>
+      <p class="dialog-sub">${esc(line)}</p>
+    </div>
+    <dl class="result-facts">${facts.map(([term, value]) => `<div><dt>${esc(term)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl>
     <div class="dialog-actions">
       ${button('New game', {icon: 'new', kind: 'primary', data: {menu: 'new'}})}
       ${button('View map', {icon: 'terrain', data: {closeDialog: 'true'}})}

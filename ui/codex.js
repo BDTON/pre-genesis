@@ -3,7 +3,8 @@ import {ctx, ui, $, esc} from './context.js';
 import * as g from './game.js';
 import {PANTHEONS} from '../mythology.js';
 import {FACTION_LORE} from '../faction-lore.js';
-import {icon, crest} from './icons.js';
+import {icon} from './icons.js';
+import {portrait} from './portraits.js';
 import {button} from './markup.js';
 import {modal} from './overlay.js';
 import {SOURCE_KINDS} from './text.js';
@@ -31,7 +32,7 @@ export function showCodex(factionId = ctx.started ? ctx.state.player : ctx.chose
   const power = g.HERO_POWERS.find(p => p.factionId === f.id);
   const legacyRules = ctx.started && ctx.state.ruleset !== g.TRAIT_RULESET;
 
-  const head = `<header class="codex-head">${crest(f.id, 'crest crest-large')}<div>
+  const head = `<header class="codex-head illuminated">${portrait(f.id, {size: 'md', gold: true})}<div>
       <h2 id="dialog-title">${esc(f.leader)}</h2>
       <p class="dialog-sub">${esc([f.patron && f.patron !== f.leader ? f.patron : '', f.tradition, f.name].filter(Boolean).join(' · '))}</p>
     </div></header>

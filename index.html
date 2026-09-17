@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#0F1A30">
 <meta name="color-scheme" content="dark">
 <meta name="pregenesis-api" content="https://api.pre-genesis.online">
-<meta name="pregenesis-version" content="0.10.0">
+<meta name="pregenesis-version" content="0.11.0">
 <meta property="og:title" content="Pre-Genesis">
 <meta property="og:description" content="Turn-based strategy with gods and prophets from world myth.">
 <meta property="og:type" content="website">
@@ -80,37 +80,63 @@
   <p id="controls-hint" class="controls-hint" hidden></p>
 </div>
 
-<main id="welcome" class="title-screen">
+<div id="ident" class="ident" hidden aria-label="BEM Studios">
+  <div class="ident-stage" aria-hidden="true">
+    <div class="ident-glow"></div>
+    <img class="ident-fan ident-fan-dead" src="assets/brand/bem-fan-dead.webp" alt="" decoding="async">
+    <img class="ident-fan ident-fan-lit" src="assets/brand/bem-fan-lit.webp" alt="" decoding="async">
+    <img class="ident-fan ident-fan-reflection" src="assets/brand/bem-fan-lit.webp" alt="" decoding="async">
+  </div>
+  <p class="ident-word">BEM Studios</p>
+  <audio id="ident-audio" src="assets/brand/bem-ident.mp3" preload="auto"></audio>
+  <button type="button" id="ident-skip" class="btn btn-ghost ident-skip">Skip</button>
+</div>
+
+<main id="welcome" class="title-screen" data-step="title">
   <div class="title-panel">
-    <h1 class="wordmark">Pre-Genesis</h1>
+    <header class="title-mast illuminated">
+      <h1 class="wordmark">Pre-Genesis</h1>
+      <p id="title-world" class="title-world"></p>
+    </header>
+    <div class="title-home">
+      <div class="title-actions">
+        <button type="button" id="new-campaign" class="btn btn-primary"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#play"></use></svg><span>New campaign</span></button>
+        <button type="button" id="resume-game" class="btn btn-secondary" hidden><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#save"></use></svg><span>Continue</span></button>
+        <button type="button" id="friends-button" class="btn btn-secondary"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#online"></use></svg><span>Play online</span></button>
+        <button type="button" id="title-settings" class="btn btn-ghost"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#settings"></use></svg><span>Settings</span></button>
+      </div>
+      <p id="title-note" class="note" role="alert" hidden></p>
+    </div>
+    <div class="title-setup">
+    <button type="button" id="setup-back" class="btn btn-ghost setup-back"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#arrow-left"></use></svg><span>Back</span></button>
     <section class="patron-picker" aria-labelledby="patron-heading">
       <div class="patron-head">
         <h2 id="patron-heading">Choose a patron</h2>
-        <label class="search">
+        <label class="search" id="patron-search-field">
           <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#search"></use></svg>
           <input id="patron-search" type="search" placeholder="Search" aria-label="Search patrons" autocomplete="off" spellcheck="false">
         </label>
         <p id="patron-count" class="patron-count" role="status"></p>
       </div>
       <div id="patron-list" class="patron-list"></div>
-      <div id="patron-detail" class="patron-detail" aria-live="polite"></div>
-      <button type="button" id="read-lore" class="btn btn-ghost"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#lore"></use></svg><span>Read lore</span></button>
+      <div class="patron-chosen">
+        <div id="patron-detail" class="patron-detail" aria-live="polite"></div>
+        <button type="button" id="read-lore" class="btn btn-ghost"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#lore"></use></svg><span>Read lore</span></button>
+      </div>
     </section>
     <fieldset id="difficulty" class="difficulty" hidden>
       <legend>Difficulty</legend>
       <div id="difficulty-options" class="segmented"></div>
       <p id="difficulty-note" class="note"></p>
     </fieldset>
-    <div class="title-actions">
+    <div class="title-actions setup-actions">
       <button type="button" id="start-game" class="btn btn-primary"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#play"></use></svg><span>Begin</span></button>
-      <button type="button" id="resume-game" class="btn btn-secondary" hidden><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#save"></use></svg><span>Continue</span></button>
-      <button type="button" id="friends-button" class="btn btn-secondary"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#online"></use></svg><span>Play online</span></button>
-      <button type="button" id="title-settings" class="btn btn-ghost"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#settings"></use></svg><span>Settings</span></button>
     </div>
-    <p id="title-note" class="note" role="alert" hidden></p>
+    </div>
   </div>
 </main>
 
+<div id="reveal" class="reveal" hidden aria-hidden="true"></div>
 <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
 <dialog id="modal" class="sheet" aria-labelledby="dialog-title">
   <button type="button" class="icon-button sheet-close" id="modal-close" aria-label="Close" title="Close"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons.svg#close"></use></svg></button>
@@ -118,6 +144,6 @@
 </dialog>
 <input id="import-file" type="file" accept="application/json,.json" hidden>
 <script type="module" src="app.js"></script>
-<script type="module" src="offline.js?release=0.10.0"></script>
+<script type="module" src="offline.js?release=0.11.0"></script>
 </body>
 </html>

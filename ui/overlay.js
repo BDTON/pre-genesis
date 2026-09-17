@@ -33,11 +33,16 @@ export function refreshCoverage() {
   setMapCovered(dialogCoversMap());
 }
 
-// In play the toast sits just below the coach line so it never hides the guidance.
+// In play the toast clears the guidance line and the phone strip below it, so it
+// never covers either.
 function placeToast(el) {
-  const coach = document.body.dataset.screen === 'game' ? $('#coach') : null;
-  const rect = coach?.getClientRects().length ? coach.getBoundingClientRect() : null;
-  el.style.top = rect && rect.height ? `${Math.round(rect.bottom + 8)}px` : '';
+  if (document.body.dataset.screen !== 'game') { el.style.top = ''; return; }
+  let bottom = 0;
+  for (const selector of ['#coach', '#realm-toggle']) {
+    const anchor = $(selector);
+    if (anchor?.getClientRects().length) bottom = Math.max(bottom, anchor.getBoundingClientRect().bottom);
+  }
+  el.style.top = bottom ? `${Math.round(bottom + 8)}px` : '';
 }
 
 export function toast(text, {tone = ''} = {}) {
@@ -108,7 +113,7 @@ export function closeModal() {
 // A styled confirmation dialog. Resolves true only on the confirm button.
 export function confirmDialog({title, text = '', confirm, cancel = 'Cancel', danger = false}) {
   return new Promise(resolve => {
-    modal(`<header class="dialog-head"><h2>${esc(title)}</h2>${text ? `<p class="dialog-sub">${esc(text)}</p>` : ''}</header>
+    modal(`<header class="dialog-head illuminated"><h2>${esc(title)}</h2>${text ? `<p class="dialog-sub">${esc(text)}</p>` : ''}</header>
       <div class="dialog-actions">
         ${button(confirm, {kind: danger ? 'danger' : 'primary', data: {confirmDialog: 'yes'}})}
         ${button(cancel, {kind: 'secondary', data: {confirmDialog: 'no'}})}

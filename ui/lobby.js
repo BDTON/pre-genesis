@@ -2,7 +2,8 @@
 import {ctx, ui, $, $$, esc} from './context.js';
 import * as g from './game.js';
 import * as client from '../multiplayer-client.js';
-import {icon, crest} from './icons.js';
+import {icon} from './icons.js';
+import {portrait} from './portraits.js';
 import {button, dialogHead} from './markup.js';
 import {modal, closeModal, toast, isModalOpen} from './overlay.js';
 import {clock} from './text.js';
@@ -57,14 +58,14 @@ function seatList(room, you) {
     const turn = room.status === 'active' && p.id === current;
     const ready = typeof p.ready === 'boolean' && room.status === 'waiting' ? (p.ready ? 'Ready' : 'Not ready') : '';
     return `<li class="seat${turn ? ' is-active' : ''}">
-      ${crest(p.faction)}
+      ${portrait(p.faction, {size: 'sm'})}
       <span class="seat-text"><strong>${esc(p.name)}</strong><small>${esc(f.leader)}${ready ? ` · ${ready}` : ''}</small></span>
       ${badges.map(b => `<span class="badge">${b}</span>`).join('')}
       ${turn ? `<span class="badge badge-turn">${icon('timer')}<span data-countdown>${left === null ? 'Turn' : clock(left)}</span></span>` : ''}
     </li>`;
   });
   if (room.status === 'waiting') {
-    for (let i = room.players.length; i < MAX_SEATS; i++) seats.push(`<li class="seat is-open">${icon('players')}<span class="seat-text"><strong>Open seat</strong><small>Played by the game</small></span></li>`);
+    for (let i = room.players.length; i < MAX_SEATS; i++) seats.push(`<li class="seat is-open"><span class="seat-empty">${icon('players')}</span><span class="seat-text"><strong>Open seat</strong><small>Played by the game</small></span></li>`);
   }
   return `<ul class="seats">${seats.join('')}</ul>`;
 }

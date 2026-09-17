@@ -9,6 +9,7 @@ import './ui/codex.js';
 import {minimapPoint, MINIMAP, installDrawer, isDrawerLayout} from './ui/hud.js';
 import {loadPreferences, applyPreferences, handleSettingsChange} from './ui/settings.js';
 import {installTitle} from './ui/title.js';
+import {playIdent} from './ui/ident.js';
 import {createSession, openInvite, roomCommand} from './ui/lobby.js';
 import {installAudio, toggleMusic} from './ui/audio.js';
 import {installInput, dismissHint} from './ui/input.js';
@@ -202,5 +203,7 @@ installInput();
 installDrawer();
 installAudio();
 applyPreferences();
+// The studio ident holds the screen first; the title is ready behind it.
 ui.showTitle();
+playIdent(() => { $('#new-campaign')?.focus({preventScroll: true}); });
 openInvite();

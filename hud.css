@@ -149,6 +149,113 @@ small {
   height: 96px;
 }
 
+/* ---------------------------------------------------------- Portraits */
+/* A leader portrait rendered from the figure models (ui/portraits.js). The
+   renders carry the lapis ground, so the frame matches and nothing flashes.
+   The emblem underneath stays put for a realm whose figure is not built yet. */
+.portrait {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--portrait-md);
+  height: var(--portrait-md);
+  overflow: hidden;
+  border: var(--hairline) solid var(--rule-strong);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+}
+
+.portrait-sm {
+  width: var(--portrait-sm);
+  height: var(--portrait-sm);
+}
+
+.portrait-md {
+  width: var(--portrait-md);
+  height: var(--portrait-md);
+}
+
+.portrait-lg {
+  width: var(--portrait-lg);
+  height: var(--portrait-lg);
+}
+
+.portrait-xl {
+  width: var(--portrait-xl);
+  height: var(--portrait-xl);
+}
+
+.portrait-gold {
+  border-color: var(--gold-leaf);
+}
+
+/* The render sits over the emblem and hides it. A realm with no figure yet has
+   nothing to paint here, so its emblem simply stays: no script, no flash. */
+.portrait-face {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.portrait-mark {
+  width: 58%;
+  height: 58%;
+  object-fit: contain;
+}
+
+.portrait.is-rendered .portrait-mark {
+  visibility: hidden;
+}
+
+/* A plate hangs the portrait on a gold rule, for the title and victory moments. */
+.plate {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: var(--space-1);
+  border: var(--hairline) solid var(--gold-wash);
+  border-radius: var(--radius-panel);
+}
+
+/* ------------------------------------------------- Illuminated rules */
+/* One gold hairline closed by a lozenge at each end: dialog titles, the
+   victory moment and codex headers. Never on a routine panel. */
+.illuminated {
+  position: relative;
+  border-bottom: var(--hairline) solid var(--gold-leaf);
+}
+
+.illuminated::before,
+.illuminated::after {
+  content: "";
+  position: absolute;
+  bottom: calc(var(--lozenge) / -2);
+  width: var(--lozenge);
+  height: var(--lozenge);
+  background: var(--gold-leaf);
+  transform: rotate(45deg);
+}
+
+.illuminated::before {
+  left: 0;
+}
+
+.illuminated::after {
+  right: 0;
+}
+
+.illuminated-center::before {
+  left: 50%;
+  margin-left: calc(var(--lozenge) / -2);
+}
+
+.illuminated-center::after {
+  content: none;
+}
+
 .realm-content,
 .selection,
 .sheet-body,
@@ -1034,8 +1141,8 @@ input[type="range"]::-moz-range-thumb {
   position: absolute;
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: var(--pin-size);
+  height: var(--pin-size);
   padding: 0;
   border: 1.5px solid var(--faction, var(--limewash));
   border-radius: 50%;
@@ -1106,11 +1213,20 @@ input[type="range"]::-moz-range-thumb {
 }
 
 @media (pointer: coarse) {
-  /* A 44px touch area around the 28px disc. */
+  /* A 44px touch area around the 36px disc, and a legible icon inside it. */
   .world .world-unit-label::before {
     content: "";
     position: absolute;
-    inset: -9px;
+    inset: calc((var(--target) - var(--pin-size)) / -2);
+  }
+
+  .world .world-unit-label .icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .world .world-unit-hp {
+    width: 24px;
   }
 }
 
@@ -1322,6 +1438,8 @@ body[data-screen="game"] .world {
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-4);
+  border-bottom: var(--hairline) solid var(--rule);
+  background: var(--surface-sunk);
 }
 
 .identity h2,
@@ -1577,6 +1695,11 @@ body[data-screen="game"] .world {
 .selection-emblem .crest {
   width: 36px;
   height: 36px;
+}
+
+.selection-portrait {
+  width: 48px;
+  height: 48px;
 }
 
 .selection-title {
@@ -1891,9 +2014,8 @@ body[data-screen="title"] .toast {
 }
 
 .dialog-head {
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-5);
   padding: 0 var(--space-7) var(--space-4) 0;
-  border-bottom: var(--hairline) solid var(--gold-leaf);
 }
 
 .dialog-head h2,
@@ -2137,7 +2259,7 @@ body[data-screen="title"] .toast {
   color: var(--mist);
 }
 
-/* Victory and defeat */
+/* Victory and defeat: the one orchestrated moment in the game. */
 .sheet[data-kind="result"] .sheet-body {
   padding-top: var(--space-6);
 }
@@ -2147,19 +2269,65 @@ body[data-screen="title"] .toast {
   justify-items: center;
   gap: var(--space-2);
   padding-bottom: var(--space-5);
-  border-bottom: var(--hairline) solid var(--gold-leaf);
   text-align: center;
 }
 
+.result .plate {
+  margin-bottom: var(--space-3);
+  animation: rise var(--duration-slow) var(--ease-out) both;
+}
+
+.result .kicker {
+  color: var(--gold-leaf);
+  letter-spacing: .16em;
+  animation: rise var(--duration-base) var(--ease-out) var(--duration-fast) both;
+}
+
 .result h2 {
-  margin-top: var(--space-2);
   font: var(--weight-display-strong) var(--text-48) / 1 var(--font-display);
   letter-spacing: var(--tracking-display);
+  animation: rise var(--duration-base) var(--ease-out) var(--duration-base) both;
 }
 
 .result .dialog-sub {
   max-width: 28em;
   font-size: var(--text-16);
+  animation: rise var(--duration-base) var(--ease-out) var(--duration-slow) both;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.result-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: var(--space-5);
+  text-align: center;
+}
+
+.result-facts div {
+  padding: 0 var(--space-2);
+  border-left: var(--hairline) solid var(--rule);
+}
+
+.result-facts div:first-child {
+  border-left: 0;
+}
+
+.result-facts dt {
+  color: var(--mist);
+  font-size: var(--text-12);
+  font-weight: var(--weight-bold);
+  letter-spacing: .1em;
+}
+
+.result-facts dd {
+  font: var(--weight-display) var(--text-16) / var(--leading-snug) var(--font-display);
+  letter-spacing: var(--tracking-display);
 }
 
 .sheet[data-kind="result"] .dialog-actions {
@@ -2398,9 +2566,19 @@ body[data-screen="title"] .toast {
   color: var(--mist);
 }
 
-.seat.is-open > .icon {
-  width: 32px;
-  height: 24px;
+.seat-empty {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: var(--portrait-sm);
+  height: var(--portrait-sm);
+  border: var(--hairline) dashed var(--rule-strong);
+  border-radius: var(--radius-panel);
+}
+
+.seat-empty .icon {
+  width: 20px;
+  height: 20px;
 }
 
 /* Badges wrap under a long name rather than squeezing it. */
@@ -2528,13 +2706,17 @@ body[data-screen="title"] .toast {
   background: var(--papyrus-wash);
 }
 
+.codex-head .portrait {
+  width: 72px;
+  height: 72px;
+}
+
 .codex-head {
   display: flex;
   align-items: center;
   gap: var(--space-4);
   margin-bottom: var(--space-4);
   padding: 0 var(--space-7) var(--space-4) 0;
-  border-bottom: var(--hairline) solid var(--gold-leaf);
 }
 
 .codex-head h2 {
@@ -2647,18 +2829,34 @@ body[data-screen="title"] .toast {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  width: min(460px, 100%);
+  width: min(500px, 100%);
   height: 100%;
   overflow-y: auto;
   padding: calc(var(--space-6) + var(--safe-top)) var(--space-6) calc(var(--space-5) + var(--safe-bottom)) calc(var(--space-6) + var(--safe-left));
   border-right: var(--hairline) solid var(--gold-leaf);
-  background: var(--lapis-night);
+  background: var(--surface-sunk);
   pointer-events: auto;
+}
+
+.title-mast {
+  flex: none;
+  padding-bottom: var(--space-3);
 }
 
 .wordmark {
   font: var(--weight-display-strong) var(--text-48) / 1 var(--font-display);
   letter-spacing: var(--tracking-display);
+}
+
+.title-world {
+  margin-top: var(--space-2);
+  color: var(--gold-leaf);
+  font: var(--weight-display) var(--text-16) / var(--leading-tight) var(--font-display);
+  letter-spacing: .18em;
+}
+
+.title-world:empty {
+  display: none;
 }
 
 .patron-picker {
@@ -2669,9 +2867,15 @@ body[data-screen="title"] .toast {
   min-height: 280px;
 }
 
+/* With a short roster the picker takes its natural height and the panel scrolls. */
+.patron-picker.is-flat {
+  flex: none;
+  min-height: 0;
+}
+
 .patron-head {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--space-2) var(--space-3);
 }
@@ -2679,6 +2883,10 @@ body[data-screen="title"] .toast {
 .patron-head h2 {
   font: var(--weight-display) var(--text-24) / var(--leading-tight) var(--font-display);
   letter-spacing: var(--tracking-display);
+}
+
+.patron-head .search[hidden] {
+  display: none;
 }
 
 .patron-count {
@@ -2693,7 +2901,7 @@ body[data-screen="title"] .toast {
 
 .patron-list {
   flex: 1 1 0;
-  min-height: 160px;
+  min-height: 120px;
   overflow-y: auto;
   padding: var(--space-1) var(--space-2) var(--space-1) 0;
   border-top: var(--hairline) solid var(--rule);
@@ -2702,6 +2910,23 @@ body[data-screen="title"] .toast {
 
 .patron-group {
   padding: var(--space-2) 0;
+}
+
+/* A roster small enough to read at a glance drops the tradition headings and
+   pairs the chips up, so every patron is visible without a scroll. */
+.patron-list.is-flat .patron-group {
+  padding: 0;
+}
+
+.patron-list.is-flat .patron-chips {
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+/* A short roster needs no scroller of its own; the panel scrolls as one page. */
+.patron-list.is-flat {
+  flex: none;
+  max-height: none;
+  overflow: visible;
 }
 
 .patron-group h3 {
@@ -2713,8 +2938,8 @@ body[data-screen="title"] .toast {
 
 .patron-chips {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
-  gap: var(--space-1);
+  grid-template-columns: repeat(auto-fill, minmax(196px, 1fr));
+  gap: var(--space-2);
 }
 
 .patron-chip {
@@ -2722,18 +2947,14 @@ body[data-screen="title"] .toast {
   align-items: center;
   gap: var(--space-2);
   min-width: 0;
-  min-height: 52px;
+  min-height: 56px;
   padding: var(--space-1) var(--space-2);
   border: var(--hairline) solid transparent;
   border-radius: var(--radius-control);
   background: transparent;
   color: var(--limewash);
   text-align: left;
-}
-
-.patron-chip .crest {
-  width: 32px;
-  height: 32px;
+  transition: background-color var(--duration-fast) var(--ease-out);
 }
 
 .patron-chip > span {
@@ -2743,8 +2964,8 @@ body[data-screen="title"] .toast {
 
 .patron-chip strong {
   overflow: hidden;
-  font-size: var(--text-14);
-  line-height: var(--leading-snug);
+  font: var(--weight-display) var(--text-20) / var(--leading-tight) var(--font-display);
+  letter-spacing: var(--tracking-display);
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -2752,6 +2973,7 @@ body[data-screen="title"] .toast {
 .patron-chip small {
   overflow: hidden;
   color: var(--mist);
+  font-size: var(--text-14);
   line-height: var(--leading-snug);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -2764,18 +2986,37 @@ body[data-screen="title"] .toast {
 .patron-chip.selected,
 .patron-chip[aria-pressed="true"] {
   border-color: var(--gold-leaf);
-  background: var(--lapis-raised);
+  background: var(--surface-raised);
+}
+
+.patron-chip.selected .portrait {
+  border-color: var(--gold-leaf);
 }
 
 .patron-chip:focus-visible {
   outline-offset: -2px;
 }
 
+/* The chosen patron sits on its own raised card: the one large image on the
+   title screen, beside the realm it opens, with its lore one tap away. */
+.patron-chosen {
+  flex: none;
+  padding: var(--space-3) var(--space-4);
+  border: var(--hairline) solid var(--rule);
+  border-left: 2px solid var(--gold-leaf);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+}
+
+.patron-chosen > .btn {
+  margin-top: var(--space-2);
+}
+
 .patron-detail {
   display: flex;
   align-items: flex-start;
   gap: var(--space-4);
-  min-height: 96px;
+  min-height: var(--portrait-lg);
 }
 
 .patron-detail:empty {
@@ -2784,6 +3025,7 @@ body[data-screen="title"] .toast {
 
 .patron-detail-text {
   display: grid;
+  align-content: start;
   gap: var(--space-1);
   min-width: 0;
 }
@@ -2794,18 +3036,26 @@ body[data-screen="title"] .toast {
 }
 
 .patron-realm {
-  color: var(--mist);
-  font: var(--weight-display) var(--text-20) / var(--leading-tight) var(--font-display);
+  color: var(--gold-leaf);
+  font: var(--weight-display) var(--text-16) / var(--leading-snug) var(--font-display);
   letter-spacing: var(--tracking-display);
 }
 
-.patron-detail-text p:not(.patron-realm) {
+.patron-trait {
+  margin-top: var(--space-1);
   font-size: var(--text-14);
-  line-height: var(--leading-snug);
+  line-height: var(--leading-body);
 }
 
 .patron-picker > .btn {
+  flex: none;
   align-self: flex-start;
+}
+
+.patron-head,
+.title-actions,
+.difficulty {
+  flex: none;
 }
 
 .difficulty {
@@ -2816,7 +3066,7 @@ body[data-screen="title"] .toast {
 }
 
 .difficulty legend {
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-1);
   padding: 0;
   color: var(--mist);
   font-size: var(--text-14);
@@ -2824,13 +3074,19 @@ body[data-screen="title"] .toast {
 }
 
 .difficulty .note {
-  margin-top: var(--space-2);
+  margin-top: var(--space-1);
 }
 
 .title-actions {
+  position: sticky;
+  bottom: calc(-1 * var(--space-5) - var(--safe-bottom));
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-2);
+  margin: 0 calc(-1 * var(--space-6)) calc(-1 * var(--space-5) - var(--safe-bottom)) calc(-1 * var(--space-6) - var(--safe-left));
+  padding: var(--space-2) var(--space-6) calc(var(--space-5) + var(--safe-bottom)) calc(var(--space-6) + var(--safe-left));
+  border-top: var(--hairline) solid var(--rule);
+  background: var(--surface-sunk);
 }
 
 .title-actions .btn-primary {
@@ -2849,6 +3105,102 @@ body[data-screen="title"] .toast {
   background: var(--ochre-wash);
   color: var(--limewash);
   font-size: var(--text-14);
+}
+
+/* ------------------------------------------------- Campaign reveal */
+/* One held moment when a campaign opens: a cinematic band over the live map,
+   naming the realm. Decorative and dismissed by any tap, click or key. */
+.reveal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--layer-reveal);
+  display: grid;
+  align-items: center;
+  background: var(--scrim);
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--ease-out);
+}
+
+.reveal[hidden] {
+  display: none;
+}
+
+.reveal[data-phase="in"] {
+  opacity: 1;
+}
+
+.reveal-band {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  padding: var(--space-6) calc(var(--space-6) + var(--safe-left)) var(--space-6) calc(var(--space-6) + var(--safe-right));
+  border-top: var(--hairline) solid var(--gold-leaf);
+  border-bottom: var(--hairline) solid var(--gold-leaf);
+  background: var(--surface-sunk);
+}
+
+.reveal[data-phase="in"] .plate {
+  animation: rise var(--duration-slow) var(--ease-out) both;
+}
+
+.reveal-text {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.reveal-kicker {
+  color: var(--gold-leaf);
+  font-size: var(--text-12);
+  font-weight: var(--weight-bold);
+  letter-spacing: .18em;
+}
+
+.reveal-name {
+  font: var(--weight-display-strong) var(--text-48) / 1 var(--font-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.reveal-line {
+  color: var(--mist);
+  font: var(--weight-display) var(--text-20) / var(--leading-snug) var(--font-display);
+  letter-spacing: var(--tracking-display);
+}
+
+/* Narrow screens stack the band and centre it. */
+@media (max-width: 720px) {
+  .reveal-band {
+    flex-direction: column;
+    gap: var(--space-4);
+    padding: var(--space-5) var(--space-4);
+    text-align: center;
+  }
+
+  .reveal-band .portrait-xl {
+    width: var(--portrait-lg);
+    height: var(--portrait-lg);
+  }
+
+  .reveal-name {
+    font-size: var(--text-32);
+  }
+
+  .reveal-line {
+    font-size: var(--text-16);
+  }
+}
+
+.reveal[data-phase="in"] .reveal-kicker {
+  animation: rise var(--duration-base) var(--ease-out) var(--duration-fast) both;
+}
+
+.reveal[data-phase="in"] .reveal-name {
+  animation: rise var(--duration-base) var(--ease-out) var(--duration-base) both;
+}
+
+.reveal[data-phase="in"] .reveal-line {
+  animation: rise var(--duration-base) var(--ease-out) var(--duration-slow) both;
 }
 
 /* ------------------------------------------------------------ Placement */
@@ -3227,7 +3579,7 @@ body.placing-district .hud > .selection {
     gap: var(--space-3);
   }
 
-  .codex-head .crest-large {
+  .codex-head .portrait-md {
     width: 48px;
     height: 48px;
   }
@@ -3304,21 +3656,35 @@ body.placing-district .hud > .selection {
     position: relative;
     width: 100%;
     height: auto;
-    max-height: min(74dvh, calc(100dvh - var(--safe-top) - 112px));
-    padding: var(--space-5) calc(var(--space-4) + var(--safe-right)) 0 calc(var(--space-4) + var(--safe-left));
+    max-height: min(82dvh, calc(100dvh - var(--safe-top) - 112px));
+    padding: var(--space-4) calc(var(--space-4) + var(--safe-right)) 0 calc(var(--space-4) + var(--safe-left));
     border-top: var(--hairline) solid var(--gold-leaf);
     border-right: 0;
     border-radius: var(--radius-panel) var(--radius-panel) 0 0;
   }
 
-  .wordmark {
+  .title-mast {
     position: fixed;
     top: calc(var(--safe-top) + var(--space-6));
     left: 0;
     right: 0;
-    font-size: var(--text-32);
+    padding: 0 var(--space-4);
+    border-bottom: 0;
     text-align: center;
     pointer-events: none;
+  }
+
+  .title-mast::before,
+  .title-mast::after {
+    content: none;
+  }
+
+  .wordmark {
+    font-size: var(--text-32);
+  }
+
+  .title-world {
+    display: none;
   }
 
   .patron-picker {
@@ -3337,16 +3703,21 @@ body.placing-district .hud > .selection {
   }
 
   .patron-chips {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .patron-chosen {
+    padding: var(--space-3);
   }
 
   .patron-detail {
     min-height: 0;
+    gap: var(--space-3);
   }
 
-  .patron-detail .crest-large {
-    width: 44px;
-    height: 44px;
+  .patron-detail .portrait-lg {
+    width: 80px;
+    height: 80px;
   }
 
   .patron-detail h2 {
@@ -3354,12 +3725,9 @@ body.placing-district .hud > .selection {
   }
 
   .title-actions {
-    position: sticky;
     bottom: 0;
     margin: 0 calc(-1 * (var(--space-4) + var(--safe-right))) 0 calc(-1 * (var(--space-4) + var(--safe-left)));
-    padding: var(--space-3) calc(var(--space-4) + var(--safe-right)) calc(var(--space-3) + var(--safe-bottom)) calc(var(--space-4) + var(--safe-left));
-    border-top: var(--hairline) solid var(--rule);
-    background: var(--lapis-night);
+    padding: var(--space-2) calc(var(--space-4) + var(--safe-right)) calc(var(--space-3) + var(--safe-bottom)) calc(var(--space-4) + var(--safe-left));
   }
 
   .title-screen .note[role="alert"] {
@@ -3583,3 +3951,133 @@ body.placing-district .hud > .selection {
     outline: 2px solid Highlight;
   }
 }
+
+/* ---------------------------------------------------------------- ident ---
+   BEM Studios developer ident. Its own palette (studio brand, not game art):
+   ink ground, teal light, the drawn fan lighting up under the wordmark. */
+.ident {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+  justify-items: center;
+  align-content: center;
+  gap: var(--space-4);
+  background: var(--bem-ink);
+  padding: var(--space-6) var(--space-4);
+  transition: opacity 300ms ease;
+}
+.ident.is-leaving { opacity: 0; }
+
+.ident-stage {
+  position: relative;
+  align-self: end;
+  width: min(42vmin, 300px);
+  aspect-ratio: 1;
+}
+.ident-glow,
+.ident-fan {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+}
+.ident-glow {
+  inset: -38%;
+  width: auto;
+  height: auto;
+  background: url("assets/brand/bem-glow.webp") center / contain no-repeat;
+}
+.ident-fan-dead { filter: brightness(0.32) saturate(0.35); }
+.ident-fan-reflection {
+  top: 100%;
+  height: 46%;
+  transform: scaleY(-1);
+}
+.ident-word {
+  align-self: start;
+  margin: 0;
+  font: 600 clamp(var(--text-16), 4.4vmin, var(--text-32)) / 1 var(--font-display);
+  letter-spacing: 0.34em;
+  text-indent: 0.34em;
+  text-transform: uppercase;
+  color: var(--bem-word-dead);
+  opacity: 0;
+}
+.ident-skip {
+  position: absolute;
+  inset: auto auto calc(var(--safe-bottom) + var(--space-5)) 50%;
+  transform: translateX(-50%);
+  color: var(--bem-quiet);
+}
+.ident-skip:hover,
+.ident-skip:focus-visible { color: var(--bem-word); }
+
+/* The dark fan rises, the light comes on through it, the wordmark ignites,
+   the whole mark breathes once, and it hands the room to the title. */
+.ident.is-playing .ident-fan-dead { animation: ident-rise 900ms ease-out forwards; }
+.ident.is-playing .ident-glow { animation: ident-light 2700ms ease-in-out 600ms forwards; }
+.ident.is-playing .ident-fan-lit { animation: ident-ignite 2600ms ease-in-out 700ms forwards; }
+.ident.is-playing .ident-fan-reflection { animation: ident-reflect 2500ms ease-in-out 800ms forwards; }
+.ident.is-playing .ident-word { animation: ident-word 1900ms ease-out 1300ms forwards; }
+.ident.is-playing .ident-stage { animation: ident-breathe 1400ms ease-in-out 2100ms; }
+
+/* Reduced motion: the finished frame, held still. */
+.ident.is-still .ident-fan-dead { opacity: 0; }
+.ident.is-still .ident-fan-lit,
+.ident.is-still .ident-glow { opacity: 1; }
+.ident.is-still .ident-glow { opacity: 0.5; }
+.ident.is-still .ident-word { opacity: 1; color: var(--bem-word); }
+
+@keyframes ident-rise {
+  from { opacity: 0; transform: translateY(14px) scale(1.015); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes ident-light {
+  0% { opacity: 0; }
+  45% { opacity: 0.58; }
+  70% { opacity: 0.44; }
+  100% { opacity: 0.5; }
+}
+@keyframes ident-ignite {
+  0% { opacity: 0; }
+  55% { opacity: 1; }
+  100% { opacity: 1; }
+}
+@keyframes ident-reflect {
+  0% { opacity: 0; }
+  60% { opacity: 0.22; }
+  100% { opacity: 0.18; }
+}
+@keyframes ident-word {
+  0% { opacity: 0; color: var(--bem-word-dead); letter-spacing: 0.42em; }
+  60% { opacity: 1; color: var(--bem-word); }
+  100% { opacity: 1; color: var(--bem-word); letter-spacing: 0.34em; }
+}
+@keyframes ident-breathe {
+  0%, 100% { transform: none; }
+  50% { transform: scale(1.012); }
+}
+
+/* --------------------------------------------------------- title steps ---
+   The title asks one thing at a time: what to do, then who to play. */
+.title-screen[data-step="title"] .title-setup,
+.title-screen[data-step="setup"] .title-home { display: none; }
+
+.title-home {
+  display: grid;
+  gap: var(--space-4);
+}
+.title-screen[data-step="title"] .title-panel { max-width: 30rem; }
+.title-screen[data-step="title"] .title-mast { margin-bottom: var(--space-2); }
+.title-home .title-actions { grid-template-columns: 1fr; }
+.title-home .title-actions .btn { width: 100%; justify-content: flex-start; min-height: 52px; }
+
+.setup-back {
+  justify-self: start;
+  margin-bottom: var(--space-2);
+}
+.setup-actions { grid-template-columns: 1fr; }

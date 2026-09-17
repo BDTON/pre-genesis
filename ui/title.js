@@ -2,7 +2,7 @@
 import {ctx, ui, $, $$, esc} from './context.js';
 import * as g from './game.js';
 import {engine} from './game.js';
-import {crest} from './icons.js';
+import {portrait} from './portraits.js';
 import {fold, plural} from './text.js';
 import {hasSave} from './storage.js';
 import {savePreferences} from './settings.js';
@@ -14,8 +14,10 @@ function traitOf(f) {
   return engine.factionTrait?.(f.id) || f.trait || null;
 }
 
-// Chips sit under a tradition heading, so the second line names the patron or the realm.
+// Grouped chips sit under a tradition heading, so the second line names the
+// patron or the realm; a flat list names the tradition itself.
 function subtitle(f) {
+  if (isFlat()) return f.tradition || f.name;
   return f.patron && f.patron !== f.leader ? f.patron : f.name;
 }
 
@@ -34,18 +36,34 @@ function searchText(f) {
   return fold([f.leader, f.patron, f.tradition, f.name, f.capital, trait?.name, trait?.summary].join(' '));
 }
 
+// Tradition headings and the search box earn their place only once the roster
+// outgrows a single glance; below that the five patrons read as one list.
+const SEARCHABLE_FROM = 9;
+const isFlat = () => g.FACTIONS.length < SEARCHABLE_FROM;
+
+const chip = f => `<button type="button" class="patron-chip" data-faction="${esc(f.id)}" data-search="${esc(searchText(f))}" aria-pressed="false" tabindex="-1">
+  ${portrait(f.id, {size: 'sm'})}<span><strong>${esc(f.leader)}</strong><small>${esc(subtitle(f))}</small></span>
+</button>`;
+
 export function renderPatronList() {
+  const list = $('#patron-list');
+  const field = $('#patron-search-field');
+  if (field) field.hidden = isFlat();
+  list.classList.toggle('is-flat', isFlat());
+  list.closest('.patron-picker')?.classList.toggle('is-flat', isFlat());
+  if (isFlat()) {
+    list.innerHTML = `<section class="patron-group"><div class="patron-chips">${g.FACTIONS.map(chip).join('')}</div></section>`;
+    return;
+  }
   const groups = new Map();
   for (const f of g.FACTIONS) {
     if (!groups.has(f.tradition)) groups.set(f.tradition, []);
     groups.get(f.tradition).push(f);
   }
   const sorted = [...groups].sort((a, b) => a[0].localeCompare(b[0]));
-  $('#patron-list').innerHTML = sorted.map(([tradition, list]) => `<section class="patron-group" data-tradition="${esc(tradition)}">
+  list.innerHTML = sorted.map(([tradition, items]) => `<section class="patron-group" data-tradition="${esc(tradition)}">
       <h3>${esc(tradition)}</h3>
-      <div class="patron-chips">${list.map(f => `<button type="button" class="patron-chip" data-faction="${esc(f.id)}" data-search="${esc(searchText(f))}" aria-pressed="false" tabindex="-1">
-        ${crest(f.id)}<span><strong>${esc(f.leader)}</strong><small>${esc(subtitle(f))}</small></span>
-      </button>`).join('')}</div>
+      <div class="patron-chips">${items.map(chip).join('')}</div>
     </section>`).join('');
 }
 
@@ -85,11 +103,12 @@ export function selectFaction(id, {scroll = true, showcase = true} = {}) {
   }
   syncRovingFocus();
   const trait = traitOf(f);
-  $('#patron-detail').innerHTML = `${crest(f.id, 'crest crest-large')}
+  $('#patron-detail').innerHTML = `${portrait(f.id, {size: 'lg', gold: true, eager: true})}
     <div class="patron-detail-text">
+      <p class="kicker">${esc(f.tradition)}</p>
       <h2>${esc(f.leader)}</h2>
       <p class="patron-realm">${esc([f.name, f.capital].filter(Boolean).join(' · '))}</p>
-      ${trait ? `<p><strong>${esc(trait.name)}.</strong> ${esc(trait.summary)}</p>` : ''}
+      ${trait ? `<p class="patron-trait"><strong>${esc(trait.name)}.</strong> ${esc(trait.summary)}</p>` : ''}
     </div>`;
   if (ctx.preferences.faction !== f.id) {
     ctx.preferences.faction = f.id;
@@ -151,6 +170,19 @@ export function updateShowcase() {
   }
 }
 
+// The title asks one question at a time: first what to do, then who to play.
+export function showTitleStep(step) {
+  const welcome = $('#welcome');
+  welcome.dataset.step = step;
+  if (step === 'setup') {
+    renderDifficulty();
+    selectFaction(ctx.chosenFaction, {scroll: true, showcase: true});
+    $('#patron-list')?.querySelector('.patron-chip.selected')?.focus({preventScroll: true});
+  } else {
+    $('#new-campaign')?.focus({preventScroll: true});
+  }
+}
+
 export function showTitle() {
   ctx.started = false;
   ctx.districtPlacement = null;
@@ -161,16 +193,15 @@ export function showTitle() {
   $('#game').inert = true;
   $('#game').hidden = true;
   $('#welcome').hidden = false;
+  $('#welcome').dataset.step = 'title';
   const saved = hasSave();
   $('#resume-game').hidden = !saved;
-  // Without Continue, Play online takes the whole row.
-  $('#friends-button').style.gridColumn = saved ? '' : '1 / -1';
   ui.renderRoomBar?.();
   if (ctx.world && typeof ctx.world.setShowcase !== 'function') ctx.world.setLabels?.(false);
   renderDifficulty();
   selectFaction(ctx.chosenFaction, {scroll: true, showcase: false});
   updateShowcase();
-  $('#start-game')?.focus({preventScroll: true});
+  $('#new-campaign')?.focus({preventScroll: true});
 }
 
 function moveChipFocus(event) {
@@ -188,16 +219,20 @@ function moveChipFocus(event) {
 }
 
 export function installTitle() {
+  const world = $('#title-world');
+  if (world) world.textContent = g.WORLD_NAME || '';
   renderPatronList();
   const saved = ctx.preferences.faction;
   ctx.chosenFaction = g.FACTIONS.some(f => f.id === saved) ? saved : g.defaultFactionId();
   $('#patron-search').addEventListener('input', e => filterPatrons(e.target.value));
   $('#patron-list').addEventListener('keydown', moveChipFocus);
   $('#difficulty').addEventListener('change', e => { if (e.target.name === 'difficulty') setDifficulty(e.target.value); });
+  $('#new-campaign').addEventListener('click', () => showTitleStep('setup'));
+  $('#setup-back').addEventListener('click', () => showTitleStep('title'));
   $('#start-game').addEventListener('click', () => ui.startNew());
   $('#resume-game').addEventListener('click', () => ui.resumeSave());
   $('#title-settings').addEventListener('click', () => ui.showMenu('display'));
   $('#read-lore').addEventListener('click', () => ui.showCodex(ctx.chosenFaction));
 }
 
-Object.assign(ui, {showTitle, selectFaction, updateShowcase, renderDifficulty});
+Object.assign(ui, {showTitle, showTitleStep, selectFaction, updateShowcase, renderDifficulty});

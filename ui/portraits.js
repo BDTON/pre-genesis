@@ -1,0 +1,35 @@
+// Leader portraits, rendered from the game's own figure models
+// (tools/figures/render.py, 512px, on the lapis ground the frames use).
+// The realm emblem is drawn underneath and stays visible when a realm has no
+// figure yet, so nothing is ever blank and nothing shifts while images load.
+import {esc} from './context.js';
+
+export const PORTRAIT_DIR = 'assets/figures/portraits/';
+export const EMBLEM_DIR = 'assets/emblems/';
+
+const SIZES = new Set(['sm', 'md', 'lg', 'xl']);
+
+export const portraitSrc = id => `${PORTRAIT_DIR}${id}.webp`;
+export const emblemSrc = id => `${EMBLEM_DIR}${id}.svg`;
+
+// `gold` frames the portrait in gold leaf: the player, the winner, the chosen
+// patron. `eager` is for a portrait that is on screen the moment it is written.
+export function portrait(factionId, {size = 'md', gold = false, eager = false, extraClass = ''} = {}) {
+  const id = esc(factionId ?? '');
+  const scale = SIZES.has(size) ? size : 'md';
+  const classes = ['portrait', `portrait-${scale}`, gold ? 'portrait-gold' : '', extraClass].filter(Boolean).join(' ');
+  const load = eager ? 'eager' : 'lazy';
+  return `<span class="${classes}" data-portrait="${id}">
+    <img class="portrait-mark" src="${emblemSrc(id)}" alt="" loading="${load}" decoding="async">
+    <img class="portrait-face" src="${portraitSrc(id)}" alt="" width="512" height="512" loading="${load}" decoding="async">
+  </span>`;
+}
+
+// One capture-phase listener covers every portrait, including markup written later.
+// `load` does not bubble, so it is caught on the way down.
+function onLoad(event) {
+  const img = event.target;
+  if (img?.classList?.contains?.('portrait-face')) img.closest('.portrait')?.classList.add('is-rendered');
+}
+
+if (typeof document !== 'undefined') document.addEventListener('load', onLoad, true);

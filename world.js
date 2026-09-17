@@ -17,15 +17,23 @@ const CAMERA_OFFSET = Object.freeze(new THREE.Vector3(18, 26, 26));
 const Y_AXIS = Object.freeze(new THREE.Vector3(0, 1, 0));
 const DEFAULT_SPAN = 13.2;
 const ICON_SPRITE = 'assets/icons.svg';
+// The world is lit as lapis night: a deep blue zenith, a warm gilt horizon and a
+// low sun. SKY is the zenith; HORIZON is where sea, fog and sky meet.
 const SKY = '#172A4C';
+const HORIZON = '#3E5478';
+const SUN_COLOR = '#FFE3B4';
+// The sun sits low on the viewer's left, so every miniature throws a long shadow.
+const SUN_OFFSET = Object.freeze(new THREE.Vector3(-11, 15, 13));
 
 // Render tiers. dpr caps the pixel ratio; activeFps applies while the camera or a
 // piece moves and idleFps to the ambient water; foliage scales forest density and
-// detail subdivides each hex wedge of the terrain mesh. Shadows are drawn on high only.
+// detail subdivides each hex wedge of the terrain mesh. wind sways foliage on high
+// only. Shadows are a separate pass that redraws only when the board changes
+// (shadowMap.autoUpdate is off), which is why balanced can afford a small map.
 export const QUALITY = Object.freeze({
-  high: Object.freeze({name: 'high', dpr: 2, shadow: 2048, activeFps: 60, idleFps: 30, foliage: 1, detail: 4}),
-  balanced: Object.freeze({name: 'balanced', dpr: 1.5, shadow: 0, activeFps: 60, idleFps: 20, foliage: .6, detail: 3}),
-  low: Object.freeze({name: 'low', dpr: 1, shadow: 0, activeFps: 30, idleFps: 0, foliage: .35, detail: 2}),
+  high: Object.freeze({name: 'high', dpr: 2, shadow: 2048, activeFps: 60, idleFps: 30, foliage: 1, detail: 4, wind: 1}),
+  balanced: Object.freeze({name: 'balanced', dpr: 1.5, shadow: 1024, activeFps: 60, idleFps: 20, foliage: .6, detail: 3, wind: 0}),
+  low: Object.freeze({name: 'low', dpr: 1, shadow: 0, activeFps: 30, idleFps: 0, foliage: .35, detail: 2, wind: 0}),
 });
 const TIERS = ['low', 'balanced', 'high'];
 
@@ -33,16 +41,20 @@ const TIERS = ['low', 'balanced', 'high'];
 // amplitude of the rolling noise added on top of each terrain's base elevation.
 const WATER_LEVEL = -.07;
 const TERRAIN = {
-  grass: {elevation: 0, relief: .022, color: '#84985c'},
-  forest: {elevation: .03, relief: .03, color: '#5e7747'},
-  hills: {elevation: .17, relief: .085, color: '#9c9868'},
-  mountain: {elevation: .30, relief: .15, color: '#8f8b81'},
-  waste: {elevation: .05, relief: .04, color: '#aa987b'},
-  water: {elevation: -.30, relief: .05, color: '#6d8475'},
+  grass: {elevation: 0, relief: .022, color: '#7e9855'},
+  forest: {elevation: .03, relief: .03, color: '#4d6f42'},
+  hills: {elevation: .17, relief: .085, color: '#a29a5f'},
+  mountain: {elevation: .30, relief: .15, color: '#82878a'},
+  waste: {elevation: .05, relief: .04, color: '#b49b71'},
+  water: {elevation: -.30, relief: .05, color: '#63806f'},
 };
-const SAND = new THREE.Color('#d8c8a0');
-const ROCK = new THREE.Color('#8a867c');
-const SNOW = new THREE.Color('#ecede6');
+const SAND = new THREE.Color('#ded0a4');
+// Sand the sea still reaches is darker and cooler, which is what draws a shore.
+const WET_SAND = new THREE.Color('#9b9375');
+const ROCK = new THREE.Color('#7f8288');
+const SNOW = new THREE.Color('#eef1f3');
+// Height above the water at which the air begins to cool the ground colour.
+const ALTITUDE_CHILL = new THREE.Color('#8fa0b4');
 // Height weights begin at RIM_START (a fraction of the hex inradius) and ease outward.
 const RIM_START = .28;
 
@@ -91,6 +103,13 @@ const PORTABLE_KEYS = {
 };
 // Props smaller than this (in world units) never cast shadows.
 const CAST_SHADOW_MIN = .09;
+// A colour written as 'leaf:#rrggbb' is drawn on the foliage surface, which sways.
+const LEAF_PREFIX = 'leaf:';
+const leafy = hex => LEAF_PREFIX + hex;
+// Miniatures stand three-quarters on to the camera, which is how a painted figure
+// reads best; a champion from its own model stands the same way and is this tall.
+const UNIT_FACING = Math.PI * .3;
+const CHAMPION_HEIGHT = .82;
 
 function hash(s) {
   let h = 2166136261;
@@ -333,13 +352,16 @@ class TerrainField {
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
     geometry.setIndex(index);
     geometry.computeVertexNormals();
-    // Beaches at the waterline, bare rock on steep slopes and snow on the highest ground.
+    // A shore band of dry then wet sand at the waterline, bare rock on steep
+    // slopes, cooler air with height and snow on the highest ground.
     const normals = geometry.attributes.normal, color = new THREE.Color();
     for (let v = 0; v < positions.length / 3; v++) {
       const y = positions[v * 3 + 1], slope = 1 - normals.getY(v);
       color.fromArray(colors, v * 3);
-      color.lerp(SAND, smoothstep(WATER_LEVEL + .05, WATER_LEVEL + .008, y) * .9);
-      color.lerp(ROCK, smoothstep(.16, .42, slope) * .75);
+      color.lerp(SAND, smoothstep(WATER_LEVEL + .075, WATER_LEVEL + .012, y) * .92);
+      color.lerp(WET_SAND, smoothstep(WATER_LEVEL + .022, WATER_LEVEL - .03, y) * .8);
+      color.lerp(ROCK, smoothstep(.15, .40, slope) * .8);
+      color.lerp(ALTITUDE_CHILL, smoothstep(.14, .46, y) * .22);
       color.lerp(SNOW, smoothstep(.40, .52, y));
       color.toArray(colors, v * 3);
     }
@@ -499,9 +521,11 @@ uniform float time;
 uniform sampler2D seabed;
 uniform vec3 seabedRect;
 uniform vec3 shallowColor;
+uniform vec3 midColor;
 uniform vec3 deepColor;
 uniform vec3 foamColor;
 uniform vec3 horizonColor;
+uniform vec3 sunColor;
 uniform vec3 sunDirection;
 uniform vec3 viewDirection;
 uniform float gridStrength;
@@ -515,21 +539,34 @@ void main() {
   float ground = mix(-0.6, bed.r * 1.2 - 0.6, inside);
   float depth = ${WATER_LEVEL.toFixed(3)} - ground;
   float known = bed.g * inside;
-  vec3 color = mix(shallowColor, deepColor, smoothstep(0.015, 0.26, depth));
-  // Two slow swells give the surface a directional sheen.
+  // Three bands: a turquoise shelf, open sea, then the lapis deep.
+  vec3 color = mix(shallowColor, midColor, smoothstep(0.012, 0.11, depth));
+  color = mix(color, deepColor, smoothstep(0.10, 0.34, depth));
+  // Two slow swells carry the light; a drifting ripple field breaks it up.
   float s1 = dot(p, vec2(0.83, 0.56)) * 2.3 + time * 0.55;
   float s2 = dot(p, vec2(-0.42, 0.91)) * 3.4 - time * 0.72;
   float swell = 0.014 + 0.012 * valueNoise(p * 0.7 + time * 0.03);
   vec2 slope = (vec2(0.83, 0.56) * cos(s1) * 2.3 + vec2(-0.42, 0.91) * cos(s2) * 2.04) * swell;
+  vec2 drift = vec2(time * 0.035, time * -0.022);
+  float rippleA = valueNoise(p * 3.7 + drift * 3.0);
+  float rippleB = valueNoise(p * 7.9 - drift * 5.0);
+  float ripple = (rippleA - 0.5) * 0.020 + (rippleB - 0.5) * 0.010;
+  slope += vec2(ripple, ripple * 0.8);
   vec3 normal = normalize(vec3(-slope.x, 1.0, -slope.y));
-  float light = 0.86 + 0.14 * max(dot(normal, sunDirection), 0.0);
+  float light = 0.82 + 0.18 * max(dot(normal, sunDirection), 0.0);
   float glint = pow(max(dot(reflect(-sunDirection, normal), viewDirection), 0.0), 120.0);
-  color = color * light + vec3(1.0, 0.94, 0.82) * glint * 0.3;
+  float sheen = pow(max(dot(reflect(-sunDirection, normal), viewDirection), 0.0), 14.0);
+  // A grazing view of water reflects the sky, so the far sea lifts toward it.
+  float fresnel = pow(1.0 - clamp(dot(normal, viewDirection), 0.0, 1.0), 4.0);
+  color = color * light;
+  color = mix(color, horizonColor, fresnel * 0.34);
+  color += sunColor * (glint * 0.55 + sheen * 0.05);
   // Foam traces explored shores only.
-  float shore = 1.0 - smoothstep(0.0, 0.055, depth);
+  float shore = 1.0 - smoothstep(0.0, 0.062, depth);
   float surge = 0.5 + 0.5 * sin(depth * 110.0 - time * 1.4 + valueNoise(p * 5.0) * 4.0);
-  float foam = known * clamp(shore * (0.3 + 0.7 * surge) + 1.0 - smoothstep(0.0, 0.012, depth), 0.0, 1.0);
-  color = mix(color, foamColor, foam * 0.7);
+  float lace = 0.55 + 0.45 * valueNoise(p * 9.0 + drift * 6.0);
+  float foam = known * clamp(shore * (0.28 + 0.72 * surge) * lace + 1.0 - smoothstep(0.0, 0.014, depth), 0.0, 1.0);
+  color = mix(color, foamColor, foam * 0.72);
   color = mix(color, deepColor * 0.55, hexLine(p) * gridStrength * known * 0.7);
   gl_FragColor = vec4(color, 1.0);
   #include <tonemapping_fragment>
@@ -581,6 +618,35 @@ void main() {
   gl_FragColor = vec4(color, 1.0);
   #include <colorspace_fragment>
   #include <fog_fragment>
+}`;
+
+// The camera is orthographic, so every ray through it is parallel and a sky dome
+// would read as one flat colour. The air is drawn instead as a backdrop the width
+// of the screen: the horizon value the fog and the far sea share, rising into the
+// lapis night, with one soft gilt bloom where the sun stands. One draw call, two
+// triangles, no depth.
+const SKY_VERTEX = `
+varying vec2 vSky;
+void main() {
+  vSky = uv;
+  gl_Position = vec4(position.xy, 1.0, 1.0);
+}`;
+
+const SKY_FRAGMENT = `
+uniform vec3 zenith;
+uniform vec3 horizon;
+uniform vec3 sunColor;
+uniform vec2 sunScreen;
+uniform float aspect;
+varying vec2 vSky;
+void main() {
+  float up = clamp(vSky.y, 0.0, 1.0);
+  vec3 color = mix(horizon, zenith, smoothstep(0.02, 0.86, up));
+  vec2 d = (vSky - sunScreen) * vec2(aspect, 1.0);
+  color += sunColor * 0.13 * exp(-dot(d, d) * 3.4);
+  gl_FragColor = vec4(color, 1.0);
+  #include <tonemapping_fragment>
+  #include <colorspace_fragment>
 }`;
 
 // Fallback label styles; hud.css restyles the same classes under its .world prefix.
@@ -660,7 +726,8 @@ export class WorldView {
     Object.assign(this.container.style, {overflow: 'hidden', isolation: 'isolate', zIndex: '0'});
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(SKY);
-    this.scene.fog = new THREE.Fog(SKY, 46, 124);
+    // Distance haze is the horizon colour, so the far sea dissolves into the sky.
+    this.scene.fog = new THREE.Fog(HORIZON, 54, 132);
     this.camera = new THREE.OrthographicCamera(-20, 20, 13, -13, .1, 140);
     try {
       this.renderer = new THREE.WebGLRenderer({antialias: true, alpha: false, stencil: false, powerPreference: this.touchUi ? 'low-power' : 'default'});
@@ -675,8 +742,10 @@ export class WorldView {
     }
     const renderer = this.renderer;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.AgXToneMapping;
-    renderer.toneMappingExposure = 1.12;
+    // Neutral keeps the painted pigments saturated where AgX greyed them, and
+    // still rolls the sun glint off without clipping to white.
+    renderer.toneMapping = THREE.NeutralToneMapping;
+    renderer.toneMappingExposure = 1.06;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     // The board is static: shadows are redrawn only when terrain or pieces change.
@@ -702,6 +771,7 @@ export class WorldView {
     this.createGeometry();
     this.createSurfaces();
     this.createEnvironment();
+    this.createSky();
     this.createLighting();
     this.createWater();
     this.createHighlights();
@@ -777,6 +847,7 @@ export class WorldView {
     const previous = this.quality;
     this.quality = QUALITY[name] || QUALITY.balanced;
     this.dprTrim = 0;
+    if (this.windUniform) this.windUniform.value = this.reducedMotion ? 0 : this.quality.wind || 0;
     if (!this.renderer) return;
     this.applyPixelRatio();
     const size = this.quality.shadow;
@@ -948,9 +1019,13 @@ export class WorldView {
     if (dx || dy) this.pan(dx * dt * 500, dy * dt * 500);
     if (!this.reducedMotion) this.motionTime += dt;
     if (this.showcase && !this.reducedMotion) {
+      // A long, slow parallax: the world turns on its axis over a minute and a half,
+      // drifts a little, and breathes out from the framing that fits it, never in,
+      // so nothing on the board is ever cropped by the motion.
       const s = this.showcase, t = (s.time += dt);
       this.azimuthGoal = this.azimuth = Math.sin(t * TAU / 90) * .42;
       if (s.base) this.targetGoal.set(s.base.x + Math.sin(t * .05) * .6, 0, s.base.z + Math.cos(t * .04) * .45);
+      if (s.fit) this.spanGoal = this.span = s.fit * (1 + .055 * (.5 - .5 * Math.cos(t * TAU / 70)));
     }
     const ease = this.reducedMotion ? 1 : 1 - Math.exp(-dt * 9);
     let cameraMoved = false;
@@ -982,6 +1057,8 @@ export class WorldView {
     }
     if (this.water) this.water.material.uniforms.time.value = this.motionTime;
     if (this.fogVeil) this.fogVeil.material.uniforms.time.value = this.motionTime;
+    if (this.windTimeUniform) this.windTimeUniform.value = this.motionTime;
+    this.stepChampions(dt, now);
     if (this.labelsDirty) this.updateLabels();
   }
 
@@ -1155,16 +1232,38 @@ export class WorldView {
     return geometry;
   }
 
-  // Five shared surfaces; each instance carries its own colour.
+  // Six shared surfaces; each instance carries its own colour. Foliage has its own
+  // surface only so a breeze can move it on high; it is otherwise matte.
   createSurfaces() {
+    this.windUniform = {value: 0};
+    this.windTimeUniform = {value: 0};
     this.surfaces = {
       matte: new THREE.MeshLambertMaterial({vertexColors: true}),
+      leafy: new THREE.MeshLambertMaterial({vertexColors: true}),
       metal: new THREE.MeshStandardMaterial({vertexColors: true, metalness: .85, roughness: .34}),
       glow: new THREE.MeshBasicMaterial({toneMapped: false}),
       wet: new THREE.MeshStandardMaterial({vertexColors: true, metalness: .05, roughness: .22}),
       sheer: new THREE.MeshBasicMaterial({transparent: true, opacity: .4, depthWrite: false}),
     };
     for (const [name, material] of Object.entries(this.surfaces)) material.name = `surface-${name}`;
+    this.surfaces.leafy.onBeforeCompile = shader => {
+      shader.uniforms.windStrength = this.windUniform;
+      shader.uniforms.windTime = this.windTimeUniform;
+      shader.vertexShader = 'uniform float windStrength;\nuniform float windTime;\n' + shader.vertexShader.replace(
+        '#include <project_vertex>',
+        `vec4 pgLocal = vec4(transformed, 1.0);
+  #ifdef USE_INSTANCING
+    pgLocal = instanceMatrix * pgLocal;
+  #endif
+  vec4 pgWorld = modelMatrix * pgLocal;
+  float pgLift = clamp(pgWorld.y * 1.5, 0.0, 1.0);
+  float pgPhase = windTime * 1.6 + pgWorld.x * 0.55 + pgWorld.z * 0.42;
+  pgWorld.xz += vec2(sin(pgPhase), cos(pgPhase * 0.81 + 1.7)) * windStrength * pgLift * 0.05;
+  vec4 mvPosition = viewMatrix * pgWorld;
+  gl_Position = projectionMatrix * mvPosition;`,
+      );
+    };
+    this.surfaces.leafy.customProgramCacheKey = () => 'pregenesis-foliage-v1';
     this.surfaceCache = new Map();
     this.gridUniform = {value: .12};
     this.terrainMaterial = new THREE.MeshLambertMaterial({vertexColors: true});
@@ -1193,7 +1292,10 @@ export class WorldView {
   surfaceFor(key) {
     let look = this.surfaceCache.get(key);
     if (look) return look;
-    const [surface, hex] = SURFACE_KEYS[key] || ['matte', String(key).startsWith('#') ? key : '#ffffff'];
+    const leaf = String(key).startsWith(LEAF_PREFIX);
+    const hexKey = leaf ? String(key).slice(LEAF_PREFIX.length) : key;
+    const [surface, hex] = SURFACE_KEYS[key]
+      || [leaf ? 'leafy' : 'matte', String(hexKey).startsWith('#') ? hexKey : '#ffffff'];
     look = {surface: this.surfaces[surface], color: new THREE.Color(hex)};
     this.surfaceCache.set(key, look);
     return look;
@@ -1204,12 +1306,15 @@ export class WorldView {
   }
 
   // Per-colour physical materials for builds without a renderer (glTF export, tests).
+  // Foliage keys fold back to their plain colour here: the breeze is a live-render
+  // surface, and exports keep exactly the materials they had before.
   material(key) {
-    if (this.materialCache.has(key)) return this.materialCache.get(key);
-    const material = new THREE.MeshStandardMaterial({color: key.startsWith('#') ? key : '#ffffff', roughness: .91, ...PORTABLE_KEYS[key]});
-    material.name = key;
-    if (FACTION_RULES.some(f => factionVisual(f.id).cloth === key)) material.userData.gameRole = 'faction-cloth';
-    this.materialCache.set(key, material);
+    const name = key.startsWith(LEAF_PREFIX) ? key.slice(LEAF_PREFIX.length) : key;
+    if (this.materialCache.has(name)) return this.materialCache.get(name);
+    const material = new THREE.MeshStandardMaterial({color: name.startsWith('#') ? name : '#ffffff', roughness: .91, ...PORTABLE_KEYS[name]});
+    material.name = name;
+    if (FACTION_RULES.some(f => factionVisual(f.id).cloth === name)) material.userData.gameRole = 'faction-cloth';
+    this.materialCache.set(name, material);
     return material;
   }
 
@@ -1219,7 +1324,7 @@ export class WorldView {
     this.environment?.dispose();
     const sky = new THREE.Scene(), geometry = new THREE.SphereGeometry(10, 16, 8);
     const position = geometry.attributes.position, colors = new Float32Array(position.count * 3);
-    const top = new THREE.Color('#fff2da'), horizon = new THREE.Color('#aab8c4'), bottom = new THREE.Color('#1b2c47'), color = new THREE.Color();
+    const top = new THREE.Color('#ffeed0'), horizon = new THREE.Color(HORIZON), bottom = new THREE.Color('#14223c'), color = new THREE.Color();
     for (let i = 0; i < position.count; i++) {
       const y = position.getY(i) / 10;
       color.copy(horizon).lerp(y > 0 ? top : bottom, Math.abs(y)).toArray(colors, i * 3);
@@ -1235,15 +1340,44 @@ export class WorldView {
     this.scene.environment = this.environment.texture;
   }
 
+  // Drawn first and never occluding anything.
+  createSky() {
+    const material = new THREE.ShaderMaterial({
+      name: 'sky',
+      uniforms: {
+        zenith: {value: new THREE.Color(SKY)},
+        horizon: {value: new THREE.Color(HORIZON)},
+        sunColor: {value: new THREE.Color(SUN_COLOR)},
+        sunScreen: {value: new THREE.Vector2(.22, .88)},
+        aspect: {value: 1.6},
+      },
+      vertexShader: SKY_VERTEX,
+      fragmentShader: SKY_FRAGMENT,
+      depthWrite: false,
+      depthTest: false,
+      fog: false,
+    });
+    this.sky = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material);
+    this.sky.name = 'Sky';
+    this.sky.renderOrder = -3;
+    this.sky.frustumCulled = false;
+    this.scene.add(this.sky);
+  }
+
   createLighting() {
-    // Cool sky and warm earth fill; a low afternoon sun from the viewer's left.
-    this.hemisphere = new THREE.HemisphereLight('#e1e7ea', '#5f5646', 1.35);
+    // A cool lapis sky bounce over warm earth, a low gilt sun from the viewer's
+    // left, and one dim cold rim from behind so silhouettes separate from the sea.
+    this.hemisphere = new THREE.HemisphereLight('#c9dcf0', '#6b6047', 1.18);
     this.scene.add(this.hemisphere);
-    this.sun = new THREE.DirectionalLight('#ffe7c4', 2.35);
-    this.sun.position.set(-9, 22, 15);
-    this.sun.shadow.bias = -.0004;
-    this.sun.shadow.normalBias = .02;
+    this.sun = new THREE.DirectionalLight(SUN_COLOR, 2.55);
+    this.sun.position.copy(SUN_OFFSET);
+    this.sun.shadow.bias = -.0005;
+    this.sun.shadow.normalBias = .025;
+    this.sun.shadow.radius = 2;
     this.scene.add(this.sun);
+    this.rim = new THREE.DirectionalLight('#7f9ec9', .42);
+    this.rim.position.set(14, 9, -16);
+    this.scene.add(this.rim);
   }
 
   updateShadowBounds() {
@@ -1253,7 +1387,7 @@ export class WorldView {
     const center = scratchVector.set((minX + maxX) / 2, 0, (minZ + maxZ) / 2);
     this.sun.target.position.copy(center);
     this.sun.target.updateMatrixWorld();
-    this.sun.position.copy(center).add(scratchOffset.set(-9, 22, 15));
+    this.sun.position.copy(center).add(scratchOffset.copy(SUN_OFFSET).setLength(26));
     Object.assign(this.sun.shadow.camera, {left: -radius, right: radius, top: radius, bottom: -radius, near: 4, far: 60});
     this.sun.shadow.camera.updateProjectionMatrix();
     if (this.water) this.water.material.uniforms.sunDirection.value.copy(scratchOffset).normalize();
@@ -1268,11 +1402,13 @@ export class WorldView {
         time: {value: 0},
         seabed: {value: null},
         seabedRect: {value: new THREE.Vector3(0, 0, 1)},
-        shallowColor: {value: new THREE.Color('#5a9e97')},
-        deepColor: {value: new THREE.Color('#1e3d5f')},
+        shallowColor: {value: new THREE.Color('#63b4a6')},
+        midColor: {value: new THREE.Color('#2b7391')},
+        deepColor: {value: new THREE.Color('#15304f')},
         foamColor: {value: new THREE.Color('#EFE7D6')},
-        horizonColor: {value: new THREE.Color(SKY)},
-        sunDirection: {value: new THREE.Vector3(-9, 22, 15).normalize()},
+        horizonColor: {value: new THREE.Color(HORIZON)},
+        sunColor: {value: new THREE.Color(SUN_COLOR)},
+        sunDirection: {value: SUN_OFFSET.clone().normalize()},
         viewDirection: {value: CAMERA_OFFSET.clone().normalize()},
         gridStrength: this.gridUniform,
       }]),
@@ -1313,9 +1449,11 @@ export class WorldView {
     this.highlightMesh.visible = false;
     this.highlightMesh.frustumCulled = false;
     this.scene.add(this.highlightMesh);
-    const ring = ringGeometry([[0, 0, 0, 1, .05, WHITE, 1]]);
+    // Hover is a gold-leaf rule with a fainter rule inside it, the way an
+    // illuminated page frames a word.
+    const ring = ringGeometry([[0, 0, 0, .99, .035, WHITE, 1], [0, 0, 0, .83, .014, WHITE, .5]]);
     this.hoverRing = new THREE.Mesh(ring, new THREE.MeshBasicMaterial({
-      vertexColors: true, color: '#EFE7D6', transparent: true, opacity: .75, depthTest: false, depthWrite: false, toneMapped: false, side: THREE.DoubleSide,
+      vertexColors: true, color: '#C9A227', transparent: true, opacity: .9, depthTest: false, depthWrite: false, toneMapped: false, side: THREE.DoubleSide,
     }));
     this.hoverRing.name = 'Hover';
     this.hoverRing.renderOrder = 21;
@@ -1338,6 +1476,9 @@ export class WorldView {
       this.terrainSignature = null;
       this.piecesSignature = null;
       this.actorPositions = new Map();
+      this.unitSnapshots = new Map();
+      // One campaign's champions never carry over to the next.
+      this.unloadChampions();
     }
     const renderState = this.visibleState(state);
     this.renderState = renderState;
@@ -1476,9 +1617,20 @@ export class WorldView {
         halfHeight = Math.max(halfHeight, Math.abs(point.y) + .6);
       }
     }
-    const spanForHeight = halfHeight / (free.y1 - free.y0);
+    const band = (free.y1 - free.y0), pixels = band * (this.height || 1);
+    const spanForHeight = halfHeight / band;
     const spanForWidth = halfWidth / (aspect * (free.x1 - free.x0));
-    this.spanGoal = clamp(Math.max(spanForHeight, spanForWidth), 6, 48);
+    // A phone's title sheet can leave a band too short to show the whole world;
+    // a close orbit over the capital reads far better there than a distant speck.
+    const close = pixels > 0 && pixels < 320 && focusTile;
+    if (close) {
+      this.showcase.base = worldPosition(focusTile);
+      this.targetGoal.copy(this.showcase.base);
+    }
+    this.showcase.fit = close
+      ? clamp(3.1 / band, 6, 48)
+      : clamp(Math.max(spanForHeight, spanForWidth), 6, 48);
+    this.spanGoal = this.showcase.fit;
     this.focusAnchor = {x: (free.x0 + free.x1) / 2, y: (free.y0 + free.y1) / 2};
   }
 
@@ -1752,17 +1904,17 @@ export class WorldView {
     b.add('taper', '#6c5b43', x, y + scale * .2, z, scale * .045, scale * .4, scale * .045);
     const angle = rand() * 6;
     if (type === 'pine') {
-      const color = ['#2e5a42', '#386848', '#47764c'][Math.floor(rand() * 3)];
+      const color = ['#27563d', '#316548', '#41764d'][Math.floor(rand() * 3)];
       for (let layer = 0; layer < 3; layer++) {
         const width = .3 - layer * .075;
-        b.add('bough', layer > 1 ? '#5f8a52' : color, x, y + scale * (.36 + layer * .19), z, scale * width, scale * (.44 - layer * .05), scale * width, 0, angle + layer * .6);
+        b.add('bough', leafy(layer > 1 ? '#5f8f53' : color), x, y + scale * (.36 + layer * .19), z, scale * width, scale * (.44 - layer * .05), scale * width, 0, angle + layer * .6);
       }
     } else {
-      const color = type === 'gold' ? '#bba357' : ['#4f7e45', '#648f4c', '#3d6e48'][Math.floor(rand() * 3)];
+      const color = type === 'gold' ? '#c2a856' : ['#4d8244', '#65954c', '#386f46'][Math.floor(rand() * 3)];
       for (let crown = 0; crown < 3; crown++) {
         const a = angle + crown * 2.1, top = crown === 2;
         const dx = top ? 0 : Math.cos(a) * scale * .13, dz = top ? 0 : Math.sin(a) * scale * .12;
-        b.add('leaf', top ? '#7f9a55' : color, x + dx, y + scale * (top ? .72 : .54), z + dz, scale * .26, scale * (top ? .22 : .24), scale * .25, 0, a);
+        b.add('leaf', leafy(top ? '#86a257' : color), x + dx, y + scale * (top ? .72 : .54), z + dz, scale * .26, scale * (top ? .22 : .24), scale * .25, 0, a);
       }
     }
   }
@@ -1991,6 +2143,11 @@ export class WorldView {
     for (const [id, animation] of this.actorAnimations || []) previous.get(id)?.add(actorMotionOffset(animation, now));
     this.actorPositions = new Map();
     this.actorAnimations = new Map();
+    // What each unit looked like last time, so a champion can be cued from what
+    // actually changed: a wound, a blow, a power, a march.
+    const wasUnit = this.unitSnapshots || new Map();
+    this.unitSnapshots = new Map((state.units || []).map(u => [u.id, {hp: u.hp, xp: u.xp, cooldown: u.cooldown, tileId: u.tileId}]));
+    const championPlacements = [];
     const focused = typeof document !== 'undefined' ? this.labels.find(label => label.element === document.activeElement) : null;
     if (this.piecesGroup) {
       this.scene.remove(this.piecesGroup);
@@ -2096,14 +2253,19 @@ export class WorldView {
       b.actorId = unit.id;
       const army = unit.armySize >= 3 && ['warrior', 'archer', 'rider'].includes(unit.kind), stackScale = count > 4 ? .7 : count > 2 ? .82 : 1;
       const formations = army ? [[0, -.25], [-.32, .18], [.32, .18]] : [[0, 0]], companyScale = stackScale * (army ? .62 : 1);
-      for (const [dx, dz] of formations) {
-        const x = p.x + dx * stackScale, z = p.z + dz * stackScale;
-        b.at(x, p.y, z, .8 * companyScale, Math.PI * .3);
-        this.unit(b, unit.kind, f, unit.faction);
-        if (unit.kind === 'warrior' || unit.kind === 'archer') {
-          for (const side of [-1, 1]) {
-            b.at(x + side * .23 * companyScale, p.y, z + .2 * companyScale, .61 * companyScale, Math.PI * .3);
-            this.unit(b, unit.kind, f, unit.faction);
+      // A champion with a figure of its own is drawn from that model instead.
+      const figure = unit.kind === 'hero' && this.championAvailable(unit.faction);
+      if (unit.kind === 'hero' && !figure) this.requestChampion(unit.faction);
+      if (!figure) {
+        for (const [dx, dz] of formations) {
+          const x = p.x + dx * stackScale, z = p.z + dz * stackScale;
+          b.at(x, p.y, z, .8 * companyScale, UNIT_FACING);
+          this.unit(b, unit.kind, f, unit.faction);
+          if (unit.kind === 'warrior' || unit.kind === 'archer') {
+            for (const side of [-1, 1]) {
+              b.at(x + side * .23 * companyScale, p.y, z + .2 * companyScale, .61 * companyScale, UNIT_FACING);
+              this.unit(b, unit.kind, f, unit.faction);
+            }
           }
         }
       }
@@ -2113,12 +2275,21 @@ export class WorldView {
         b.add('torus', 'bannerGold', 0, .01, 0, .25, .25, .25, Math.PI / 2);
         // A coloured front inset makes the champion base legible among foliage.
         b.add('box', f.cloth, 0, .01, .255, .16, .024, .035);
+        if (figure) {
+          const kit = this.championKits.get(unit.faction);
+          championPlacements.push({
+            unitId: unit.id, faction: unit.faction, position: p.clone().setY(p.y + .02),
+            rotation: UNIT_FACING, scale: CHAMPION_HEIGHT / (kit.height || 1) * stackScale,
+          });
+        }
       }
       this.addUnitLabel(unit, p.clone().setY(p.y + (unit.kind === 'rider' ? .85 : .72)), f);
     }
     this.piecesGroup = b.finish();
     this.piecesGroup.name = 'Pieces';
     this.scene.add(this.piecesGroup);
+    this.syncChampions(championPlacements);
+    this.cueChampions(state, wasUnit);
     if (this.actorAnimations.size) this.animatePieces(performance.now());
     if (this.renderer?.shadowMap) this.renderer.shadowMap.needsUpdate = true;
     this.labelsDirty = true;
@@ -2561,7 +2732,11 @@ export class WorldView {
       const at = ring(pendingAttack, .96, .11, palette.pending);
       if (at) crosses.push([...at, .42, .08, ...palette.pending]);
     }
-    if (selected) ring(selected, 1, .085, palette.selected);
+    // The selected tile carries a gold-leaf rule with a hairline inside it.
+    if (selected) {
+      ring(selected, 1, .085, palette.selected);
+      ring(selected, .84, .016, [palette.selected[0], palette.selected[1] * .5]);
+    }
     const previous = this.highlightMesh.geometry;
     this.highlightMesh.geometry = ringGeometry(rings, crosses);
     previous.dispose();
@@ -2614,7 +2789,217 @@ export class WorldView {
       }
     }
     for (const [id, animation] of this.actorAnimations) if (now - animation.started >= animation.duration) this.actorAnimations.delete(id);
-    if (this.renderer?.shadowMap && this.quality?.shadow) this.renderer.shadowMap.needsUpdate = true;
+    // Shadows follow the march, but redrawing the map every frame is not worth it.
+    if (this.renderer?.shadowMap && this.quality?.shadow && this.pieceShadowAt !== Math.floor(now / 90)) {
+      this.pieceShadowAt = Math.floor(now / 90);
+      this.renderer.shadowMap.needsUpdate = true;
+    }
+  }
+
+  // Champions -------------------------------------------------------------------
+
+  // The Founder's Five who have a figure are drawn from their own model. The file
+  // is fetched the first time such a champion is on the board, never before, and a
+  // failure simply leaves the procedural champion in place.
+  championAvailable(factionId) {
+    return this.championKits?.has(factionId) || false;
+  }
+
+  requestChampion(factionId) {
+    if (!this.renderer || this.disposed) return;
+    this.championKits ??= new Map();
+    this.championFailed ??= new Set();
+    this.championLoading ??= new Set();
+    if (this.championKits.has(factionId) || this.championFailed.has(factionId) || this.championLoading.has(factionId)) return;
+    this.championLoading.add(factionId);
+    import('./ui/champions.js').then(async module => {
+      if (!module.hasFigure(factionId)) throw Error(`${factionId} has no figure`);
+      const kit = await module.loadFigure(factionId);
+      if (this.disposed) return kit.dispose();
+      this.championModule = module;
+      this.championKits.set(factionId, kit);
+      this.championLoading.delete(factionId);
+      // The board was drawn without the figure; draw it again now that it is here.
+      this.refreshPieces();
+    }).catch(error => {
+      this.championLoading.delete(factionId);
+      this.championFailed.add(factionId);
+      console.warn(`Champion figure unavailable (${factionId}):`, error?.message || error);
+    });
+  }
+
+  refreshPieces() {
+    if (!this.renderState || this.disposed) return;
+    this.piecesSignature = null;
+    this.buildPieces(this.renderState);
+    this.requestRender();
+  }
+
+  // One figure per champion on the board, kept between rebuilds so an animation
+  // that is playing is not cut short by an unrelated change elsewhere.
+  syncChampions(placements) {
+    this.championInstances ??= new Map();
+    const live = this.championInstances;
+    if (!this.championGroup && placements.length) {
+      this.championGroup = new THREE.Group();
+      this.championGroup.name = 'Champions';
+      this.scene.add(this.championGroup);
+    }
+    const seen = new Set();
+    for (const place of placements) {
+      seen.add(place.unitId);
+      let entry = live.get(place.unitId);
+      if (entry && entry.faction !== place.faction) {
+        this.releaseChampion(place.unitId);
+        entry = null;
+      }
+      if (!entry) {
+        const kit = this.championKits.get(place.faction);
+        if (!kit) continue;
+        const instance = kit.createInstance();
+        entry = {faction: place.faction, instance, clip: null, until: 0, lod: 0, facing: place.rotation};
+        this.championGroup.add(instance.root);
+        live.set(place.unitId, entry);
+        this.playChampionClip(entry, 'idle', {loop: true});
+      }
+      entry.base = place.position.clone();
+      entry.scale = place.scale;
+      entry.targetFacing = place.rotation;
+      entry.instance.root.position.copy(place.position);
+      entry.instance.root.scale.setScalar(place.scale);
+      entry.instance.root.rotation.y = entry.facing;
+      entry.instance.root.updateMatrixWorld(true);
+    }
+    for (const id of [...live.keys()]) if (!seen.has(id)) this.releaseChampion(id);
+    if (this.championGroup) this.championGroup.visible = live.size > 0;
+  }
+
+  releaseChampion(unitId) {
+    const entry = this.championInstances?.get(unitId);
+    if (!entry) return;
+    entry.instance.kit.releaseInstance(entry.instance);
+    this.championInstances.delete(unitId);
+  }
+
+  // The clip a champion should be playing, read from what changed in the game
+  // state: a wound, a blow struck (attack grants experience), a power spent, a
+  // step taken, or the campaign won.
+  championIntent(unit, before, state) {
+    if (state?.winner && state.winner === unit.faction) return {name: 'victory', loop: true};
+    if (!before) return null;
+    if ((unit.cooldown || 0) > (before.cooldown || 0)) return {name: 'power', loop: false};
+    if ((unit.xp || 0) > (before.xp || 0)) return {name: 'attack', loop: false};
+    if ((unit.hp || 0) < (before.hp || 0)) return {name: 'hurt', loop: false};
+    return null;
+  }
+
+  playChampionClip(entry, name, {loop = false, fade = .22} = {}) {
+    const action = entry.instance.actions.get(name);
+    if (!action) return;
+    const previous = entry.clip && entry.instance.actions.get(entry.clip);
+    action.reset();
+    action.enabled = true;
+    action.setLoop(loop ? THREE.LoopRepeat : THREE.LoopOnce, loop ? Infinity : 1);
+    action.clampWhenFinished = !loop;
+    action.timeScale = 1;
+    if (previous && previous !== action) {
+      action.crossFadeFrom(previous, this.reducedMotion ? 0 : fade, false);
+      action.play();
+    } else action.play();
+    entry.clip = name;
+    entry.loop = loop;
+    entry.until = loop ? Infinity : performance.now() + action.getClip().duration * 1000;
+  }
+
+  // Called from buildPieces, where the previous unit snapshot is still at hand.
+  cueChampions(state, snapshots) {
+    if (!this.championInstances?.size) return;
+    for (const [unitId, entry] of this.championInstances) {
+      const unit = (state.units || []).find(u => u.id === unitId);
+      if (!unit) continue;
+      const intent = this.championIntent(unit, snapshots.get(unitId), state);
+      if (intent) this.playChampionClip(entry, intent.name, {loop: intent.loop});
+      else if (this.actorAnimations?.has(unitId) && entry.clip !== 'move') this.playChampionClip(entry, 'move', {loop: true, fade: .14});
+    }
+  }
+
+  // Mixers advance only for champions inside the frame; everything else holds its
+  // pose and costs nothing but its draw call.
+  stepChampions(dt, now) {
+    const live = this.championInstances;
+    if (!live?.size) return;
+    this.championFrustum ??= new THREE.Frustum();
+    this.championMatrix ??= new THREE.Matrix4();
+    this.championFrustum.setFromProjectionMatrix(
+      this.championMatrix.multiplyMatrices(this.camera.projectionMatrix, this.camera.matrixWorldInverse));
+    // A figure is drawn at full detail while it is large on screen and near the
+    // middle of the view; otherwise the far mesh stands in.
+    const pixels = this.height ? this.height / (2 * this.span) : 40;
+    let animating = false;
+    for (const [unitId, entry] of live) {
+      const root = entry.instance.root;
+      const visible = this.championFrustum.containsPoint(root.position);
+      const screen = entry.scale * (entry.instance.kit.height || 1) * pixels;
+      const far = screen < 58 || root.position.distanceTo(this.target) > 13;
+      const lod = far ? 1 : 0;
+      if (lod !== entry.lod) {
+        entry.lod = lod;
+        entry.instance.meshes.forEach((group, level) => group.forEach(mesh => {
+          mesh.visible = level === lod && (!mesh.userData.variant || mesh.userData.variant === entry.instance.variant);
+        }));
+      }
+      const animation = this.reducedMotion ? null : this.actorAnimations?.get(unitId);
+      if (animation && entry.base) {
+        root.position.copy(entry.base).add(actorMotionOffset(animation, now, scratchOffset));
+        // A champion turns to walk the way it is going.
+        const step = scratchOffset.copy(animation.offset);
+        if (step.lengthSq() > 1e-4) entry.targetFacing = Math.atan2(-step.x, -step.z);
+      } else if (entry.base) root.position.copy(entry.base);
+      const turn = ((entry.targetFacing - entry.facing + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+      if (Math.abs(turn) > 1e-3 && !this.reducedMotion) {
+        entry.facing += turn * Math.min(1, dt * 7);
+        animating = true;
+      } else entry.facing = entry.targetFacing;
+      root.rotation.y = entry.facing;
+      root.updateMatrixWorld(true);
+      if (!visible || this.reducedMotion) continue;
+      entry.instance.mixer.update(dt);
+      // A one-off blow or power runs at the active rate and then settles; looping
+      // clips ride the ambient frames the water already asks for.
+      if (!entry.loop) {
+        if (now < entry.until) animating = true;
+        else if (entry.clip !== 'idle') this.playChampionClip(entry, 'idle', {loop: true});
+      }
+    }
+    if (animating) this.requestRender();
+    // Moving figures refresh the shadow map, but no faster than 11 times a second.
+    if (this.renderer?.shadowMap && this.quality?.shadow && !this.reducedMotion && this.championShadowAt !== Math.floor(now / 90)) {
+      this.championShadowAt = Math.floor(now / 90);
+      this.renderer.shadowMap.needsUpdate = true;
+    }
+  }
+
+  // Reduced motion holds every champion in its idle pose on the first frame.
+  restChampions() {
+    for (const entry of this.championInstances?.values() || []) {
+      entry.instance.mixer.setTime(0);
+      if (entry.clip !== 'idle') this.playChampionClip(entry, 'idle', {loop: true});
+      entry.instance.mixer.update(0);
+    }
+  }
+
+  // Campaigns end; their figures go with them.
+  unloadChampions() {
+    for (const id of [...(this.championInstances?.keys() || [])]) this.releaseChampion(id);
+    if (this.championGroup) {
+      this.scene.remove(this.championGroup);
+      this.championGroup = null;
+    }
+    this.championModule?.unloadFigures();
+    this.championKits?.clear();
+    this.championFailed?.clear();
+    this.championLoading?.clear();
+    this.championModule = null;
   }
 
   // Input -----------------------------------------------------------------------
@@ -2766,6 +3151,8 @@ export class WorldView {
   setAccessibility({reducedMotion = this.reducedMotion, highContrast = this.highContrast} = {}) {
     this.reducedMotion = !!reducedMotion;
     this.highContrast = !!highContrast;
+    if (this.windUniform) this.windUniform.value = this.reducedMotion ? 0 : this.quality?.wind || 0;
+    if (this.reducedMotion) this.restChampions();
     if (this.reducedMotion) {
       this.target?.copy(this.targetGoal);
       this.span = this.spanGoal;
@@ -2780,7 +3167,7 @@ export class WorldView {
       this.actorAnimations?.clear();
       this.keys?.clear();
     }
-    if (this.hoverRing) this.hoverRing.material.color.set(this.highContrast ? '#ffffff' : '#EFE7D6');
+    if (this.hoverRing) this.hoverRing.material.color.set(this.highContrast ? '#ffffff' : '#C9A227');
     if (this.lastHighlights) this.updateHighlights(this.lastHighlights);
     if (this.renderer) {
       this.updateCamera();
@@ -2889,6 +3276,14 @@ export class WorldView {
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrixWorld();
     if (this.water) this.water.material.uniforms.viewDirection.value.copy(cameraOffset).normalize();
+    if (this.sky) {
+      // The sun is directional, so its bloom is anchored by where the light comes
+      // from in camera space rather than by a point that could project off-screen.
+      const uniforms = this.sky.material.uniforms;
+      scratchOffset.copy(SUN_OFFSET).normalize().transformDirection(this.camera.matrixWorldInverse);
+      uniforms.sunScreen.value.set(.5 + scratchOffset.x * .46, .5 + scratchOffset.y * .46);
+      uniforms.aspect.value = aspect;
+    }
     if (this.gridUniform) {
       const fade = 1 - smoothstep(13, 19, this.span);
       this.gridUniform.value = (this.highContrast ? .24 : .12) * (this.showcase ? .4 : fade);
@@ -2898,6 +3293,7 @@ export class WorldView {
   dispose() {
     this.disposed = true;
     this.sleep();
+    this.unloadChampions();
     this.resizeObserver?.disconnect();
     if (this.contextNoticeTimer) clearTimeout(this.contextNoticeTimer);
     if (this.events) {

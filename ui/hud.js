@@ -4,6 +4,7 @@ import * as g from './game.js';
 import {engine} from './game.js';
 import {districtOptions} from '../city-planning.js';
 import {icon, unitIcon, crest} from './icons.js';
+import {portrait} from './portraits.js';
 import {button, meter, stat} from './markup.js';
 import {TERRAIN, RESOURCES, IMPROVEMENTS, plural, signed, formatNumber} from './text.js';
 import {orderBlockReason, activePlayerName} from './actions.js';
@@ -145,7 +146,7 @@ export function diplomacyRows() {
     const massing = !war && engine.getFaction(ctx.state, f.id)?.warPlan?.target === ctx.state.player;
     const status = war ? ['status-danger', 'war', 'At war'] : massing ? ['status-danger', 'warning', 'Massing troops'] : ['status-good', 'peace', 'At peace'];
     return `<div class="rival" data-faction-row="${esc(f.id)}">
-      <div class="rival-head">${crest(f.id)}<div><strong>${esc(f.leader)}</strong><small>${esc(f.name)}</small></div>
+      <div class="rival-head">${portrait(f.id, {size: 'sm'})}<div><strong>${esc(f.leader)}</strong><small>${esc(f.name)}</small></div>
         <span class="status ${status[0]}">${icon(status[1])}${status[2]}</span></div>
       ${diplomacyActions(f.id)}
     </div>`;
@@ -159,7 +160,10 @@ function renderSidebar() {
   const closeButton = isDrawerLayout()
     ? `<button type="button" class="icon-button" data-close-realm="true" aria-label="Close" title="Close" style="margin-left:auto">${icon('close')}</button>`
     : '';
-  $('#realm-identity').innerHTML = `${crest(m.id, 'crest crest-large')}<div><h2>${esc(m.name)}</h2><p>${esc(m.leader)} · ${plural(cities.length, 'city', 'cities')}</p></div>${closeButton}`;
+  const identity = `${portrait(m.id, {size: 'md', gold: true})}<div><h2>${esc(m.name)}</h2><p>${esc(m.leader)} · ${plural(cities.length, 'city', 'cities')}</p></div>${closeButton}`;
+  const identityEl = $('#realm-identity');
+  // Rebuilt only on a change, so the portrait never blinks between renders.
+  if (identityEl.dataset.html !== identity) { identityEl.innerHTML = identity; identityEl.dataset.html = identity; }
   $$('[data-tab]').forEach(b => {
     const active = b.dataset.tab === ctx.tab;
     b.classList.toggle('active', active);
@@ -240,8 +244,11 @@ function unitSelection(unit) {
       <div class="row-actions">${button('Attack', {icon: 'attack', kind: 'danger', data: {act: 'attack'}})}${button('Cancel', {data: {act: 'cancel-attack'}})}</div>
     </div>` : '';
 
+  const badge = unit.kind === 'hero'
+    ? portrait(unit.faction, {size: 'md', gold: true, extraClass: 'selection-portrait'})
+    : `<div class="selection-emblem">${unitIcon(unit)}</div>`;
   return `<div class="selection-head">
-      <div class="selection-emblem">${unitIcon(unit)}</div>
+      ${badge}
       <div class="selection-title">${kicker ? `<p class="kicker">${esc(kicker)}</p>` : ''}<h2>${esc(unit.name)}</h2><p class="selection-sub">${esc(TERRAIN[t?.terrain] || '')}${unit.moves > 0 ? ` · ${plural(unit.moves, 'move')} left` : ' · No moves'}</p></div>
     </div>
     ${statsFor(unit)}
@@ -332,7 +339,7 @@ function renderSelection() {
   }
   const panel = $('#selection');
   panel.dataset.kind = kind;
-  panel.innerHTML = html;
+  if (panel.dataset.html !== html) { panel.innerHTML = html; panel.dataset.html = html; }
 }
 
 // One-line coach. The first turns walk a new player through a campaign opening.
@@ -487,8 +494,9 @@ export function syncOrderControls() {
   for (const container of [$('#modal-body')]) {
     if (!container) continue;
     const isRoom = container.dataset.roomPanel && container.dataset.roomPanel !== 'false';
+    const isResult = $('#modal')?.dataset.kind === 'result';
     let status = container.querySelector(':scope > .order-status');
-    if (!reason || isRoom || !ctx.started) { status?.remove(); continue; }
+    if (!reason || isRoom || isResult || !ctx.started) { status?.remove(); continue; }
     if (!status) {
       status = document.createElement('p');
       status.className = 'order-status';

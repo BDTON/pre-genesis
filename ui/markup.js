@@ -55,4 +55,4 @@ export function stat(iconName, text, label = '') {
   return `<span class="stat" ${label ? `title="${esc(label)}"` : ''}>${icon(iconName, label)}<span>${esc(text)}</span></span>`;
 }
 
-export const dialogHead = (title, sub = '') => `<header class="dialog-head"><h2 id="dialog-title">${esc(title)}</h2>${sub ? `<p class="dialog-sub">${esc(sub)}</p>` : ''}</header>`;
+export const dialogHead = (title, sub = '') => `<header class="dialog-head illuminated"><h2 id="dialog-title">${esc(title)}</h2>${sub ? `<p class="dialog-sub">${esc(sub)}</p>` : ''}</header>`;

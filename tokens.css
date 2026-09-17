@@ -80,11 +80,23 @@
   --focus-width: 2px;
   --focus-offset: 2px;
 
+  /* Elevation: three surfaces and nothing else. Panels that sit on the map use
+     --surface-sunk, sheets and cards on them step up one level at a time. */
+  --surface-sunk: var(--lapis-night);
+  --surface: var(--lapis);
+  --surface-raised: var(--lapis-raised);
+
   /* Sizes. */
   --icon-size: 1.25em;
   --target: 44px;
   --target-compact: 36px;
   --topbar-height: 48px;
+  --pin-size: 28px;
+  --portrait-sm: 40px;
+  --portrait-md: 56px;
+  --portrait-lg: 104px;
+  --portrait-xl: 152px;
+  --lozenge: 7px;
   --panel-width: 320px;
   --sheet-width: 400px;
   --dialog-width: 560px;
@@ -111,6 +123,14 @@
   --layer-bar: 30;
   --layer-toast: 40;
   --layer-update: 50;
+  --layer-reveal: 60;
+}
+
+/* Phones get a larger map pin: a 36px disc inside the same 44px touch area. */
+@media (pointer: coarse) {
+  :root {
+    --pin-size: 36px;
+  }
 }
 
 /* Fine pointers can use denser controls; touch keeps 44px targets. */
@@ -148,4 +168,14 @@
   --wash: rgb(239 231 214 / .1);
   --scrim: rgb(15 26 48 / .82);
   --papyrus-rule: rgb(42 37 25 / .45);
+}
+
+/* BEM Studios ident. The developer's own brand palette, used by the splash
+   before the title and nowhere else in the game. */
+:root {
+  --bem-ink: #04060a;
+  --bem-teal: #18e8c4;
+  --bem-word: #eafffb;
+  --bem-word-dead: #3a4048;
+  --bem-quiet: #6f7b83;
 }
