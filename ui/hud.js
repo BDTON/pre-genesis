@@ -217,7 +217,7 @@ function unitSelection(unit) {
 
   let help = unit.moves > 0 ? `${tapWord()} a lit tile to move.` : 'No moves left this turn.';
   if (unit.kind === 'settler') {
-    help = unit.moves <= 0 ? 'No moves left; found the city next turn.'
+    help = unit.moves <= 0 ? (foundable?.includes(unit.tileId) ? 'Found the city here next turn.' : 'No moves left. Keep going next turn.')
       : foundable === null ? 'Found cities 3+ tiles from any other city.'
       : canFound ? `This site is free; ${tapWordLower()} Found city.` : 'Move to a marked site, then Found city.';
   }
@@ -356,8 +356,8 @@ export function coachStep() {
   const guiding = s.turn <= 6 && !ctx.preferences?.tipsOff;
   if (unit) {
     if (unit.kind === 'settler') {
-      if (unit.moves <= 0) return {text: 'No moves left; found the city next turn.', action: null};
       const sites = g.foundableTileIds(unit);
+      if (unit.moves <= 0) return {text: sites?.includes(unit.tileId) ? 'Found the city here next turn.' : 'No moves left. Keep going next turn.', action: null};
       if (!sites) return {text: 'Found cities 3+ tiles from any other city.', action: null};
       if (sites.includes(unit.tileId)) return {text: `${tapWord()} Found city to settle here.`, action: ['Found city', {icon: 'found', kind: 'primary', data: {act: 'found'}}]};
       return {text: `Move ${unit.name} to a marked site.`, action: null};

@@ -121,6 +121,24 @@ export function reachable(unit) {
   try { return engine.reachableTiles(ctx.state, unit.id); } catch { return []; }
 }
 
+// The reachable tile that gets a unit closest to a distant target, or null if no step helps.
+export function stepToward(unit, targetId) {
+  const target = tile(targetId);
+  const here = unit && tile(unit.tileId);
+  if (!target || !here) return null;
+  // Settlers prefer a legal city site when it is as close to the target as any other step.
+  const sites = new Set(unit.kind === 'settler' ? foundableTileIds(unit) || [] : []);
+  let best = null;
+  let bestScore = engine.distance(here, target) * 2;
+  for (const id of reachable(unit)) {
+    const candidate = tile(id);
+    if (!candidate) continue;
+    const score = engine.distance(candidate, target) * 2 - (sites.has(id) ? 1 : 0);
+    if (score < bestScore) { best = id; bestScore = score; }
+  }
+  return best;
+}
+
 export function attackableTiles(unit) {
   if (!unit) return [];
   return ctx.state.tiles.filter(t => t.visible && forecast(unit, t.id)?.canAttack).map(t => t.id);

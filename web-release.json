@@ -1,12 +1,12 @@
 {
-  "version": "pregenesis-web-c941d65c26082b",
+  "version": "pregenesis-web-d0ebb6df177e08",
   "files": 97,
-  "bytes": 2893618,
+  "bytes": 2895069,
   "assets": [
     {
       "file": "index.html",
-      "bytes": 8441,
-      "sha256": "c2438a3c44842239974788fd474717e0525549afbba3d07cc6371f79aa3b6fa0"
+      "bytes": 8443,
+      "sha256": "566fc4e3e63bf8cd2bd7bfea2111c45051f092bf9bbf2c3fcc4398f2c32c7211"
     },
     {
       "file": "app.js",
@@ -395,8 +395,8 @@
     },
     {
       "file": "ui/actions.js",
-      "bytes": 14519,
-      "sha256": "7f0fe3886b7a916b32d1bb6ff3ae8d903da95026e882013af96a18d438d9e5fd"
+      "bytes": 15070,
+      "sha256": "f325ec6eee29029faee66ba4551ab547ca66e5319d297bbd729bcc669573a81e"
     },
     {
       "file": "ui/audio.js",
@@ -420,13 +420,13 @@
     },
     {
       "file": "ui/game.js",
-      "bytes": 8407,
-      "sha256": "8822d4e01686d7ee9a0f403b965331913c389ce3005db3f8696137f0f4f8d686"
+      "bytes": 9175,
+      "sha256": "cb7ffa442c17585986866725bae60795d7b16aa5f4f24c97b0295a12bb099a8d"
     },
     {
       "file": "ui/hud.js",
-      "bytes": 29446,
-      "sha256": "d112eb01d2be6d3c8049e7beeb84504ae21467b828352289207e6f50e165b995"
+      "bytes": 29576,
+      "sha256": "637624e8b0f68a3d4bb43d7e94352d9fbe9517ffcd542aed4f16991e02888f9f"
     },
     {
       "file": "ui/icons.js",

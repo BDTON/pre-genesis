@@ -200,6 +200,18 @@ export function selectTile(id) {
       }
       return;
     }
+    const ownPiece = s.units.some(u => u.tileId === id && u.faction === s.player)
+      || s.cities.some(c => c.tileId === id && c.faction === s.player);
+    const step = !ownPiece && target.explored !== false && unit.moves > 0 ? g.stepToward(unit, id) : null;
+    if (step) {
+      if (action({type: 'MOVE', unitId: unit.id, tileId: step}).ok) {
+        ctx.selectedTileId = g.selectedUnit()?.tileId || step;
+        ctx.moveMode = false;
+        ui.render();
+        toast('On the way. Click the tile again next turn.');
+      }
+      return;
+    }
     if (ctx.moveMode) { toast('Too far. Pick a lit tile.'); return; }
   }
   ctx.selectedTileId = id;
