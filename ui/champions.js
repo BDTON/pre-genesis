@@ -15,9 +15,10 @@ const FIGURE_DIR = 'assets/figures/';
 const FIGURE_EXT = '.gl' + 'b';
 
 /** Founder's Five champions with a figure. Moses has none yet. */
-export const CHAMPION_FIGURES = Object.freeze(['michael', 'ra', 'athena', 'thor', 'moses']);
+export {FIGURE_IDS as CHAMPION_FIGURES} from './portraits.js';
+import {FIGURE_IDS as CHAMPION_FIGURES} from './portraits.js';
 /** Patron figures. Shown as a patron only, never as a unit on the map. */
-export const PATRON_FIGURES = Object.freeze(['ancient-of-days']);
+export {PATRON_FIGURE_IDS as PATRON_FIGURES} from './portraits.js';
 export const CLIPS = Object.freeze(['idle', 'move', 'attack', 'power', 'hurt', 'victory']);
 
 export function figureUrl(id) {
