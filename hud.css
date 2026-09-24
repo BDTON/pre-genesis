@@ -1141,8 +1141,8 @@ input[type="range"]::-moz-range-thumb {
   position: absolute;
   display: grid;
   place-items: center;
-  width: var(--pin-size);
-  height: var(--pin-size);
+  width: calc(var(--pin-size) * .72);
+  height: calc(var(--pin-size) * .72);
   padding: 0;
   border: 1.5px solid var(--faction, var(--limewash));
   border-radius: 50%;
@@ -1155,8 +1155,8 @@ input[type="range"]::-moz-range-thumb {
 }
 
 .world .world-unit-label .icon {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 12px;
 }
 
 .world .world-unit-label::after {
@@ -1165,10 +1165,10 @@ input[type="range"]::-moz-range-thumb {
 
 .world .world-unit-hp {
   position: absolute;
-  bottom: -6px;
+  bottom: -5px;
   left: 50%;
   width: 18px;
-  height: 3px;
+  height: 2px;
   overflow: hidden;
   border-radius: var(--radius-control);
   background: var(--surface-raised);
@@ -1193,15 +1193,15 @@ input[type="range"]::-moz-range-thumb {
 
 .world .world-army-badge {
   position: absolute;
-  top: -8px;
+  bottom: -8px;
   right: -10px;
-  min-width: 20px;
-  padding: 0 4px;
+  min-width: 16px;
+  padding: 0 3px;
   border: 0;
   border-radius: var(--radius-panel);
   background: var(--limewash);
   color: var(--ink);
-  font: var(--weight-bold) var(--text-12) / 16px var(--font-text);
+  font: var(--weight-bold) var(--text-12) / 14px var(--font-text);
   letter-spacing: 0;
   pointer-events: none;
 }
@@ -1221,8 +1221,8 @@ input[type="range"]::-moz-range-thumb {
   }
 
   .world .world-unit-label .icon {
-    width: 20px;
-    height: 20px;
+    width: 14px;
+    height: 14px;
   }
 
   .world .world-unit-hp {

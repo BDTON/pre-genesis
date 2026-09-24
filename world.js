@@ -2256,6 +2256,13 @@ export class WorldView {
       // A champion with a figure of its own is drawn from that model instead.
       const figure = unit.kind === 'hero' && this.championAvailable(unit.faction);
       if (unit.kind === 'hero' && !figure) this.requestChampion(unit.faction);
+      // A faction-coloured ground ring marks the unit's tile without covering
+      // the model itself. Heroes keep their own insignia (drawn below).
+      if (unit.kind !== 'hero') {
+        b.at(p.x, lift + .005, p.z, 1, 0);
+        b.add('disc', f.cloth, 0, 0, 0, .34, .014, .34);
+        b.add('torus', f.cloth, 0, .001, 0, .36, .36, .022, Math.PI / 2);
+      }
       if (!figure) {
         for (const [dx, dz] of formations) {
           const x = p.x + dx * stackScale, z = p.z + dz * stackScale;
@@ -2283,7 +2290,7 @@ export class WorldView {
           });
         }
       }
-      this.addUnitLabel(unit, p.clone().setY(p.y + (unit.kind === 'rider' ? .85 : .72)), f);
+      this.addUnitLabel(unit, p.clone().setY(p.y + (unit.kind === 'rider' ? .25 : .18)), f);
     }
     this.piecesGroup = b.finish();
     this.piecesGroup.name = 'Pieces';

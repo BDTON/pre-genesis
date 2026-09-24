@@ -1,7 +1,7 @@
 {
-  "version": "pregenesis-web-0863bcdb76c7f3",
+  "version": "pregenesis-web-b31d573fca5325",
   "files": 109,
-  "bytes": 3109134,
+  "bytes": 3109529,
   "assets": [
     {
       "file": "index.html",
@@ -370,8 +370,8 @@
     },
     {
       "file": "hud.css",
-      "bytes": 84776,
-      "sha256": "e13344b17a8258a35395b881097693b578b321409e073556b4f96e6e9286417e"
+      "bytes": 84803,
+      "sha256": "96f2593927762a4f05cebc1e325c96d5c496c39908ce54a5705d04bc2f06d89e"
     },
     {
       "file": "lore-biblical.js",
@@ -545,8 +545,8 @@
     },
     {
       "file": "world.js",
-      "bytes": 161152,
-      "sha256": "f16e19a219bae61c434e8591f13b61c28175b39e21467994ce9a8fa386544398"
+      "bytes": 161520,
+      "sha256": "7c45cdc47f89fb0de47d0be6408c4ded4a18f4b09c49810ca5b314f778d27210"
     }
   ],
   "runtime": [
