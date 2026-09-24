@@ -1,7 +1,7 @@
 {
-  "version": "pregenesis-web-af24b9aba46585",
-  "files": 110,
-  "bytes": 3296546,
+  "version": "pregenesis-web-081ed0826b6a3a",
+  "files": 111,
+  "bytes": 3296880,
   "assets": [
     {
       "file": "index.html",
@@ -350,8 +350,8 @@
     },
     {
       "file": "assets/icons.svg",
-      "bytes": 32184,
-      "sha256": "f20daf69d987bdd66e35f772b6832404861e6e279c318d8b9ed78aef12e2dee5"
+      "bytes": 32185,
+      "sha256": "ecd4a5458947d537982cd0d12b63787f2e56ce9948b0e067fdcf9bb151babf4e"
     },
     {
       "file": "city-planning.js",
@@ -377,6 +377,11 @@
       "file": "factions.js",
       "bytes": 57435,
       "sha256": "864d06754fb3add2af2e1ac4345b454e4d39691f9e8c709d506b62279670ce4b"
+    },
+    {
+      "file": "figure-manifest.js",
+      "bytes": 352,
+      "sha256": "e7552a60b40f02f4f01fbb6027ff67bcc388cc08af85476aa73eda6d08b17597"
     },
     {
       "file": "hud.css",
@@ -510,8 +515,8 @@
     },
     {
       "file": "ui/portraits.js",
-      "bytes": 2343,
-      "sha256": "c4e49aa0dd309962fdbe724022363f32e1ae28560aeff0c8571276da200b3ef7"
+      "bytes": 2324,
+      "sha256": "c2664a36769f515f99570c0ef010fec9f350c93123a73d13bcdbaf43c00aecb6"
     },
     {
       "file": "ui/reveal.js",
