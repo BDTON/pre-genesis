@@ -48,21 +48,38 @@ const difficultyOf = state => DIFFICULTIES.find(d => d.id === (state.difficulty 
 
 export const TECHS = [
   { id: 'agriculture', name: 'Wheat of Triptolemus', cost: 50, requires: [], description: 'Demeter’s grain for all the earth: farms yield 1 more food.', source: 'Apollodorus, Library 1.5.2; Homeric Hymn to Demeter 153, 474–476' },
-  { id: 'writing', name: 'Writing of Thoth', cost: 55, requires: [], description: 'Thoth’s gift of letters: unlocks the House of Life.', source: 'Plato, Phaedrus 274c–275b' },
-  { id: 'masonry', name: 'Craft of Ptah', cost: 60, requires: [], description: 'The maker god’s stonework: unlocks Cyclopean Walls and mines.', source: 'Memphite Theology, Shabaka Stone (British Museum EA 498)' },
-  { id: 'riding', name: 'Bridle of Athena', cost: 90, requires: ['agriculture'], description: 'The golden bridle that tamed Pegasus: unlocks Horsemen.', source: 'Pindar, Olympian 13.63–86' },
-  { id: 'metalworking', name: 'Craft of Tubal-cain', cost: 120, requires: ['masonry'], description: 'The first smith of bronze and iron: unlocks the Forge of Hephaestus and gives soldiers 4 strength.', source: 'Genesis 4:22' },
-  { id: 'engineering', name: 'Art of Daedalus', cost: 190, requires: ['metalworking', 'writing'], description: 'The master builder’s skill: every city gains 2 production.', source: 'Diodorus Siculus, Library 4.76–77' },
-  { id: 'tablet_of_destinies', name: 'Tablet of Destinies', cost: 360, requires: ['engineering'], description: 'The tablet Marduk took from Kingu: unlocks Etemenanki.', source: 'Enuma Elish I 157; IV 121–122' },
-  { id: 'fire', name: 'Fire of Prometheus', cost: 240, requires: ['engineering'], description: 'Fire carried to mortals in a fennel stalk: every city gains 1 production and 1 culture.', source: 'Hesiod, Theogony 565–569; Works and Days 50–52' },
+  { id: 'pottery', name: 'Pithos of Ganymede', cost: 55, requires: [], description: 'Ganymede’s amphora: unlocks the Trade Post and lets cities store 6 more food.', source: 'Homer, Iliad 20.230–235; funerary pithoi, Crete' },
+  { id: 'writing', name: 'Writing of Thoth', cost: 60, requires: [], description: 'Thoth’s gift of letters: unlocks the House of Life.', source: 'Plato, Phaedrus 274c–275b' },
+  { id: 'masonry', name: 'Craft of Ptah', cost: 65, requires: [], description: 'The maker god’s stonework: unlocks Cyclopean Walls and mines.', source: 'Memphite Theology, Shabaka Stone (British Museum EA 498)' },
+  { id: 'astronomy', name: 'Watch-tower of Bel', cost: 80, requires: ['writing'], description: 'The Babylonian ziggurat’s star-watchers: cities on hills produce 1 more science.', source: 'Eratosthenes, quoted by Strabo 1.1.6; BM tablets WA 28178' },
+  { id: 'irrigation', name: 'Cedar Channel of Sennacherib', cost: 90, requires: ['agriculture', 'masonry'], description: 'The great aqueduct: cities adjacent to rivers produce 2 more food.', source: 'Luckenbill, The Annals of Sennacherib (OIP 2) 80–91' },
+  { id: 'riding', name: 'Bridle of Athena', cost: 95, requires: ['agriculture'], description: 'The golden bridle that tamed Pegasus: unlocks Horsemen.', source: 'Pindar, Olympian 13.63–86' },
+  { id: 'sailing', name: 'Argo of the Argonauts', cost: 110, requires: ['pottery'], description: 'The first ship of legend: cities on coasts produce 1 more gold.', source: 'Apollonius Rhodius, Argonautica 1.524–527' },
+  { id: 'metalworking', name: 'Craft of Tubal-cain', cost: 130, requires: ['masonry'], description: 'The first smith of bronze and iron: unlocks the Forge of Hephaestus and gives soldiers 4 strength.', source: 'Genesis 4:22' },
+  { id: 'calendar', name: 'Calendar of Nabu', cost: 150, requires: ['astronomy'], description: 'The Babylonian year-count: every city produces 1 more science.', source: 'Ptolemy, Almagest III.1; Babylonian Mul.Apin tablets (BM 32312)' },
+  { id: 'mathematics', name: 'Theorem of Thales', cost: 175, requires: ['astronomy', 'writing'], description: 'The first philosopher-mathematician: cities gain 1 more science per adjacent mountain.', source: 'Proclus, Commentary on the First Book of Euclid 65.3–65' },
+  { id: 'medicine', name: 'Staff of Asclepius', cost: 200, requires: ['mathematics', 'writing'], description: 'The healer’s serpent-staff: every unit heals 4 more on home soil.', source: 'Homeric Hymn to Asclepius 1–5; Pindar, Pythian 3.5–58' },
+  { id: 'music', name: 'Lyre of Orpheus', cost: 220, requires: ['medicine'], description: 'The enchanter’s lyre: every city produces 1 more culture.', source: 'Apollodorus, Library 1.3.2; Diodorus Siculus 4.25.4' },
+  { id: 'engineering', name: 'Art of Daedalus', cost: 240, requires: ['metalworking', 'writing'], description: 'The master builder’s skill: every city gains 2 production.', source: 'Diodorus Siculus, Library 4.76–77' },
+  { id: 'fire', name: 'Fire of Prometheus', cost: 270, requires: ['engineering'], description: 'Fire carried to mortals in a fennel stalk: every city gains 1 production and 1 culture.', source: 'Hesiod, Theogony 565–569; Works and Days 50–52' },
+  { id: 'alphabet', name: 'Phoenician Letters', cost: 290, requires: ['writing'], description: 'The traders of Tyre spread their alphabet: civics research 20% faster.', source: 'Herodotus, Histories 5.58; Kilamuwa Inscription (KAI 24)' },
+  { id: 'navigation', name: 'Stars of Astarte', cost: 320, requires: ['sailing', 'astronomy'], description: 'Phoenician celestial navigation: cities on coasts produce 1 more gold.', source: 'Lucan, Pharsalia 3.193–228; Periplus of Pseudo-Skylax 1' },
+  { id: 'law_code', name: 'Code of Hammurabi', cost: 360, requires: ['writing', 'masonry'], description: 'The stele of laws: every city gains 1 culture and 1 gold.', source: 'Code of Hammurabi, prologue (BM ANE 91028)' },
+  { id: 'siegecraft', name: 'Helepolis of Demetrius', cost: 410, requires: ['engineering', 'metalworking'], description: 'The siege tower of Poliorcetes: siege units gain 6 strength against cities.', source: 'Vitruvius, De Architectura 10.22.14; Plutarch, Demetrius 21.3' },
+  { id: 'tablet_of_destinies', name: 'Tablet of Destinies', cost: 480, requires: ['engineering'], description: 'The tablet Marduk took from Kingu: unlocks Etemenanki.', source: 'Enuma Elish I 157; IV 121–122' },
 ];
 
 export const CIVICS = [
   { id: 'tradition', name: 'The Me', cost: 45, requires: [], description: 'The decrees of civilization Inanna brought to Uruk: unlocks the Sanctuary and Bezalel’s Workshop.', source: 'Inana and Enki (ETCSL 1.3.1)' },
   { id: 'military', name: 'Einherjar', cost: 70, requires: [], description: 'Odin’s chosen warriors: unlocks the Myrmidons policy.', source: 'Grímnismál 18–23; Snorri, Gylfaginning 38–41' },
-  { id: 'trade', name: 'Ships of Tarshish', cost: 110, requires: ['tradition'], description: 'Solomon’s trading fleet: unlocks the Agora and the Treaty with Hiram.', source: '1 Kings 10:22' },
-  { id: 'lorekeepers', name: 'Seven Sages', cost: 130, requires: ['tradition'], description: 'The apkallu who taught the arts: unlocks the Tablet House policy.', source: 'Berossus, Babyloniaca F1; Uruk List of Kings and Sages (W 20030,7)' },
-  { id: 'alliances', name: 'Amphictyony', cost: 280, requires: ['trade', 'lorekeepers'], description: 'A sacred league of peoples: needed for Etemenanki and the Temple of Apollo at Delphi.', source: 'Pausanias, Description of Greece 10.8.1–5' },
+  { id: 'monuments', name: 'Pyramids of Giza', cost: 95, requires: ['tradition'], description: 'The eternal tombs: every city produces 1 more culture per adjacent desert.', source: 'Herodotus, Histories 2.124; Pyramid Inscriptions, Lepsius 2.415' },
+  { id: 'statesmanship', name: 'Sceptre of the Pharaoh', cost: 110, requires: ['tradition'], description: 'The double crown: unlocks the Granaries policy and lets capital cities produce 1 more gold.', source: 'Tefnakht Stela (Cairo CG 20692); Manetho, Aegyptiaca fr. 4' },
+  { id: 'trade', name: 'Ships of Tarshish', cost: 120, requires: ['tradition'], description: 'Solomon’s trading fleet: unlocks the Agora and the Treaty with Hiram.', source: '1 Kings 10:22' },
+  { id: 'lorekeepers', name: 'Seven Sages', cost: 140, requires: ['tradition'], description: 'The apkallu who taught the arts: unlocks the Tablet House policy.', source: 'Berossus, Babyloniaca F1; Uruk List of Kings and Sages (W 20030,7)' },
+  { id: 'phalanx', name: 'Sarissa of Macedon', cost: 200, requires: ['military'], description: 'The pike-phalanx of Pella: pikemen gain 8 strength and cost 10 more gold each.', source: 'Polybius 18.29; Asclepiodotus, Tactics 3.4' },
+  { id: 'code_of_laws', name: 'Twelve Tables', cost: 210, requires: ['statesmanship'], description: 'Roman law set in bronze: every city produces 1 more gold and 1 more culture.', source: 'Cicero, De Oratore 1.43.193; Livy 3.34' },
+  { id: 'cosmology', name: 'Cave of the Seven Veils', cost: 320, requires: ['lorekeepers', 'monuments'], description: 'The mysteries of Eleusis: every city produces 1 more culture and 1 more science.', source: 'Homeric Hymn to Demeter 480–482; Pausanias 1.38.7' },
+  { id: 'alliances', name: 'Amphictyony', cost: 360, requires: ['trade', 'lorekeepers'], description: 'A sacred league of peoples: needed for Etemenanki and the Temple of Apollo at Delphi.', source: 'Pausanias, Description of Greece 10.8.1–5' },
 ];
 
 export const POLICIES = [
@@ -798,19 +815,23 @@ function armyReady(unit) {
   return BATTALIONS.includes(unit.kind) && (unit.armySize ?? 1) === 1 && unit.hp === unit.maxHp && unit.moves === unit.maxMoves && !unit.acted;
 }
 function formArmy(state, unit) {
-  const failure = { ok: false, message: 'A host needs 3 unhurt units of one kind on one tile, all with full movement.' };
+  // Two units of the same kind, on the same tile, at full health and movement,
+  // join into a single host. The maximum stack size is two (CIVREV-shaped
+  // rules: small stacks, big decisions). One host with armySize=2 still moves
+  // and fights as one unit; the merger is reversible only by losing units.
+  const failure = { ok: false, message: 'A host needs 2 unhurt units of one kind on one tile, both with full movement.' };
   if (!armyReady(unit)) return failure;
   const others = state.units
     .filter(u => u.id !== unit.id && u.faction === unit.faction && u.tileId === unit.tileId && u.kind === unit.kind && armyReady(u))
-    .slice(0, 2);
-  if (others.length !== 2) return failure;
-  unit.strength += others.reduce((sum, u) => sum + u.strength, 0);
-  unit.armySize = 3;
+    .slice(0, 1);
+  if (others.length !== 1) return failure;
+  unit.strength += others[0].strength;
+  unit.armySize = 2;
   unit.name = productionOf(unit.kind).armyName;
   unit.moves = 0;
   unit.acted = true;
   unit.healing = false;
-  state.units = state.units.filter(u => !others.includes(u));
+  state.units = state.units.filter(u => u !== others[0]);
   narrate(state, unit.tileId, unit.faction, `A new ${unit.name} formed.`);
   return { ok: true, message: `${unit.name} formed. It can move next turn.` };
 }

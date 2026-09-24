@@ -1,7 +1,7 @@
 {
-  "version": "pregenesis-web-b31d573fca5325",
+  "version": "pregenesis-web-0a0ece4703d17a",
   "files": 109,
-  "bytes": 3109529,
+  "bytes": 3114030,
   "assets": [
     {
       "file": "index.html",
@@ -345,8 +345,8 @@
     },
     {
       "file": "engine.js",
-      "bytes": 85034,
-      "sha256": "457aba36d0d287132c1b6f347291c2ad382ad039fb1fbb333845ac8edb76aae1"
+      "bytes": 89497,
+      "sha256": "530f2b2d296eae018317b6b871c883085a44660090d253785cf9114d15a3393d"
     },
     {
       "file": "faction-lore.js",
@@ -426,7 +426,7 @@
     {
       "file": "save-validation.js",
       "bytes": 19566,
-      "sha256": "6c4e59cf3f85177be6d119dff68bfe391d11b204f06ee8f0d8475394301c475a"
+      "sha256": "94ac307100fad90a480f10755d2e3774dd05dd61a19e26b622621096ed535a87"
     },
     {
       "file": "tokens.css",
@@ -545,8 +545,8 @@
     },
     {
       "file": "world.js",
-      "bytes": 161520,
-      "sha256": "7c45cdc47f89fb0de47d0be6408c4ded4a18f4b09c49810ca5b314f778d27210"
+      "bytes": 161558,
+      "sha256": "071bc85fa138a525a775cfa41da940428942efcae0939a9993bb2f8ade9c23d2"
     }
   ],
   "runtime": [

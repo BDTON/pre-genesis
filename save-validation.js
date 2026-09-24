@@ -294,8 +294,8 @@ export function validateCampaignSave(v) {
     integer(u.charges, `${path}.charges`, u.kind === 'builder' ? 1 : 0, u.kind === 'builder' ? 100 : 0);
     integer(u.cooldown, `${path}.cooldown`, 0, 100); integer(u.bonusStrength, `${path}.bonusStrength`, 0, 10000); integer(u.buffTurns, `${path}.buffTurns`, 0, 100);
     optionalBoolean(u.acted, `${path}.acted`); optionalBoolean(u.healing, `${path}.healing`);
-    if (u.armySize !== undefined && ![1, 3].includes(u.armySize)) invalid(`${path}.armySize`, 'must be 1 or 3 when present');
-    if (u.armySize === 3 && !['warrior', 'archer', 'rider'].includes(u.kind)) invalid(`${path}.armySize`, 'is only supported for Spearmen, Archers and Horsemen');
+    if (u.armySize !== undefined && ![1, 2].includes(u.armySize)) invalid(`${path}.armySize`, 'must be 1 or 2 when present');
+    if (u.armySize === 2 && !['warrior', 'archer', 'rider'].includes(u.kind)) invalid(`${path}.armySize`, 'is only supported for Spearmen, Archers and Horsemen');
     if (u.kind === 'hero') {
       if (heroFactions.has(u.faction)) invalid(path, 'duplicates a realm’s champion');
       heroFactions.add(u.faction);

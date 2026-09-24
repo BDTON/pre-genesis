@@ -2251,7 +2251,7 @@ export class WorldView {
       const f = factionVisual(unit.faction);
       b.tileId = unit.tileId;
       b.actorId = unit.id;
-      const army = unit.armySize >= 3 && ['warrior', 'archer', 'rider'].includes(unit.kind), stackScale = count > 4 ? .7 : count > 2 ? .82 : 1;
+      const army = unit.armySize >= 2 && ['warrior', 'archer', 'rider'].includes(unit.kind), stackScale = count > 4 ? .7 : count > 2 ? .82 : 1;
       const formations = army ? [[0, -.25], [-.32, .18], [.32, .18]] : [[0, 0]], companyScale = stackScale * (army ? .62 : 1);
       // A champion with a figure of its own is drawn from that model instead.
       const figure = unit.kind === 'hero' && this.championAvailable(unit.faction);
@@ -2625,16 +2625,16 @@ export class WorldView {
     fill.style.width = `${clamp((unit.hp || 1) / (unit.maxHp || unit.hp || 1) * 100, 0, 100)}%`;
     hp.append(fill);
     label.append(svg, hp);
-    const army = unit.armySize >= 3;
+    const army = unit.armySize >= 2;
     label.dataset.army = String(army);
     if (army) {
       const badge = document.createElement('span');
       badge.className = 'world-army-badge';
-      badge.textContent = '3';
+      badge.textContent = String(unit.armySize ?? 2);
       badge.setAttribute('aria-hidden', 'true');
       label.append(badge);
     }
-    const name = `${unit.name || unit.kind}${army ? ' · Army of 3' : ''}`;
+    const name = `${unit.name || unit.kind}${army ? ` · Army of ${unit.armySize}` : ''}`;
     label.title = `${name} · ${unit.hp}/${unit.maxHp} health · ${unit.moves} moves`;
     label.setAttribute('aria-label', `Select ${name}, ${unit.hp} of ${unit.maxHp} health, ${unit.moves} moves`);
     label.addEventListener('click', e => {
