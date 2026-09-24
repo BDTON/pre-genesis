@@ -1,12 +1,12 @@
 {
-  "version": "pregenesis-web-081ed0826b6a3a",
-  "files": 111,
-  "bytes": 3296880,
+  "version": "pregenesis-web-0863bcdb76c7f3",
+  "files": 109,
+  "bytes": 3109134,
   "assets": [
     {
       "file": "index.html",
-      "bytes": 10340,
-      "sha256": "5257783b412196b711ec5cd1435a734cd924afdf4a41cbf7c590b0daa01002d6"
+      "bytes": 10020,
+      "sha256": "98ec48fcc3e25c04ec32d6a16ffcb9a1527708956d3336757dfe356510084b0a"
     },
     {
       "file": "app.js",
@@ -22,21 +22,6 @@
       "file": "assets/app-icon.svg",
       "bytes": 770,
       "sha256": "14ef32e0861d3f8cd93b10aac913f0ce5a158ebd582d791ea7925b9557958f03"
-    },
-    {
-      "file": "assets/brand/bem-fan-dead.webp",
-      "bytes": 78790,
-      "sha256": "fca51574511545c5104a14359632f30dcdafc76b5c1d7efc69482dd7c0aea77a"
-    },
-    {
-      "file": "assets/brand/bem-fan-lit.webp",
-      "bytes": 131378,
-      "sha256": "29ec40fea3b795b8e8c6a72ef212e2840b6f39f56a3128369ef8c5bbf48008d6"
-    },
-    {
-      "file": "assets/brand/bem-glow.webp",
-      "bytes": 2918,
-      "sha256": "ceb931e66665cfdfb20c9723d1f52b7cf2f558b6f7e52d7857e8c68e4e68b673"
     },
     {
       "file": "assets/brand/bem-ident.mp3",
@@ -380,13 +365,13 @@
     },
     {
       "file": "figure-manifest.js",
-      "bytes": 352,
-      "sha256": "e7552a60b40f02f4f01fbb6027ff67bcc388cc08af85476aa73eda6d08b17597"
+      "bytes": 404,
+      "sha256": "3c5d57fefc128ca7d4064d179468232404fc5c155aac7c010b45dc9f1908001e"
     },
     {
       "file": "hud.css",
-      "bytes": 85053,
-      "sha256": "bcccad119dee914ccd7c4629c6e75a59e27ba96b92ddf5439c928b3d91104ced"
+      "bytes": 84776,
+      "sha256": "e13344b17a8258a35395b881097693b578b321409e073556b4f96e6e9286417e"
     },
     {
       "file": "lore-biblical.js",
@@ -434,14 +419,19 @@
       "sha256": "892e92ef1809ad2d759987964f35e2da7a287fda6f2f5dc511a3c0f72d6a2b84"
     },
     {
+      "file": "privacy.html",
+      "bytes": 9500,
+      "sha256": "f770510aede5b46f86a73c298f92849814a32a1273bd2fe8f4e9531f1f0d1a24"
+    },
+    {
       "file": "save-validation.js",
       "bytes": 19566,
       "sha256": "6c4e59cf3f85177be6d119dff68bfe391d11b204f06ee8f0d8475394301c475a"
     },
     {
       "file": "tokens.css",
-      "bytes": 4989,
-      "sha256": "2c547f6a3bae0324dbdaf92716e4261b20470c8dfaf9146f1dd9dac1b7946f28"
+      "bytes": 5267,
+      "sha256": "3d10a31312720c168f8312a9b2109e27be4bb49b2131ed7d2ff4f952b8209c43"
     },
     {
       "file": "ui/actions.js",
@@ -460,8 +450,8 @@
     },
     {
       "file": "ui/codex.js",
-      "bytes": 5412,
-      "sha256": "9dd075bf15d6a07e10950ac5dbdbf76881252026dc54dfae6279799376a50048"
+      "bytes": 5689,
+      "sha256": "a8e352b88f679834bc8de39de5334e707bea00677a9394fe9c4ff76b8d7eced8"
     },
     {
       "file": "ui/context.js",
@@ -490,8 +480,8 @@
     },
     {
       "file": "ui/ident.js",
-      "bytes": 2500,
-      "sha256": "a4c2850bb6a2797cc7d4262568e14b71eddef841531848ab4892051d4940326f"
+      "bytes": 16786,
+      "sha256": "6f3f80c45070880fad26546ff829ec9f831a38ab2876874495a2fe1659960104"
     },
     {
       "file": "ui/input.js",
@@ -515,8 +505,8 @@
     },
     {
       "file": "ui/portraits.js",
-      "bytes": 2324,
-      "sha256": "c2664a36769f515f99570c0ef010fec9f350c93123a73d13bcdbaf43c00aecb6"
+      "bytes": 3439,
+      "sha256": "308ed8fd747409510cc68f09965e6565532a3265538d559af3fe40a277432dbc"
     },
     {
       "file": "ui/reveal.js",
@@ -525,8 +515,8 @@
     },
     {
       "file": "ui/settings.js",
-      "bytes": 10246,
-      "sha256": "d725b989a735ed68a68327c22c87c9b6d745148498ae7e30e268c2b1260cfe4b"
+      "bytes": 10675,
+      "sha256": "0370b67fc2884c58af06462cdd1b59e268af0b05d665fe471d3ba5004d96fd6d"
     },
     {
       "file": "ui/storage.js",
@@ -566,6 +556,11 @@
       "sha256": "c95540fde0372568c4475c3589d092a70ec2c91f5137ea838a952b9d1b225fa2"
     },
     {
+      "file": "assets/figures/artemis.glb",
+      "bytes": 335100,
+      "sha256": "2969838802f980a51043881ca6a0c3841b3bd780ed18e7dbf2bea1907a81ef87"
+    },
+    {
       "file": "assets/figures/athena.glb",
       "bytes": 534392,
       "sha256": "f19330d35c57da97d599d2981a21bc146280eb18aef15fdb25856409eb62ac81"
@@ -594,6 +589,16 @@
       "file": "assets/figures/closeups/thor.webp",
       "bytes": 7456,
       "sha256": "9013e398be1962a2d75823889ab627488a371aff3f351f5a06f7577beff73734"
+    },
+    {
+      "file": "assets/figures/demeter.glb",
+      "bytes": 437656,
+      "sha256": "59a280eed35bbcd9f57f2605f5ee0d9dc65072c55bf45989d87d9a7f1042aadf"
+    },
+    {
+      "file": "assets/figures/hermes.glb",
+      "bytes": 401200,
+      "sha256": "18c2a2183d3675e61cc70b9717bfc40dde1a2adf474938fd32769301b1d106d4"
     },
     {
       "file": "assets/figures/michael.glb",
@@ -641,6 +646,11 @@
       "sha256": "89be00eeeb51568fff7940ebc8c16ec6d8546e57d0ee29880bdd0bbfa37ea9a2"
     },
     {
+      "file": "assets/figures/poseidon.glb",
+      "bytes": 344580,
+      "sha256": "1bcd9d67998ddeb009c6de3a9700e7f00c770678a79e3fe67785c58b628c3260"
+    },
+    {
       "file": "assets/figures/ra.glb",
       "bytes": 463416,
       "sha256": "f53151fed22b7329dc92d5339f24e2e0321454187316f0b75b5229ed2b47e7ce"
@@ -649,6 +659,11 @@
       "file": "assets/figures/thor.glb",
       "bytes": 428084,
       "sha256": "ea7b1985f9ff49b2cc247a2fd04605896a3f4235a8b4a4670584c2355c794bba"
+    },
+    {
+      "file": "assets/figures/zeus.glb",
+      "bytes": 438680,
+      "sha256": "44c9793c295297f536d20eaa10071a426adb9eda2be35a764984050134621180"
     }
   ]
 }

@@ -4,7 +4,7 @@ import * as g from './game.js';
 import {PANTHEONS} from '../mythology.js';
 import {FACTION_LORE} from '../faction-lore.js';
 import {icon} from './icons.js';
-import {portrait} from './portraits.js';
+import {portrait, figurePlate} from './portraits.js';
 import {button} from './markup.js';
 import {modal} from './overlay.js';
 import {SOURCE_KINDS} from './text.js';
@@ -46,8 +46,12 @@ export function showCodex(factionId = ctx.started ? ctx.state.player : ctx.chose
       ${power ? `<p><strong>${esc(power.name)}</strong> ${esc(power.description)}</p>` : ''}
     </section>` : '';
 
+  // The plate opens the reading column for a realm whose leader is modelled.
+  const plate = figurePlate(f.id, f.leader);
+  const opening = text => (plate ? `<div class="codex-opening">${plate}${text}</div>` : text);
+
   if (!lore) {
-    modal(`${head}<p>${esc(f.lore || f.description || '')}</p>${traitCard}
+    modal(`${head}${opening(`<p class="lead">${esc(f.lore || f.description || '')}</p>`)}${traitCard}
       ${f.sourceUrl ? `<p>${sourceLink({url: f.sourceUrl, title: f.sourceLabel || f.sourceUrl})}</p>` : ''}`, {kind: 'codex', size: 'wide'});
     return;
   }
@@ -71,7 +75,7 @@ export function showCodex(factionId = ctx.started ? ctx.state.player : ctx.chose
   }
 
   modal(`${head}
-    <p class="lead">${esc(lore.identity)}</p>
+    ${opening(`<p class="lead">${esc(lore.identity)}</p>`)}
     ${traitCard}
     <section class="dialog-section"><h3>Stories (${stories.length})</h3>${storyList}</section>
     ${more}

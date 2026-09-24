@@ -128,6 +128,13 @@ function controlsSection() {
   return html;
 }
 
+// The phone apps have no service worker and no local page server, so their
+// Privacy link goes to the published page; the web build keeps its own copy.
+function privacyHref() {
+  const origin = globalThis.PREGENESIS_NATIVE?.publicOrigin;
+  return origin ? `${String(origin).replace(/\/+$/, '')}/privacy.html` : 'privacy.html';
+}
+
 function aboutSection() {
   const version = document.querySelector('meta[name="pregenesis-version"]')?.content || '';
   return `<p><strong>Pre-Genesis</strong>${version ? ` ${esc(version)}` : ''}</p>
@@ -135,7 +142,8 @@ function aboutSection() {
     <ul class="plain-list">
       <li><strong>three.js</strong><span>MIT licence</span></li>
       <li><strong>PreGenesis type</strong><span>Made for this game</span></li>
-    </ul>`;
+    </ul>
+    <p><a href="${esc(privacyHref())}" target="_blank" rel="noopener noreferrer">Privacy</a></p>`;
 }
 
 export function showMenu(section = ctx.started ? 'game' : 'display') {

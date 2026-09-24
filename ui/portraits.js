@@ -5,11 +5,13 @@
 import {esc} from './context.js';
 
 export const PORTRAIT_DIR = 'assets/figures/portraits/';
+export const PLATE_DIR = 'assets/figures/plates/';
 export const EMBLEM_DIR = 'assets/emblems/';
 
 const SIZES = new Set(['sm', 'md', 'lg', 'xl']);
 
 export const portraitSrc = id => `${PORTRAIT_DIR}${id}.webp`;
+export const plateSrc = id => `${PLATE_DIR}${id}.webp`;
 export const emblemSrc = id => `${EMBLEM_DIR}${id}.svg`;
 
 // Realms whose leader has a built figure, and so a rendered portrait. The rest
@@ -35,6 +37,21 @@ export function portrait(factionId, {size = 'md', gold = false, eager = false, e
   </span>`;
 }
 
+// The full-body plate, rendered from the same model on the same lapis ground.
+// It is built for exactly the realms that have a portrait, so the reader never
+// asks for a file that was never rendered. `label` names the leader for readers
+// using a screen reader.
+export const hasPlate = id => hasPortrait(id);
+
+export function figurePlate(factionId, label = '') {
+  if (!hasPlate(factionId)) return '';
+  const id = esc(factionId ?? '');
+  return `<figure class="codex-plate">
+    <img src="${plateSrc(id)}" alt="${esc(label)}" width="640" height="640" loading="lazy" decoding="async">
+    <figcaption>Rendered from the game’s own model.</figcaption>
+  </figure>`;
+}
+
 // One capture-phase listener covers every portrait, including markup written later.
 // `load` does not bubble, so it is caught on the way down.
 function onLoad(event) {
@@ -42,4 +59,14 @@ function onLoad(event) {
   if (img?.classList?.contains?.('portrait-face')) img.closest('.portrait')?.classList.add('is-rendered');
 }
 
-if (typeof document !== 'undefined') document.addEventListener('load', onLoad, true);
+// A plate that cannot be fetched (an older app bundle carries the offline core
+// only) leaves the reading column alone instead of a broken frame.
+function onError(event) {
+  const img = event.target;
+  if (img?.tagName === 'IMG') img.closest?.('.codex-plate')?.remove();
+}
+
+if (typeof document !== 'undefined') {
+  document.addEventListener('load', onLoad, true);
+  document.addEventListener('error', onError, true);
+}

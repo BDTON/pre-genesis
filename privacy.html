@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" class="doc">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pre-Genesis privacy</title>
+<meta name="description" content="What Pre-Genesis keeps, what it sends and what it never collects.">
+<meta name="theme-color" content="#0F1A30">
+<meta name="color-scheme" content="dark">
+<meta name="robots" content="index,follow">
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="hud.css">
+<link rel="icon" href="assets/app-icon.svg" type="image/svg+xml">
+<style>
+/* A single reading page on the lapis ground. Every value is a token from
+   tokens.css; the surface is the papyrus the Codex reads on. */
+html.doc,
+body.doc {
+  height: auto;
+  overflow: visible;
+}
+
+body.doc {
+  min-height: 100%;
+  padding:
+    calc(var(--safe-top) + var(--space-5))
+    calc(var(--safe-right) + var(--space-4))
+    calc(var(--safe-bottom) + var(--space-8))
+    calc(var(--safe-left) + var(--space-4));
+}
+
+.doc-mast,
+.doc-sheet,
+.doc-foot {
+  width: min(760px, 100%);
+  margin-inline: auto;
+}
+
+.doc-mast {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.doc-brand {
+  font: var(--weight-display) var(--text-20) / var(--leading-tight) var(--font-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.doc-sheet {
+  padding: var(--space-6) var(--space-5);
+  border: var(--hairline) solid var(--papyrus-rule);
+  border-radius: var(--radius-panel);
+  background: var(--papyrus);
+  color: var(--papyrus-ink);
+}
+
+.doc-head {
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-4);
+}
+
+.doc-sheet h1 {
+  font: var(--weight-display) var(--text-32) / var(--leading-tight) var(--font-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.doc-sheet h2 {
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-2);
+  font: var(--weight-display) var(--text-20) / var(--leading-snug) var(--font-display);
+  letter-spacing: var(--tracking-display);
+}
+
+.doc-sheet p {
+  margin-top: var(--space-3);
+}
+
+.doc-sheet .lead {
+  margin-top: var(--space-4);
+}
+
+.doc-sheet .note,
+.doc-sheet .plain-list li > span {
+  color: var(--papyrus-muted);
+}
+
+.doc-sheet .plain-list {
+  margin-top: var(--space-3);
+}
+
+.doc-sheet .plain-list li {
+  border-bottom-color: var(--papyrus-rule);
+}
+
+.doc-sheet a {
+  color: var(--lapis);
+}
+
+.doc-sheet :focus-visible {
+  outline-color: var(--lapis);
+}
+
+.doc-foot {
+  margin-top: var(--space-5);
+  color: var(--mist);
+  font-size: var(--text-12);
+  line-height: var(--leading-snug);
+}
+
+@media (max-width: 600px) {
+  .doc-sheet {
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .doc-sheet h1 {
+    font-size: var(--text-24);
+  }
+}
+</style>
+</head>
+<body class="doc">
+
+<header class="doc-mast">
+  <p class="doc-brand">Pre-Genesis</p>
+  <a class="btn btn-secondary" href="index.html">Play</a>
+</header>
+
+<main class="doc-sheet">
+  <div class="doc-head illuminated">
+    <h1>Privacy</h1>
+  </div>
+  <p class="note">Last changed 23 September 2026. It covers Pre-Genesis wherever you play it: in a browser, and in the Android, iOS and desktop apps.</p>
+
+  <p class="lead">Pre-Genesis is a game made by BEM Studios. There is no account to make and no profile to fill in. Playing alone sends nothing anywhere. Playing online sends only what the other people in your room need to see the same campaign you do.</p>
+
+  <h2>Playing alone</h2>
+  <p>A solo campaign never leaves the device you play it on. The game writes three things into the browser or app storage on that device:</p>
+  <ul class="plain-list">
+    <li><strong>Your campaign</strong><span>The map, your cities, units, research and turn number</span></li>
+    <li><strong>Your settings</strong><span>Text size, contrast, motion, graphics, sound, key and pad bindings, chosen difficulty and realm, and the display name you last typed</span></li>
+    <li><strong>One session flag</strong><span>Whether the studio opening has played in this tab</span></li>
+  </ul>
+  <p>None of it is sent to a server, and none of it reaches BEM Studios. The game files themselves are cached on the device so you can play with no connection at all.</p>
+  <p>Exporting a campaign writes a file where you choose to put it. Importing reads a file you choose. The game never opens a file on its own.</p>
+
+  <h2>Playing online</h2>
+  <p>An online room is the one part of the game that uses a server: <a href="https://api.pre-genesis.online/healthz">api.pre-genesis.online</a>, run by BEM Studios on one rented server. When you make or join a room, the game sends:</p>
+  <ul class="plain-list">
+    <li><strong>A display name</strong><span>Whatever you type, 1 to 32 characters</span></li>
+    <li><strong>A room code</strong><span>Eight letters and numbers, made by the server</span></li>
+    <li><strong>A realm</strong><span>The realm you chose to play</span></li>
+    <li><strong>A map seed</strong><span>The number the shared map is drawn from</span></li>
+    <li><strong>The campaign</strong><span>The shared game state: tiles, cities, units, turns and the game’s own messages</span></li>
+    <li><strong>A seat token</strong><span>Random characters that prove the seat is yours</span></li>
+  </ul>
+  <p>Everyone in the room sees the display names of everyone else in that room. Type whatever you like; it does not have to be your real name.</p>
+  <p>There is no chat. The only messages in a room are written by the game, such as a realm falling or a turn passing.</p>
+  <p>The room code and your seat token are kept on your device so you can close the tab and come back to the same seat.</p>
+
+  <h2>How long a room is kept</h2>
+  <p>Rooms live on the server in a small database and are deleted on a timer. Nothing is archived and there is no backup copy kept elsewhere.</p>
+  <ul class="plain-list">
+    <li><strong>Everyone has left</strong><span>Deleted at once</span></li>
+    <li><strong>Never started</strong><span>Deleted after one day</span></li>
+    <li><strong>Finished</strong><span>Deleted after three days</span></li>
+    <li><strong>Untouched</strong><span>Deleted after fourteen days</span></li>
+  </ul>
+  <p>Once a room is deleted, the display names and the campaign in it are gone.</p>
+
+  <h2>What the server notes down</h2>
+  <p>The room service counts recent requests per network address so one device cannot flood it. That count is held in memory, is never written to the database, and is dropped after ten minutes of quiet.</p>
+  <p>When a request fails the service prints the time and the reason. It does not print names, room contents or seat tokens.</p>
+  <p>The web server in front of it keeps an ordinary access log: time, network address, the path asked for and the answer given. It holds no game content and no names.</p>
+
+  <h2>What the game never does</h2>
+  <ul class="plain-list">
+    <li><strong>No accounts</strong><span>No sign-in, no email address, no password</span></li>
+    <li><strong>No advertising</strong><span>No ads, no ad networks, no advertising identifier</span></li>
+    <li><strong>No analytics</strong><span>No telemetry, no crash reporting, no tracking, no cookies</span></li>
+    <li><strong>No third parties</strong><span>Nothing is sold, shared or sent to anyone else</span></li>
+    <li><strong>No outside code</strong><span>Every file the game loads is served from the game itself</span></li>
+    <li><strong>No device permissions</strong><span>No location, camera, microphone, contacts, photos or files; the Android app asks only for internet access</span></li>
+  </ul>
+
+  <h2>Links out of the game</h2>
+  <p>Every name in Pre-Genesis is cited, and the Codex puts those citations on screen as links to museums, libraries and text archives. Opening one leaves the game and hands you to that site, which has its own privacy policy and is nothing to do with BEM Studios. Nothing about you or your campaign goes with you; the game only opens the address.</p>
+
+  <h2>Children</h2>
+  <p>Pre-Genesis is not aimed at children under 13, and it asks nobody for their age, name, email address or anything else that would identify them. The only text a player can enter is the display name used in an online room, and it is deleted with the room. If a child has typed something into that box that you would rather was gone, leave the room and it is deleted at once.</p>
+
+  <h2>Removing what is kept</h2>
+  <ul class="plain-list">
+    <li><strong>On the web</strong><span>Clear site data for pre-genesis.online in your browser</span></li>
+    <li><strong>In an app</strong><span>Delete the Android, iOS or desktop app, or clear its storage</span></li>
+    <li><strong>An online room</strong><span>Leave it; when the last player leaves the room is deleted</span></li>
+  </ul>
+  <p>There is no account to close, and nothing to ask us to erase, because nothing is held against a person.</p>
+
+  <h2>Changes</h2>
+  <p>If what the game does changes, this page changes with it and the date at the top changes too. The version of this page that matters is the one published at pre-genesis.online.</p>
+
+  <h2>Contact</h2>
+  <p>Write to <a href="mailto:brandon.deaton001@gmail.com">brandon.deaton001@gmail.com</a> with any question about this page or about the game.</p>
+</main>
+
+<p class="doc-foot">BEM Studios. Pre-Genesis draws its names and stories from mythology and scripture, each one cited in the game’s Codex.</p>
+
+</body>
+</html>
